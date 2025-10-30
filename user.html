@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario - Aprendiendo Ch'ol</title>
+    <style>
+        /* Estilos Base: Fondo y Contenedor */
+        body {
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+            margin: 0;
+            padding: 20px; /* Padding para que el contenido no toque los bordes en móvil */
+            background-color: #E6F3F7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            background-color: #ffffff;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            display: flex;
+            gap: 40px;
+            max-width: 900px;
+            width: 90%; /* Usamos porcentaje para fluidez */
+            align-items: flex-start; /* Alineamos arriba */
+        }
+
+        /* ------------------ SECCIÓN IZQUIERDA: INFO DE USUARIO ------------------ */
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 30%;
+            flex-shrink: 0;
+        }
+
+        .avatar-display {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #FFD166;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 5rem;
+            color: #fff;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            /* Estilo para imágenes de avatar si las usas */
+            background-size: cover; 
+            background-position: center;
+        }
+
+        .user-info h2 {
+            font-size: 2rem;
+            color: #2A9D8F;
+            margin: 10px 0;
+            word-break: break-word; /* Para nombres largos en móvil */
+        }
+        
+        .level {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #F88F8F;
+            margin-top: 10px;
+        }
+
+        /* ------------------ SECCIÓN DERECHA: FORMULARIO Y PROGRESO ------------------ */
+        .profile-form {
+            width: 70%;
+        }
+        
+        .profile-form h2 {
+            font-size: 2.5rem;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .progress-section { margin-bottom: 25px; }
+        .progress-section h3 { font-size: 1.2rem; color: #555; }
+        
+        .progress-bar-container {
+            background-color: #e0e0e0;
+            border-radius: 15px;
+            height: 30px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0; /* Lo inicializamos en 0 */
+            background-color: #7EE081;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: #fff;
+            font-weight: bold;
+            transition: width 0.8s ease-in-out;
+        }
+
+        /* Insignias */
+        .badges-section { margin-bottom: 30px; }
+        .badges-container {
+            display: flex;
+            gap: 15px;
+        }
+
+        .badge {
+            background-color: #FFC04C;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
+        }
+        
+        /* Campos del Formulario */
+        .form-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            box-sizing: border-box; /* Aseguramos que el padding no afecte el ancho total */
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: flex-start;
+        }
+        
+        .button-group button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .save-button { background-color: #2A9D8F; color: #fff; }
+        .save-button:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+
+        .reset-button { background-color: #ccc; color: #555; }
+        .reset-button:hover { background-color: #bbb; }
+        
+        /* ============================================== */
+        /* === MEDIA QUERIES PARA RESPONSIVIDAD MÓVIL === */
+        /* ============================================== */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .profile-container {
+                flex-direction: column; /* Apilamiento Vertical */
+                padding: 20px;
+                width: 100%;
+                max-width: none;
+            }
+
+            .user-info, .profile-form {
+                width: 100%; /* Ocupa todo el ancho */
+            }
+
+            .user-info {
+                margin-bottom: 20px;
+                padding-bottom: 20px;
+                border-bottom: 1px solid #eee; /* Separador */
+            }
+
+            .profile-form h2 {
+                text-align: center;
+                margin-top: 0;
+            }
+
+            .form-fields {
+                grid-template-columns: 1fr; /* Una sola columna */
+            }
+            
+            .badges-container {
+                flex-wrap: wrap; 
+                justify-content: center;
+            }
+
+            .button-group {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="user-info">
+            <div class="avatar-display" id="avatarDisplay">🦊</div>
+            <h2 id="aliasDisplay">Aventurero</h2>
+            <p id="ageDisplay">8-10 años</p>
+            <p>Nivel Actual</p>
+            <span class="level" id="levelDisplay">Nivel 3</span>
+        </div>
+
+        <form class="profile-form" id="profileForm">
+            <h2>Mi Perfil</h2>
+            
+            <div class="progress-section">
+                <h3>Progreso General (Lecciones)</h3>
+                <p style="font-size: 0.9rem; margin: 5px 0 5px 0;">3/7 Lecciones completadas</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar" style="width: 42%;">42%</div>
+                </div>
+            </div>
+
+            <div class="badges-section">
+                <h3>Insignias Obtenidas</h3>
+                <div class="badges-container" id="badgesContainer">
+                    <span class="badge">Explorador</span>
+                    <span class="badge">Amigo</span>
+                    <span class="badge" style="opacity: 0.4;">¡Ch'ol! (Bloqueado)</span>
+                </div>
+            </div>
+
+            <div class="form-fields">
+                <div class="form-group">
+                    <label for="alias">Alias (Visible)</label>
+                    <input type="text" id="alias" value="Aventurero" maxlength="15">
+                </div>
+                <div class="form-group">
+                    <label for="age">Rango de Edad</label>
+                    <select id="age">
+                        <option value="8-10" selected>8-10 años</option>
+                        <option value="5-7">5-7 años</option>
+                        <option value="11-13">11-13 años</option>
+                        <option value="14+">14+ años</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="avatar">Seleccionar Avatar</label>
+                    <select id="avatar">
+                        <option value="🦊" selected>🦊 Zorro</option>
+                        <option value="🐆">🐆 Jaguar</option>
+                        <option value="🐒">🐒 Mono</option>
+                        <option value="🦜">🦜 Loro</option>
+                        <option value="🐸">🐸 Rana</option>
+                        <option value="🦉">🦉 Búho</option>
+                        <option value="🐊">🐊 Cocodrilo</option>
+                        <option value="🦋">🦋 Mariposa</option>
+                        <option value="🐘">🐘 Elefante</option>
+                        <option value="🦒">🦒 Jirafa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="upload-image">O Subir Imagen (Avanzado)</label>
+                    <input type="file" id="upload-image" accept="image/*" disabled>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="save-button" id="saveButton">Guardar Cambios</button>
+                <button type="button" class="reset-button" id="resetButton">Restablecer Datos</button>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Elementos del formulario
+            const form = document.getElementById('profileForm');
+            const aliasInput = document.getElementById('alias');
+            const ageSelect = document.getElementById('age');
+            const avatarSelect = document.getElementById('avatar');
+            const resetButton = document.getElementById('resetButton'); // Añadido para la corrección
+
+            // Elementos de visualización
+            const aliasDisplay = document.getElementById('aliasDisplay');
+            const ageDisplay = document.getElementById('ageDisplay');
+            const avatarDisplay = document.getElementById('avatarDisplay');
+            const progressBar = document.getElementById('progressBar');
+            
+            // Valor de progreso simulado (Esto vendrá de la BD en el futuro)
+            const mockProgress = {
+                alias: "Aventurero",
+                age: "8-10",
+                avatar: "🦊",
+                progressPercent: 42,
+            };
+
+            const loadProfile = (data) => {
+                // 1. Cargar datos del formulario
+                aliasInput.value = data.alias;
+                ageSelect.value = data.age;
+                avatarSelect.value = data.avatar;
+
+                // 2. Actualizar visualización
+                aliasDisplay.textContent = data.alias;
+                // Nota: Usamos la función de búsqueda de texto si quieres un texto más bonito.
+                const ageText = ageSelect.options[ageSelect.selectedIndex].text;
+                ageDisplay.textContent = ageText; // Ahora toma "8-10 años"
+                avatarDisplay.textContent = data.avatar;
+                
+                // 3. Actualizar barra de progreso (simulando dato de la BD)
+                progressBar.style.width = data.progressPercent + '%';
+                progressBar.textContent = data.progressPercent + '%';
+            };
+
+            const saveProfile = () => {
+                // ----------------------------------------------------------------------
+                // NOTA: Aquí es donde enviarías un request al Backend para guardar en la BD.
+                // ----------------------------------------------------------------------
+                
+                // Simulación de guardado:
+                const newAlias = aliasInput.value;
+                const newAgeValue = ageSelect.value;
+                const newAvatar = avatarSelect.value;
+                
+                // Actualizamos la visualización inmediatamente
+                aliasDisplay.textContent = newAlias;
+                // Buscamos el texto completo para la visualización del usuario
+                const newAgeText = ageSelect.options[ageSelect.selectedIndex].text; 
+                ageDisplay.textContent = newAgeText; 
+                avatarDisplay.textContent = newAvatar;
+                
+                alert('¡Tus cambios han sido guardados en la BD simulada!');
+            };
+            
+            // Event Listeners
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                saveProfile();
+            });
+
+            // CORRECCIÓN APLICADA: Event Listener para Restablecer Datos
+            resetButton.addEventListener('click', () => {
+                // Recarga los datos originales simulados
+                loadProfile(mockProgress); 
+                alert('Los campos se han restablecido a los datos cargados.');
+            });
+
+            // Al cargar la página, usamos los datos simulados de la BD
+            loadProfile(mockProgress);
+        });
+    </script>
+</body>
+</html>

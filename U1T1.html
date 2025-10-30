@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ch'ol App - Tema 1: Saludos</title>
+    <style>
+        :root{
+            --bg1: #FFECB3;
+            --card: #ffffff;
+            --accent: #FF7043;
+            --next: #29B6F6;
+            --ok: #4CAF50;
+            --bad: #E53935;
+            --text-color: #333333;
+            font-family: 'Comic Sans MS', cursive, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+        html,body{height:100%;margin:0}
+        body{
+            background: linear-gradient(180deg, var(--bg1) 0%, #AEC6E6 100%);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            color: var(--text-color);
+        }
+        .app{
+            width:100%;
+            max-width:900px;
+            background:var(--card);
+            border-radius: 30px;
+            box-shadow: 0 15px 40px rgba(255, 112, 67, 0.2);
+            padding: 30px;
+            border: 5px solid var(--accent);
+            max-height: 95vh; 
+            display: flex;
+            flex-direction: column; 
+        }
+        header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:10px;
+            margin-bottom: 20px;
+            flex-shrink: 0; 
+        }
+        h1{
+            /* FLUIDEZ RESPONSIVA */
+            font-size: clamp(1.5rem, 3vw, 2rem); 
+            margin:0;
+            color: var(--accent);
+            text-shadow: 2px 2px #fff;
+        }
+        .stage-area{
+            overflow-y: auto; 
+            padding-right: 10px;
+            padding-bottom: 20px;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-start;
+            align-items: center;
+            scrollbar-width: thin;
+        }
+        .controls{
+            display:flex;gap:15px;justify-content:space-between;align-items:center; margin-top:10px;
+            flex-shrink: 0; 
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        
+        /* Botones de control */
+        button.primary, button.ghost{
+            padding:12px 20px;
+            border-radius: 15px;
+            font-weight:700; cursor:pointer;
+            transition: all .1s ease;
+        }
+        button.primary{
+            background:var(--next); color:white; border:none; 
+            box-shadow: 0 5px 0 0 #0288D1;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        button.primary.active{
+            opacity: 1;
+            pointer-events: auto;
+        }
+        button.primary.active:active{
+            transform: translateY(5px);
+            box-shadow: 0 0px 0 0 #0288D1;
+        }
+        button.ghost{
+            background:#e0f7fa;
+            border: 3px solid #00BCD4;
+            color: #00BCD4;
+            font-weight: 600;
+        }
+        
+        .options-row{display:flex; gap:20px; flex-wrap:wrap; justify-content:center}
+        
+        .opt{
+            min-width:140px; padding:20px; border-radius: 20px;
+            background:#fff;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+            display:flex;flex-direction:column;align-items:center;gap:10px; cursor:pointer;
+            border: 4px solid #E0E0E0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all .2s;
+        }
+        .opt:not(.disabled):hover{
+            transform:translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        .opt.disabled{pointer-events: none; opacity: 0.7;}
+        .opt.ok{border-color:var(--ok); box-shadow:0 8px 20px rgba(76,175,80,0.3); background:#E8F5E9;}
+        .opt.bad{border-color:var(--bad); box-shadow:0 8px 20px rgba(229,57,53,0.3); background:#FFEBEE;}
+        
+        .feedback{ font-weight:800; font-size: 1.4rem; }
+
+        /* Contenedor responsivo para video */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Estilos de Imagen para Actividad 2 */
+        .day-image-option img {
+            width: 100px; 
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        
+        /* ESTILOS PARA LA ACTIVIDAD 3 (Matching Original) */
+        .matching-container {
+            display: flex;
+            flex-wrap: wrap; 
+            gap: 25px;
+            width: 100%;
+            justify-content: center;
+            padding: 20px;
+            background-color: #e8f5e9; 
+            border-radius: 25px;
+            box-shadow: inset 0 0 15px rgba(0,150,136,0.1);
+        }
+
+        .matching-column {
+            flex: 1; 
+            min-width: 280px; 
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+        .matching-column h3 {
+            color: var(--accent);
+            margin-top: 0;
+            font-size: 1.4rem;
+            border-bottom: 2px solid #FFD180;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex-grow: 1; 
+        }
+
+        .question-card {
+            /* MANTENEMOS LOS ESTILOS ORIGINALES DE LA TARJETA DRAGGEABLE */
+            background-color: #FFF9C4; 
+            border: 3px solid #FFCA28; 
+            border-radius: 15px;
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: grab;
+            box-shadow: 0 5px 0 0 #FFB300; 
+            transition: transform 0.2s, box-shadow 0.2s;
+            color: var(--text-color);
+            text-align: center;
+        }
+        .question-card.matched-correct {
+            opacity: 1; 
+            cursor: default;
+            pointer-events: none;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .answer-dropzone {
+            background-color: #E3F2FD; 
+            border: 4px dashed #64B5F6; 
+            border-radius: 15px;
+            padding: 15px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-style: italic;
+            color: #42A5F5;
+            font-weight: 500;
+            position: relative;
+            transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+            flex-direction: column;
+        }
+        
+        /* Media Queries revisadas para la Actividad 3 */
+        @media (max-width: 600px){
+            .app{
+                max-height: 100vh;
+                padding: 15px;
+                padding-right: 0; 
+            }
+            body{
+                padding: 10px;
+            }
+            h1{font-size: 1.5rem;}
+            
+            /* Ajustes de Botones en Móvil */
+            button.primary, button.ghost{
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            .controls{
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            
+            /* Apilamiento de columnas de Matching */
+            .matching-container{
+                flex-direction: column;
+                gap: 15px;
+            }
+            .matching-column{
+                min-width:100%;
+                flex-basis: 100%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app" role="application" aria-label="Prototipo actividades para primaria">
+        <header>
+            <h1 id="title">Mini-Clase: Saludos Ch'ol</h1>
+            <div style="display: flex; gap: 10px;">
+                <button class="ghost" onclick="window.location.href='pantalla1.html'" style="font-weight: 500; padding: 10px;">🏠 Inicio</button>
+                <button class="primary" id="nextBtn" onclick="next()">Siguiente</button>
+            </div>
+        </header>
+
+        <main class="stage-area" id="stageArea"></main>
+
+        <div class="controls" id="controlsArea">
+             </div>
+
+        <footer>Prototipo educativo · Tema 1: Saludos</footer>
+    </div>
+
+<script>
+    // ************************************************************************
+    // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL
+    const MAIN_SCREEN_URL = 'pantalla1.html'; 
+    // ************************************************************************
+    
+    // VARIABLES CRÍTICAS
+    const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4];
+    let currentStage = 0;
+    // Se ha redefinido feedbackEl sin 'window.' para mantener consistencia
+    let feedbackEl = null; 
+    const titleEl = document.getElementById('title');
+    const nextBtn = document.getElementById('nextBtn');
+    const controlsArea = document.getElementById('controlsArea');
+    
+    // Variables de Progreso (Mantener para el flujo, pero eliminando la lógica de puntuación)
+    let stageProgress = [false, false, false, false, false]; 
+    
+    // Funciones de Control de Etapa 
+    function setStageComplete(isComplete = true) {
+        // Lógica de puntuación eliminada. Solo se mantiene la lógica de avance.
+        stageProgress[currentStage] = isComplete;
+        nextBtn.classList.toggle('active', isComplete);
+    }
+
+    function clearFeedback(){ 
+        // Se usa la variable local feedbackEl
+        if(feedbackEl) feedbackEl.textContent = ""; 
+    }
+    
+    function setFeedback(text, kind){
+        // Se usa la variable local feedbackEl
+        if(!feedbackEl) return;
+        feedbackEl.textContent = text;
+        if(kind === 'ok'){ feedbackEl.style.color = 'var(--ok)' }
+        else if(kind === 'bad'){ feedbackEl.style.color = 'var(--bad)' }
+        else { feedbackEl.style.color = 'var(--text-color)' }
+    }
+    
+    function disableOptions() {
+          document.querySelectorAll('.opt').forEach(el => el.classList.add('disabled'));
+    }
+
+    function renderControls(html = '') {
+        controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>${html}`;
+        // Inicialización de feedbackEl para que sea referenciable
+        feedbackEl = document.getElementById('feedback');
+    }
+
+    function next(){ 
+        if (!stageProgress[currentStage]) {
+            setFeedback("¡Termina esta parte antes de continuar!", 'bad');
+            return;
+        }
+
+        if (currentStage === 4) {
+            // Se elimina la mención a la puntuación
+            alert(`Tema Terminado. Volviendo a la pantalla principal...`);
+            window.location.href = MAIN_SCREEN_URL; 
+            return; 
+        }
+
+        currentStage++;
+        if (currentStage >= stages.length) {
+            currentStage = stages.length - 1; 
+        }
+        render(); 
+    }
+
+    function speakText(text, lang='es-ES'){
+        if(!window.speechSynthesis) return;
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = lang;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+    }
+    
+    function render(){ 
+        clearFeedback(); 
+        setStageComplete(false);
+        const container = document.getElementById('stageArea'); 
+        container.innerHTML=''; 
+
+        const titles = ['Mini-Clase: Saludos Ch\'ol', 'Actividad 1: Escucha y Selecciona', 'Actividad 2: Partes del Día', 'Actividad 3: Unir Palabras', '¡Módulo Terminado!'];
+        titleEl.textContent = titles[currentStage];
+
+        stages[currentStage](container);
+        
+        if (currentStage === 0 || currentStage === 4) {
+            setStageComplete(true);
+        }
+    }
+
+
+    // =======================================================================
+    // FUNCIÓN CRÍTICA: CREACIÓN DEL BOTÓN DE AUDIO 
+    // =======================================================================
+    function createAudioButton(text, audioFilename, lang = 'cho') {
+        const btn = document.createElement('button');
+        btn.className = 'ghost';
+        btn.innerHTML = '🔊 Reproducir Audio';
+        const audioUrl = `assets/audio/${audioFilename}`; 
+
+        btn.onclick = () => {
+            try {
+                const audio = new Audio(audioUrl);
+                audio.play();
+                setFeedback(`Reproduciendo: "${text}"`, 'neutral');
+            } catch (e) {
+                console.warn(`No se encontró el audio real en: ${audioUrl}. Usando simulación de voz.`);
+                speakText(text, lang); 
+                setFeedback(`[TTS] Reproduciendo: "${text}"`, 'neutral');
+            }
+        };
+        return btn;
+    }
+
+    // =======================================================================
+    // 0 - MINI-CLASE (VIDEO) - AHORA RESPONSIVO
+    // =======================================================================
+    function renderStage0(container){
+        const videoHtml = `
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/z4fR0S2T-R0?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <p style="text-align:center; max-width: 600px; margin-top: 20px;">
+                ¡Mira el video para aprender los saludos básicos en Ch'ol! Luego, presiona **Siguiente** para comenzar las actividades.
+            </p>
+        `;
+        container.innerHTML = videoHtml;
+        setStageComplete(true);
+        renderControls();
+    }
+
+    // =======================================================================
+    // 1 - ACTIVIDAD 1: ESCUCHA Y SELECCIONA (Funcional)
+    // =======================================================================
+    const stage1Data = [
+        { audio: "Lekil k'in", filename: "Lekil_kin.mp3", correct: "Buenos días", options: ["Buenos días", "Buenas tardes", "Hola", "Adiós"] },
+        { audio: "Lekil ak'wal", filename: "Lekil_akwal.mp3", correct: "Buenas tardes", options: ["Buenos días", "Buenas tardes", "Gracias", "Perdón"] },
+        { audio: "Lekilix", filename: "Lekilix.mp3", correct: "Hola", options: ["Hola", "Yo", "Tú", "Nosotros"] },
+        { audio: "T'yoj", filename: "Tyoj.mp3", correct: "Gracias", options: ["¿Cómo estás?", "Gracias", "Estoy bien", "Mal"] },
+        { audio: "Baxik", filename: "Baxik.mp3", correct: "Adiós", options: ["Adiós", "Hasta mañana", "Hasta luego", "Ya me voy"] },
+        { audio: "Yom a k'ajt", filename: "Yom_k_ajt.mp3", correct: "¿Cómo te llamas?", options: ["¿Cuántos años tienes?", "¿Cómo te llamas?", "¿Eres tú?", "¿Quién es?"] },
+    ];
+    let currentRound1 = 0; 
+
+    function checkAnswer1(selectedOption, currentData, allOptionsElements) {
+        if (selectedOption === currentData.correct) {
+            setFeedback('¡Muy bien! ¡Correcto!', 'ok');
+            currentRound1++;
+            setTimeout(() => {
+                renderStage1(document.getElementById('stageArea'));
+            }, 1200);
+        } else {
+            setFeedback('Incorrecto. ¡La respuesta correcta es: ' + currentData.correct + '!', 'bad');
+            allOptionsElements.forEach(el => {
+                if (el.textContent === currentData.correct) {
+                    el.classList.add('ok');
+                }
+            });
+            currentRound1++;
+            setTimeout(() => {
+                renderStage1(document.getElementById('stageArea'));
+            }, 2500);
+        }
+    }
+
+    function renderStage1(container) {
+        if (currentRound1 >= stage1Data.length) {
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las 6 rondas.</h2>`;
+            setStageComplete(true);
+            renderControls();
+            return;
+        }
+        const currentData = stage1Data[currentRound1];
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha el audio y selecciona la **traducción** correcta.</p>`;
+
+        const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho'); 
+        
+        const controls = `<div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">${audioBtn.outerHTML}</div>`;
+        renderControls(controls);
+        
+        const row = document.createElement('div');
+        row.className = 'options-row';
+        currentData.options.sort(() => Math.random() - 0.5); 
+
+        currentData.options.forEach(opt => {
+            const b = document.createElement('div');
+            b.className = 'opt';
+            b.textContent = opt;
+            
+            b.onclick = (e) => {
+                const allOptions = document.querySelectorAll('.opt');
+                disableOptions(); 
+                
+                if (opt === currentData.correct) {
+                    b.classList.add('ok');
+                } else {
+                    b.classList.add('bad');
+                }
+                
+                checkAnswer1(opt, currentData, allOptions);
+            };
+            row.appendChild(b);
+        });
+
+        container.appendChild(row);
+        setStageComplete(false); 
+    }
+
+    // =======================================================================
+    // 2 - ACTIVIDAD 2: ELEGIR FIGURAS SEGÚN EL AUDIO (CORREGIDA)
+    // =======================================================================
+    const stage2Questions = [
+        // Las rutas en 'correct' son ahora solo el nombre del archivo, ya que 'assets/img/' se añade en renderStage2
+        { audio: "Lekil k'in", filename: "Lekil_kin.mp3", correct: "escenario dia.jpg", word: "Día" },
+        { audio: "Lekil ak'wal", filename: "Lekil_akwal.mp3", correct: "escenario tarde.jpg", word: "Tarde" }, 
+        { audio: "Lekilix", filename: "Lekilix.mp3", correct: "escenario noche.jpg", word: "Noche" },
+    ];
+    let currentRound2 = 0; 
+
+    const stage2AllOptions = [
+        // Las rutas en 'filename' son ahora solo el nombre del archivo
+        { filename: "escenario dia.jpg", word: "Día" },
+        { filename: "escenario tarde.jpg", word: "Tarde" },
+        { filename: "escenario noche.jpg", word: "Noche" },
+        { filename: "lluvia.png", word: "Lluvia" }, 
+        { filename: "escenario selva.jpg", word: "Nublado" }
+    ];
+
+    function checkAnswer2(selectedImage, currentData, allOptionsElements) {
+        if (selectedImage === currentData.correct) {
+            setFeedback(`¡Correcto! Es la ${currentData.word}.`, 'ok');
+            currentRound2++;
+            setTimeout(() => {
+                renderStage2(document.getElementById('stageArea'));
+            }, 1200);
+        } else {
+            // El mensaje de feedback fue limpiado para usar solo el nombre del archivo.
+            setFeedback('Incorrecto. ¡La figura correcta representa ' + currentData.word + '!', 'bad');
+            allOptionsElements.forEach(el => {
+                if (el.dataset.img === currentData.correct) {
+                    el.classList.add('ok');
+                }
+            });
+            currentRound2++;
+            setTimeout(() => {
+                renderStage2(document.getElementById('stageArea'));
+            }, 2500);
+        }
+    }
+    
+    function renderStage2(container) {
+        if (currentRound2 >= stage2Questions.length) {
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Genial! Terminaste las 3 rondas del día.</h2>`;
+            setStageComplete(true);
+            renderControls();
+            return; 
+        }
+
+        const currentData = stage2Questions[currentRound2];
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de 3. Escucha el saludo y selecciona la figura que representa: **${currentData.word}**.</p>`;
+        
+        const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho');
+        
+        const controls = `<div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">${audioBtn.outerHTML}</div>`;
+        renderControls(controls);
+        
+        const row = document.createElement('div');
+        row.className = 'options-row';
+        
+        // Barajamos las opciones para que no siempre aparezcan en el mismo orden
+        stage2AllOptions.sort(() => Math.random() - 0.5);
+
+        stage2AllOptions.forEach(it => {
+            const b = document.createElement('div');
+            b.className = 'opt day-image-option'; 
+            b.dataset.img = it.filename;
+            
+            // CORRECCIÓN CLAVE: Usamos 'assets/img/' como prefijo base
+            b.innerHTML = `<img src="assets/img/${it.filename}" alt="${it.word}"/>`;
+            
+            b.onclick = ()=>{
+                const allOptions = document.querySelectorAll('.opt');
+                disableOptions();
+                
+                if (it.filename === currentData.correct) {
+                    b.classList.add('ok');
+                } else {
+                    b.classList.add('bad');
+                }
+                
+                checkAnswer2(it.filename, currentData, allOptions); 
+            };
+            row.appendChild(b);
+        });
+
+        container.appendChild(row);
+        setStageComplete(false);
+    }
+
+    // =======================================================================
+    // 3 - ACTIVIDAD 3: UNIR PALABRAS (DISEÑO ORIGINAL)
+    // =======================================================================
+    const stage3Pairs = [
+        ['Lekil k\'in', 'Buenos días'],
+        ['Lekil ak\'wal', 'Buenas tardes'],
+        ['Lekilix', 'Hola'],
+        ['T\'yoj', 'Gracias'],
+        ['Baxik', 'Adiós'],
+        ['Yom a k\'ajt', '¿Cómo te llamas?'],
+    ];
+
+    function checkAllMatches3() {
+        const dropzones = document.querySelectorAll('.answer-dropzone');
+        let allCorrect = true;
+        const questionsList = document.getElementById('questionsList'); // La lista de preguntas arrastrables
+
+        dropzones.forEach(dz => {
+            dz.classList.remove('ok', 'bad'); 
+            const droppedCard = dz.querySelector('.question-card');
+            const answerText = dz.dataset.answer;
+            
+            if (droppedCard) {
+                const questionText = droppedCard.dataset.question;
+                const correctPair = stage3Pairs.find(p => p[0] === questionText);
+                
+                if (correctPair && correctPair[1] === answerText) {
+                    // Correcto
+                    dz.classList.add('ok');
+                    droppedCard.classList.add('matched-correct'); 
+                } else {
+                    // Incorrecto: La tarjeta regresa.
+                    dz.classList.add('bad');
+                    allCorrect = false;
+                    
+                    droppedCard.classList.remove('matched-correct', 'dragging');
+                    questionsList.appendChild(droppedCard); 
+                    
+                    dz.classList.remove('filled');
+                    const placeholder = dz.querySelector('.placeholder-text');
+                    if (placeholder) placeholder.style.display = 'block';
+                }
+            } else {
+                dz.classList.add('bad'); 
+                allCorrect = false;
+            }
+        });
+
+        if (allCorrect) {
+            setFeedback('¡Felicidades! Todos los pares son correctos.', 'ok');
+            setStageComplete(true);
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.draggable = false;
+                card.classList.add('matched-correct'); 
+            });
+            // La variable controlsArea está definida globalmente
+            controlsArea.querySelector('button.ghost').style.pointerEvents = 'none';
+        } else {
+            setFeedback('¡Revisa los rojos! Las tarjetas incorrectas regresaron para que intentes de nuevo.', 'bad');
+        }
+    }
+
+
+    function renderStage3(container){
+        container.innerHTML = `<p class="stage0-info">Arrastra el **Saludo en Ch'ol** (Amarillo) a su **Traducción en Español** (Azul).</p>`;
+        
+        renderControls(`<button class="ghost" onclick="checkAllMatches3()">Comprobar</button>`);
+        
+        const matchingContainer = document.createElement('div');
+        matchingContainer.className = 'matching-container';
+        
+        const questionsCol = document.createElement('div');
+        questionsCol.className = 'matching-column';
+        questionsCol.innerHTML = '<h3>Ch\'ol (Arrastra)</h3><div id="questionsList" class="questions-list"></div>';
+
+        const answersCol = document.createElement('div');
+        answersCol.className = 'matching-column';
+        answersCol.innerHTML = '<h3>Español (Suelta Aquí)</h3><div id="answersList"></div>';
+        
+        const shuffledQuestions = [...stage3Pairs].sort(() => Math.random() - 0.5); 
+        const shuffledAnswers = [...stage3Pairs].map(p=>p[1]).sort(() => Math.random() - 0.5);
+
+        // Crear tarjetas de preguntas (Arrastrables - Ch'ol)
+        const questionsList = questionsCol.querySelector('#questionsList');
+        shuffledQuestions.forEach((pair, index) => {
+            const questionCard = document.createElement('div');
+            questionCard.className = 'question-card';
+            questionCard.id = `q-card-${index}`;
+            questionCard.draggable = true;
+            questionCard.dataset.question = pair[0];
+            questionCard.textContent = pair[0];
+
+            questionCard.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', e.target.id);
+                e.target.classList.add('dragging');
+            });
+            questionCard.addEventListener('dragend', (e) => {
+                e.target.classList.remove('dragging');
+            });
+            questionsList.appendChild(questionCard);
+        });
+
+        // Crear zonas de respuesta (Dropzones - Español)
+        const answersList = answersCol.querySelector('#answersList');
+        shuffledAnswers.forEach((answer, index) => {
+            const dropzone = document.createElement('div');
+            dropzone.className = 'answer-dropzone';
+            dropzone.id = `ans-dropzone-${index}`;
+            dropzone.dataset.answer = answer;
+
+            const placeholder = document.createElement('span');
+            placeholder.className = 'placeholder-text';
+            placeholder.textContent = answer;
+            dropzone.appendChild(placeholder);
+
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault(); 
+                dropzone.classList.add('hovered');
+            });
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('hovered');
+            });
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('hovered');
+
+                const cardId = e.dataTransfer.getData('text/plain');
+                const draggedCard = document.getElementById(cardId);
+                
+                // Devolver tarjeta previa
+                if (dropzone.children.length > 0 && dropzone.children[0].classList.contains('question-card')) {
+                    questionsList.appendChild(dropzone.children[0]);
+                    dropzone.classList.remove('filled');
+                    dropzone.querySelector('.placeholder-text').style.display = 'block'; 
+                }
+                
+                // Mover la nueva tarjeta
+                dropzone.appendChild(draggedCard);
+                dropzone.classList.add('filled');
+                dropzone.querySelector('.placeholder-text').style.display = 'none'; 
+
+                setStageComplete(false); 
+                dropzone.classList.remove('ok', 'bad');
+            });
+            answersList.appendChild(dropzone);
+        });
+
+        matchingContainer.appendChild(questionsCol);
+        matchingContainer.appendChild(answersCol);
+        container.appendChild(matchingContainer);
+        setStageComplete(false);
+    }
+    
+    // =======================================================================
+    // 4 - FINAL DE TEMA (SIN PUNTUACIÓN)
+    // =======================================================================
+    function renderStage4(container) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
+                <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 1 Completado! 🎉</h2>
+                <p style="font-size: 1.2rem;">Has terminado todas las actividades de Saludos.</p>
+                <p>Presiona **Siguiente** para volver a la pantalla principal.</p>
+            </div>
+        `;
+        setStageComplete(true);
+        renderControls();
+    }
+
+
+    // --- Inicialización (Solución al ReferenceError) ---
+    document.addEventListener('DOMContentLoaded', () => {
+        render();
+    });
+</script>
+</body>
+</html>

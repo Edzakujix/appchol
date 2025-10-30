@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ch'ol App - Tema 2: Presentación Personal</title>
+    <style>
+        /* 🌈 Estilo para Niños 🎨 */
+        :root{
+            --bg1: #FFECB3;
+            --card: #ffffff;
+            --accent: #FF7043;
+            --next: #29B6F6;
+            --ok: #4CAF50;
+            --bad: #E53935;
+            --text-color: #333333;
+            font-family: 'Comic Sans MS', cursive, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+        html,body{height:100%;margin:0}
+        body{
+            background: linear-gradient(180deg, var(--bg1) 0%, #AEC6E6 100%);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            color: var(--text-color);
+        }
+        .app{
+            width:100%;
+            max-width:900px;
+            background:var(--card);
+            border-radius: 30px;
+            box-shadow: 0 15px 40px rgba(255, 112, 67, 0.2);
+            padding: 30px;
+            border: 5px solid var(--accent);
+            max-height: 95vh; 
+            display: flex;
+            flex-direction: column; 
+        }
+        header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:10px;
+            margin-bottom: 20px;
+            flex-shrink: 0; 
+        }
+        h1{
+            /* FLUIDEZ RESPONSIVA */
+            font-size: clamp(1.5rem, 3vw, 2rem); 
+            margin:0;
+            color: var(--accent);
+            text-shadow: 2px 2px #fff;
+        }
+        .stage-area{
+            overflow-y: auto; 
+            padding-right: 10px;
+            padding-bottom: 20px;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-start;
+            align-items: center;
+            scrollbar-width: thin;
+        }
+        .controls{
+            display:flex;gap:15px;justify-content:space-between;align-items:center; margin-top:10px;
+            flex-shrink: 0; 
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        
+        /* Botones de control (ajuste para consistencia) */
+        button.primary, button.ghost{
+            padding:12px 20px;
+            border-radius: 15px;
+            font-weight:700; cursor:pointer;
+            transition: all .1s ease;
+        }
+        button.primary{
+            background:var(--next); color:white; border:none; 
+            box-shadow: 0 5px 0 0 #0288D1;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        button.primary.active{
+            opacity: 1;
+            pointer-events: auto;
+        }
+        button.primary.active:active{
+            transform: translateY(5px);
+            box-shadow: 0 0px 0 0 #0288D1;
+        }
+        button.ghost{
+            background:#e0f7fa;
+            border: 3px solid #00BCD4;
+            color: #00BCD4;
+            font-weight: 600;
+        }
+        
+        .options-row{display:flex; gap:20px; flex-wrap:wrap; justify-content:center}
+        
+        .opt{
+            min-width:140px; padding:20px; border-radius: 20px;
+            background:#fff;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+            display:flex;flex-direction:column;align-items:center;gap:10px; cursor:pointer;
+            border: 4px solid #E0E0E0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all .2s;
+        }
+        .opt:not(.disabled):hover{
+            transform:translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        .opt.disabled{pointer-events: none; opacity: 0.7;}
+        .opt.ok{border-color:var(--ok); box-shadow:0 8px 20px rgba(76,175,80,0.3); background:#E8F5E9;}
+        .opt.bad{border-color:var(--bad); box-shadow:0 8px 20px rgba(229,57,53,0.3); background:#FFEBEE;}
+        
+        .feedback{ font-weight:800; font-size: 1.4rem; }
+
+        /* Contenedor responsivo para video (mismo estilo que Cód 4) */
+        .video-wrapper {
+            position: relative;
+            width: 100%; max-width: 600px; 
+            padding-bottom: 56.25%; 
+            height: 0; overflow: hidden;
+            border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .video-wrapper iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
+        }
+
+        /* Estilos específicos para la Actividad 1 Demo (Imágenes de Niño/Niña) */
+        .demo-image-card {
+            width: 150px; 
+            height: 150px;
+            border-radius: 50%;
+            background-color: #E0E0E0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 5px solid transparent;
+            transition: all 0.3s;
+        }
+        .demo-image-card:hover {
+            transform: scale(1.05);
+            border-color: var(--next);
+        }
+        .demo-image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            /* Usamos placeholders de colores para simular las imágenes */
+            content: url('https://placehold.co/150x150/FFC107/FFF?text=Ni%C3%B1o');
+        }
+        .demo-image-card[data-type="girl"] img {
+            content: url('https://placehold.co/150x150/F48FB1/FFF?text=Ni%C3%B1a');
+        }
+
+        /* Estilos para la Actividad 4: Completar Frase (CRÍTICO para responsividad) */
+        .sentence-input-area {
+            font-size: clamp(1.2rem, 4vw, 1.6rem);
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .word-slot {
+            display: inline-block;
+            min-width: 25vw; 
+            max-width: 150px;
+            height: 35px;
+            border-bottom: 3px solid var(--accent);
+            color: var(--accent);
+            margin: 0 5px;
+            text-align: center;
+        }
+        .word-option {
+            background-color: #f0f0f0;
+            border: 3px solid #ccc;
+            border-radius: 10px;
+            padding: 8px 15px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: clamp(1rem, 3vw, 1.2rem); 
+        }
+        .word-option:hover:not(.disabled) {
+            transform: scale(1.05);
+            background-color: #fff;
+        }
+
+        @media (max-width: 600px){
+            .app{
+                max-height: 100vh;
+                padding: 15px;
+            }
+            body{
+                padding: 10px;
+            }
+            /* Título y opciones en móvil */
+            h1{font-size: 1.5rem;}
+            .opt{min-width:40%; padding:15px; font-size: 1rem;} 
+
+            /* Controles y Botones en Móvil */
+            button.primary, button.ghost{
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            .controls{
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            
+            /* Actividad 4 específica en móvil */
+            .word-slot {
+                min-width: 100px; /* Ancho fijo para móvil */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app" role="application" aria-label="Prototipo actividades para primaria">
+        <header>
+            <h1 id="title">Mini-Clase: Presentación Personal</h1>
+            <div style="display: flex; gap: 10px;">
+                <button class="ghost" onclick="goHome()" style="font-weight: 500; padding: 10px;">🏠 Inicio</button> 
+                <button class="primary" id="nextBtn" onclick="next()">Siguiente</button>
+            </div>
+        </header>
+
+        <main class="stage-area" id="stageArea"></main>
+
+        <div class="controls" id="controlsArea">
+             </div>
+
+        <footer>Prototipo educativo · Tema 2: Presentación Personal</footer>
+    </div>
+
+<script>
+    // ************************************************************************
+    // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL
+    const MAIN_SCREEN_URL = 'pantalla1.html'; // Usarás el nombre de archivo real aquí
+    // ************************************************************************
+    
+    // Función de redirección para el botón de Inicio
+    function goHome() {
+        window.location.href = MAIN_SCREEN_URL;
+    }
+
+    // Nueve etapas: 0 (Video) a 5 (Final)
+    const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4, renderStage5];
+    let currentStage = 0;
+    let feedbackEl = null; 
+    const titleEl = document.getElementById('title');
+    const nextBtn = document.getElementById('nextBtn');
+    const controlsArea = document.getElementById('controlsArea');
+    
+    // Variables de Progreso
+    let stageProgress = new Array(stages.length).fill(false); 
+    let userScore = 0;
+    // Se mantiene TOTAL_ACTIVITY_POINTS solo para el alert interno, ya no es visible
+    const TOTAL_ACTIVITY_POINTS = 40; 
+
+    // --- Utilidades del flujo y BD (preparación para el backend) ---
+
+    function setStageComplete(isComplete = true) {
+        if (isComplete && !stageProgress[currentStage]) {
+            // CORRECCIÓN 3: Se elimina la suma de userScore (puntuación interna)
+            // if(currentStage >= 2 && currentStage <= 4) { 
+            //     userScore += 10; 
+            // }
+        }
+        stageProgress[currentStage] = isComplete;
+        nextBtn.classList.toggle('active', isComplete);
+    }
+
+    function clearFeedback(){ 
+        if(feedbackEl) feedbackEl.textContent = ""; 
+    }
+    function setFeedback(text, kind){
+        // Se usa la variable global feedbackEl definida en renderControls
+        if(!feedbackEl) return;
+        feedbackEl.textContent = text;
+        if(kind === 'ok'){ feedbackEl.style.color = 'var(--ok)' }
+        else if(kind === 'bad'){ feedbackEl.style.color = 'var(--bad)' }
+        else { feedbackEl.style.color = 'var(--text-color)' }
+    }
+
+    function renderControls(html = '') {
+        controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>${html}`;
+        // Inicialización de feedbackEl para que sea referenciable en setFeedback/clearFeedback
+        feedbackEl = document.getElementById('feedback');
+    }
+
+    function next(){ 
+        if (!stageProgress[currentStage]) {
+            setFeedback("¡Termina esta parte antes de continuar!", 'bad');
+            return;
+        }
+
+        // --- PUNTO DE REDIRECCIÓN CRÍTICO (Stage 5) ---
+        if (currentStage === 5) {
+            // CORRECCIÓN 4: Se elimina la puntuación del alert final
+            alert(`Tema Terminado. Guardando en BD...`);
+            window.location.href = MAIN_SCREEN_URL; 
+            return; 
+        }
+        // --------------------------------------------------
+
+        currentStage++;
+        if (currentStage >= stages.length) {
+            currentStage = stages.length - 1; 
+        }
+        render(); 
+    }
+
+    function render(){ 
+        clearFeedback(); 
+        setStageComplete(false);
+        const container = document.getElementById('stageArea'); 
+        container.innerHTML=''; 
+
+        const titles = [
+            'Mini-Clase: Presentación Personal', 
+            'Actividad 1: Demostración (Niño/Niña)', 
+            'Actividad 2: Identificar Familia (6 rondas)', 
+            'Actividad 3: Conteo y Números (4 rondas)',
+            'Actividad 4: Completar Frase (5 rondas)',
+            '¡Tema Terminado!' // CORRECCIÓN 5: Título final
+        ];
+        titleEl.textContent = titles[currentStage];
+
+        stages[currentStage](container);
+        
+        // El video y la pantalla final se completan inmediatamente
+        if (currentStage === 0 || currentStage === 5) { 
+            setStageComplete(true);
+        }
+    }
+
+    // --- Utilidades de Audio (mantienen la misma lógica que Código 4) ---
+
+    function speakText(text, lang='es-ES'){
+        if(!window.speechSynthesis) return;
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = lang;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+    }
+    
+    function playAudio(audioFilename, text, lang = 'cho') {
+        const audioUrl = `assets/audio/${audioFilename}`; 
+        
+        try {
+            const audio = new Audio(audioUrl);
+            audio.play();
+            setFeedback(`Reproduciendo: "${text}"`, 'neutral');
+        } catch (e) {
+            console.warn(`No se encontró el audio real en: ${audioUrl}. Usando simulación de voz.`);
+            speakText(text, lang); 
+            setFeedback(`[TTS] Reproduciendo: "${text}"`, 'neutral');
+        }
+    }
+
+    function createAudioButton(text, audioFilename, lang = 'cho') {
+        const btn = document.createElement('button');
+        btn.className = 'ghost';
+        btn.innerHTML = '🔊 Reproducir Audio';
+        btn.onclick = () => { playAudio(audioFilename, text, lang); };
+        return btn;
+    }
+
+    // =======================================================================
+    // 0 - MINI-CLASE (VIDEO)
+    // =======================================================================
+    function renderStage0(container){
+          const videoHtml = `
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/z4fR0S2T-R0?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <p style="text-align:center; max-width: 600px; margin-top: 20px;">
+                ¡Mira el video para aprender las frases de presentación! Presiona **Siguiente** para la demostración.
+            </p>
+        `;
+        container.innerHTML = videoHtml;
+        setStageComplete(true);
+        renderControls();
+    }
+
+    // =======================================================================
+    // 1 - ACTIVIDAD 1: DEMOSTRACIÓN (NIÑO/NIÑA)
+    // =======================================================================
+    function renderStage1(container) {
+        container.innerHTML = `<p class="stage0-info">Toca una figura para escuchar cómo se presenta un niño o una niña.</p>`;
+
+        const demoData = [
+            { type: 'boy', text: "Yo soy Juan. ¡Hola!", filename: "demo_boy.mp3" },
+            { type: 'girl', text: "Yo soy María. Mucho gusto.", filename: "demo_girl.mp3" }
+        ];
+
+        const row = document.createElement('div');
+        row.className = 'options-row';
+
+        demoData.forEach(data => {
+            const b = document.createElement('div');
+            b.className = 'demo-image-card';
+            b.dataset.type = data.type;
+            
+            const img = document.createElement('img');
+            img.setAttribute('src', 'assets/img/' + (data.type === 'girl' ? 'nina.png' : 'nino.png')); 
+
+            b.onclick = () => {
+                playAudio(data.filename, data.text, 'cho');
+            };
+            
+            b.appendChild(img);
+            row.appendChild(b);
+        });
+
+        container.appendChild(row);
+        setStageComplete(true);
+        renderControls();
+    }
+
+    // =======================================================================
+    // 2 - ACTIVIDAD 2: SELECCIONAR FIGURA (6 rondas - Familia/Presentación)
+    // =======================================================================
+    const stage2Data = [
+        { audio: "Ella es mi mamá", filename: "mama.mp3", correct: "mama.png", options: ["mama.png", "abuelo.png", "perro.png"] },
+        { audio: "Él es mi papá", filename: "papa.mp3", correct: "papa.png", options: ["papa.png", "hermano.png", "gato.png"] },
+        { audio: "Yo tengo un perro", filename: "perro.mp3", correct: "perro.png", options: ["perro.png", "casa.png", "mama.png"] },
+        { audio: "Mi casa es grande", filename: "casa.mp3", correct: "casa.png", options: ["casa.png", "papa.png", "perro.png"] },
+        { audio: "Mi abuelo está aquí", filename: "abuelo.mp3", correct: "abuelo.png", options: ["abuelo.png", "niño.png", "niña.png"] },
+        { audio: "Yo tengo 5 años", filename: "cinco.mp3", correct: "5_dedos.png", options: ["5_dedos.png", "3_dedos.png", "4_dedos.png"] },
+    ];
+    let currentRound2 = 0; 
+
+    function checkAnswer2(selectedImage, currentData, allOptionsElements) {
+        if (selectedImage === currentData.correct) {
+            setFeedback('¡Muy bien! ¡Correcto!', 'ok');
+            currentRound2++;
+            setTimeout(() => {
+                renderStage2(document.getElementById('stageArea'));
+            }, 1200);
+        } else {
+            setFeedback('Incorrecto. ¡La imagen correcta es: ' + currentData.correct + '!', 'bad');
+            allOptionsElements.forEach(el => {
+                if (el.dataset.img === currentData.correct) {
+                    el.classList.add('ok');
+                }
+            });
+            currentRound2++;
+            setTimeout(() => {
+                renderStage2(document.getElementById('stageArea'));
+            }, 2500);
+        }
+    }
+
+    function renderStage2(container) {
+        if (currentRound2 >= stage2Data.length) {
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las 6 rondas.</h2>`;
+            setStageComplete(true);
+            renderControls();
+            return;
+        }
+
+        const currentData = stage2Data[currentRound2];
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Data.length}: Escucha y selecciona la imagen que representa la frase.</p>`;
+
+        const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'es-ES'); 
+        
+        const controls = `<div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">${audioBtn.outerHTML}</div>`;
+        renderControls(controls);
+        
+        const row = document.createElement('div');
+        row.className = 'options-row';
+        currentData.options.sort(() => Math.random() - 0.5); 
+
+        currentData.options.forEach(opt => {
+            const b = document.createElement('div');
+            b.className = 'opt';
+            b.dataset.img = opt; 
+            
+            b.innerHTML = `<img src="assets/img/${opt}" alt="Opción" style="width: 100px; height: 100px; border-radius: 10px;"/>`;
+
+            b.onclick = (e) => {
+                const allOptions = document.querySelectorAll('.opt');
+                allOptions.forEach(el => el.classList.add('disabled'));
+                
+                if (opt === currentData.correct) {
+                    b.classList.add('ok');
+                } else {
+                    b.classList.add('bad');
+                }
+                
+                checkAnswer2(opt, currentData, allOptions);
+            };
+            row.appendChild(b);
+        });
+
+        container.appendChild(row);
+        setStageComplete(false); 
+    }
+    
+    // =======================================================================
+    // 3 - ACTIVIDAD 3: SELECCIONAR NÚMERO (4 rondas - Conteo Visual + Audio)
+    // =======================================================================
+    const stage3Data = [
+        { count: 3, image: "3_personas.png", correctAudio: "somos_3.mp3", options: ["somos_3.mp3", "somos_4.mp3", "somos_2.mp3"] },
+        { count: 2, image: "2_animales.png", correctAudio: "hay_2.mp3", options: ["hay_1.mp3", "hay_2.mp3", "hay_5.mp3"] },
+        { count: 5, image: "5_cosas.png", correctAudio: "tengo_5.mp3", options: ["tengo_4.mp3", "tengo_6.mp3", "tengo_5.mp3"] },
+        { count: 4, image: "4_frutas.png", correctAudio: "cuatro_frutas.mp3", options: ["tres_frutas.mp3", "cinco_frutas.mp3", "cuatro_frutas.mp3"] },
+    ];
+    let currentRound3 = 0;
+
+    function checkAnswer3(selectedAudio, currentData, allOptionsElements) {
+        if (selectedAudio === currentData.correctAudio) {
+            setFeedback('¡Correcto! El número coincide.', 'ok');
+            currentRound3++;
+            setTimeout(() => {
+                renderStage3(document.getElementById('stageArea'));
+            }, 1200);
+        } else {
+            setFeedback('Incorrecto. ¡La frase correcta es la que suena ' + currentData.correctAudio.replace(".mp3", "") + '!', 'bad');
+            
+            allOptionsElements.forEach(el => {
+                if (el.dataset.audio === currentData.correctAudio) {
+                    el.classList.add('ok');
+                }
+            });
+            
+            currentRound3++;
+            
+            setTimeout(() => {
+                renderStage3(document.getElementById('stageArea'));
+            }, 2500);
+        }
+    }
+
+    function renderStage3(container) {
+        if (currentRound3 >= stage3Data.length) {
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Muy bien! ¡Contaste ${stage3Data.length} veces correctamente!</h2>`;
+            setStageComplete(true);
+            renderControls();
+            return;
+        }
+
+        const currentData = stage3Data[currentRound3];
+        container.innerHTML = `
+            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: **¿Cuántos hay?** Selecciona el audio con el número correcto.</p>
+            <img src="assets/img/${currentData.image}" alt="Elementos a contar" style="width: 200px; height: 200px; border-radius: 15px; margin-bottom: 20px; border: 3px solid var(--accent);"/>
+        `;
+        
+        renderControls(); 
+        
+        const row = document.createElement('div');
+        row.className = 'options-row';
+        currentData.options.sort(() => Math.random() - 0.5); 
+
+        currentData.options.forEach(opt => {
+            const b = document.createElement('div');
+            b.className = 'word-option';
+            b.dataset.audio = opt;
+            b.textContent = "🔊 Escuchar Opción";
+            
+            b.onclick = (e) => {
+                playAudio(opt, "Opción", 'es-ES'); 
+                
+                if (b.classList.contains('clicked-once')) {
+                    const allOptions = document.querySelectorAll('.word-option');
+                    allOptions.forEach(el => el.classList.add('disabled'));
+                    
+                    if (opt !== currentData.correctAudio) {
+                        b.classList.add('bad');
+                    }
+                    
+                    checkAnswer3(opt, currentData, allOptions);
+
+                } else {
+                    b.classList.add('clicked-once');
+                    setTimeout(() => b.classList.remove('clicked-once'), 1500);
+                    setFeedback('Vuelve a tocar para seleccionar.', 'neutral');
+                }
+            };
+            row.appendChild(b);
+        });
+
+        container.appendChild(row);
+        setStageComplete(false);
+    }
+
+
+    // =======================================================================
+    // 4 - ACTIVIDAD 4: COMPLETAR FRASE (5 rondas)
+    // =======================================================================
+    const stage4Data = [
+        { sentence: "Yo ____ Leda.", correct: "soy", options: ["soy", "vivo", "tengo", "como"], hint: "Palabra para presentarte" },
+        { sentence: "Yo ____ en Palenque.", correct: "vivo", options: ["soy", "vivo", "tengo", "como"], hint: "Palabra para decir dónde estás" },
+        { sentence: "Yo ____ 6 años.", correct: "tengo", options: ["soy", "vivo", "tengo", "voy"], hint: "Palabra para decir tu edad" },
+        { sentence: "Mi mamá ____ bonita.", correct: "es", options: ["es", "va", "tiene", "come"], hint: "Palabra que describe" },
+        { sentence: "¿Cómo ____?", correct: "estás", options: ["estás", "juegas", "corres", "duermes"], hint: "Frase de saludo y pregunta" },
+    ];
+    let currentRound4 = 0;
+
+    function checkAnswer4(selectedWord, currentData) {
+        if (selectedWord === currentData.correct) {
+            setFeedback('¡Correcto! La frase está completa.', 'ok');
+            currentRound4++;
+            setTimeout(() => {
+                renderStage4(document.getElementById('stageArea'));
+            }, 1200);
+        } else {
+            setFeedback('Incorrecto. La palabra correcta era: ' + currentData.correct, 'bad');
+            
+            document.querySelectorAll('.word-option').forEach(el => {
+                if (el.textContent === currentData.correct) {
+                    el.classList.add('ok');
+                }
+                el.classList.add('disabled');
+            });
+
+            currentRound4++; 
+            
+            setTimeout(() => {
+                renderStage4(document.getElementById('stageArea'));
+            }, 2500);
+        }
+    }
+
+    function renderStage4(container) {
+        if (currentRound4 >= stage4Data.length) {
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Terminaste las 5 frases.</h2>`;
+            setStageComplete(true);
+            renderControls();
+            return;
+        }
+
+        const currentData = stage4Data[currentRound4];
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound4 + 1} de ${stage4Data.length}: Selecciona la palabra que completa la frase:</p>`;
+        
+        const sentenceArea = document.createElement('div');
+        sentenceArea.className = 'sentence-input-area';
+        const displayedSentence = currentData.sentence.replace('____', `<span id="wordSlot" class="word-slot">?</span>`);
+        sentenceArea.innerHTML = displayedSentence;
+        container.appendChild(sentenceArea);
+
+        const optionsContainer = document.createElement('div');
+        optionsContainer.className = 'options-row';
+        currentData.options.sort(() => Math.random() - 0.5); 
+
+        currentData.options.forEach(opt => {
+            const b = document.createElement('div');
+            b.className = 'word-option';
+            b.textContent = opt;
+            
+            b.onclick = () => {
+                document.getElementById('wordSlot').textContent = opt;
+
+                const allOptions = document.querySelectorAll('.word-option');
+                allOptions.forEach(el => el.classList.add('disabled'));
+
+                if (opt !== currentData.correct) {
+                    b.classList.add('bad');
+                }
+                
+                checkAnswer4(opt, currentData);
+            };
+            optionsContainer.appendChild(b);
+        });
+
+        container.appendChild(optionsContainer);
+        setStageComplete(false); 
+        renderControls();
+    }
+
+
+    // =======================================================================
+    // 5 - FINAL DE MÓDULO (Redirección y Guardado de BD)
+    // =======================================================================
+    function renderStage5(container) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
+                <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 2 Completado! 🎉</h2>
+                <p style="font-size: 1.2rem;">Has terminado todas las actividades de Presentación Personal.</p>
+                <p>Presiona **Siguiente** para volver a la pantalla principal.</p>
+            </div>
+        `;
+        setStageComplete(true);
+        renderControls();
+    }
+
+
+    // --- Inicialización ---
+    document.addEventListener('DOMContentLoaded', () => {
+        render();
+    });
+</script>
+</body>
+</html>
