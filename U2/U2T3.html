@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ch'ol App - Tema 3: Naturaleza</title>
+    <style>
+        /* COMENTARIO: Variables de Fondo actualizadas para cielo/pasto */
+        :root{
+            --color-cielo: #ADE4FF; /* AZUL CLARO */
+            --color-pasto: #6AA84F; /* VERDE PAST */
+            
+            --bg1: #FFECB3; --card: #ffffff; --accent: #FF7043; --next: #29B6F6;
+            --ok: #4CAF50; --bad: #E53935; --text-color: #333333;
+            font-family: 'Comic Sans MS', cursive, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+        html,body{height:100%;margin:0}
+        
+        /* COMENTARIO: Fondo Body actualizado para estilo cielo/pasto */
+        body{
+            background: linear-gradient(180deg, var(--color-cielo) 65%, #ADD8E6 100%);
+            display:flex; align-items:center; justify-content:center; padding:20px; color: var(--text-color);
+            position: relative;
+            box-sizing: border-box;
+            min-height: 100vh;
+        }
+        /* COMENTARIO: Se añade simulación de pasto */
+        .ground-sim {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 20vh;
+            background-color: var(--color-pasto);
+            border-top-left-radius: 60% 30%;
+            border-top-right-radius: 60% 30%;
+            z-index: -1;
+        }
+
+        .app{
+            width:100%; max-width:900px; background:var(--card); border-radius: 30px;
+            box-shadow: 0 15px 40px rgba(255, 112, 67, 0.2); padding: 30px; border: 5px solid var(--accent);
+            max-height: 95vh; display: flex; flex-direction: column; 
+        }
+        header{
+            display:flex; justify-content:space-between; align-items:center; gap:10px;
+            margin-bottom: 20px; flex-shrink: 0; 
+        }
+        h1{
+            font-size: clamp(1.5rem, 3vw, 2rem); margin:0; color: var(--accent); text-shadow: 2px 2px #fff;
+        }
+        .stage-area{
+            overflow-y: auto; padding-right: 10px; padding-bottom: 20px; display: flex; 
+            flex-direction: column; justify-content: flex-start; align-items: center; scrollbar-width: thin;
+        }
+        .controls{
+            display:flex;gap:15px;justify-content:space-between; align-items:center; margin-top:10px;
+            flex-shrink: 0; padding-top: 10px; border-top: 1px solid #eee;
+        }
+        
+        button.primary, button.ghost{padding:12px 20px; border-radius: 15px; font-weight:700; cursor:pointer; transition: all .1s ease;}
+        button.primary{background:var(--next); color:white; border:none; box-shadow: 0 5px 0 0 #0288D1; opacity: 0.5; pointer-events: none;}
+        button.primary.active{opacity: 1; pointer-events: auto;}
+        button.primary.active:active{transform: translateY(5px); box-shadow: 0 0px 0 0 #0288D1;}
+        button.ghost{background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; font-weight: 600;}
+        
+        .options-row{display:flex; gap:20px; flex-wrap:wrap; justify-content:center}
+        .opt{
+            min-width:140px; padding:20px; border-radius: 20px; background:#fff; box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+            display:flex;flex-direction:column;align-items:center;gap:10px; cursor:pointer; border: 4px solid #E0E0E0;
+            font-size: 1.1rem; font-weight: 600; transition: all .2s;
+        }
+        .opt:not(.disabled):hover{transform:translateY(-5px) scale(1.05); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);}
+        .opt.disabled{pointer-events: none; opacity: 0.7;}
+        .opt.ok{border-color:var(--ok); box-shadow:0 8px 20px rgba(76,175,80,0.3); background:#E8F5E9;}
+        .opt.bad{border-color:var(--bad); box-shadow:0 8px 20px rgba(229,57,53,0.3); background:#FFEBEE;}
+        .feedback{ font-weight:800; font-size: 1.4rem; }
+
+        .video-wrapper { position: relative; width: 100%; max-width: 600px; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        
+        .img-option img { width: 100px; height: 100px; border-radius: 10px; object-fit: cover; }
+
+        /* Estilos para Matching (similares a U1T3) */
+        .matching-container { display: flex; flex-wrap: wrap; gap: 25px; width: 100%; justify-content: center; padding: 20px; background-color: #e8f5e9; border-radius: 25px; box-shadow: inset 0 0 15px rgba(0,150,136,0.1); }
+        .matching-column { flex: 1; min-width: 280px; background-color: #ffffff; border-radius: 20px; padding: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align: center; min-height: 300px; display: flex; flex-direction: column; }
+        .matching-column h3 { color: var(--accent); margin-top: 0; font-size: 1.4rem; border-bottom: 2px solid #FFD180; padding-bottom: 10px; margin-bottom: 20px; }
+        .questions-list { display: flex; flex-direction: column; gap: 15px; flex-grow: 1; }
+        .question-card { background-color: #FFF9C4; border: 3px solid #FFCA28; border-radius: 15px; padding: 15px 20px; font-weight: 700; font-size: 1.1rem; cursor: grab; box-shadow: 0 5px 0 0 #FFB300; transition: transform 0.2s, box-shadow 0.2s; color: var(--text-color); text-align: center; }
+        .answer-dropzone { background-color: #E3F2FD; border: 4px dashed #64B5F6; border-radius: 15px; padding: 15px; min-height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; font-style: italic; color: #42A5F5; font-weight: 500; position: relative; transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s; flex-direction: column; }
+        .answer-dropzone img { max-width: 80%; max-height: 80px; border-radius: 10px; }
+
+        @media (max-width: 600px){ /* Media queries unificadas */ }
+    </style>
+</head>
+<body>
+    <div class="app" role="application" aria-label="Prototipo actividades para primaria">
+        <header>
+            <h1 id="title">M2 - Tema 3: Naturaleza</h1>
+            <div style="display: flex; gap: 10px;">
+                <button class="ghost" onclick="goHome()" style="font-weight: 500; padding: 10px;">🏠 Inicio</button>
+                <button class="primary" id="nextBtn" onclick="next()">Siguiente</button>
+            </div>
+        </header>
+
+        <main class="stage-area" id="stageArea"></main>
+
+        <div class="controls" id="controlsArea">
+             </div>
+
+        <footer>Prototipo educativo · Módulo 2: Donde Vivo</footer>
+    </div>
+    
+    <div class="ground-sim"></div>
+
+<script>
+    // ************************************************************************
+    // CONFIGURACIÓN (RUTAS MÓDULO 2)
+    const MAIN_SCREEN_URL = '../U2/U2DOVI.html'; // Sube de U2/ y va al mapa de módulos
+    const USER_GOOGLE_ID = 'ID_DEL_USUARIO_AUTENTICADO';
+    const TOTAL_ACTIVITY_POINTS = 30; // 3 actividades * 10 puntos 
+    // ************************************************************************
+    
+    function goHome() { window.location.href = MAIN_SCREEN_URL; }
+
+    // VARIABLES y FLUJO
+    const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4]; 
+    let currentStage = 0;
+    let feedbackEl = null; 
+    const titleEl = document.getElementById('title');
+    const nextBtn = document.getElementById('nextBtn');
+    const controlsArea = document.getElementById('controlsArea');
+    let stageProgress = new Array(stages.length).fill(false); 
+    let userScore = 0;
+
+    // Lógica de Puntuación y Flujo (Unificada)
+    function setStageComplete(isComplete = true) {
+        if (isComplete && !stageProgress[currentStage]) {
+            if(currentStage >= 1 && currentStage <= 3) { userScore += 10; }
+        }
+        stageProgress[currentStage] = isComplete;
+        nextBtn.classList.toggle('active', isComplete);
+    }
+    
+    // FUNCIÓN CRÍTICA DE RENDER CONTROL
+    function renderControls(html = '') {
+        controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>${html}`;
+        feedbackEl = document.getElementById('feedback');
+    }
+    
+    function clearFeedback(){ if(feedbackEl) feedbackEl.textContent = ""; }
+    function setFeedback(text, kind){ 
+        if(!feedbackEl) return;
+        feedbackEl.textContent = text;
+        if(kind === 'ok'){ feedbackEl.style.color = 'var(--ok)' }
+        else if(kind === 'bad'){ feedbackEl.style.color = 'var(--bad)' }
+        else { feedbackEl.style.color = 'var(--text-color)' }
+    }
+    function disableOptions() { document.querySelectorAll('.opt, .word-option').forEach(el => el.classList.add('disabled')); }
+    
+    function next(){ 
+        if (!stageProgress[currentStage]) {
+            setFeedback("¡Termina esta parte antes de continuar!", 'bad');
+            return;
+        }
+        if (currentStage === 4) {
+             alert(`✅ Tema Terminado. Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo al Módulo 2...`);
+             window.location.href = MAIN_SCREEN_URL; 
+             return; 
+        }
+        currentStage++;
+        if (currentStage >= stages.length) { currentStage = stages.length - 1; }
+        render(); 
+    }
+
+    function speakText(text, lang='es-ES'){ 
+        if(!window.speechSynthesis) return;
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = lang;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+    }
+    
+    // COMENTARIO: FUNCIÓN DE AUDIO MEJORADA (Manejo de Promise para diagnóstico)
+    function playAudio(audioFilename, text, lang = 'cho') {
+        // COMENTARIO: Se corrige la ruta a la ruta relativa correcta (../assets/audio)
+        const audioUrl = `../assets/audio/${audioFilename}`; 
+        
+        const audio = new Audio(audioUrl);
+        
+        audio.play()
+            .then(() => {
+                setFeedback(`🔊 Reproduciendo: "${text}"`, 'neutral');
+            })
+            .catch(e => {
+                // COMENTARIO: Si el archivo no carga (404 o formato), este error aparecerá en la Consola.
+                console.error(`❌ Error al cargar o reproducir "${audioUrl}": ${e.message}`);
+                speakText(text, lang); 
+                setFeedback(`[TTS] No se encontró el audio real. Reproduciendo: "${text}"`, 'neutral');
+            });
+    }
+
+    // COMENTARIO: createAudioButton se mueve al ámbito global para evitar ReferenceError.
+    function createAudioButton(text, audioFilename, lang = 'cho') {
+        const btn = document.createElement('button');
+        btn.className = 'ghost';
+        btn.innerHTML = '🔊 Reproducir Audio';
+        btn.onclick = () => { playAudio(audioFilename, text, lang); };
+        return btn;
+    }
+
+    function render(){ 
+        clearFeedback(); 
+        setStageComplete(false);
+        const container = document.getElementById('stageArea'); 
+        container.innerHTML=''; 
+
+        const titles = ['M2 - Tema 3: Naturaleza', 'Actividad 1: Escucha y Traduce', 'Actividad 2: Unir Ch\'ol con Imagen', 'Actividad 3: Imagen del Guardián', '¡Tema Terminado!'];
+        titleEl.textContent = titles[currentStage];
+
+        stages[currentStage](container);
+        
+        if (currentStage === 0 || currentStage === 4) { setStageComplete(true); }
+    }
+
+    // =======================================================================
+    // 0 - MINI-CLASE (VIDEO INTRO)
+    // =======================================================================
+    function renderStage0(container){
+        const videoHtml = `
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <p style="text-align:center; max-width: 600px; margin-top: 20px;">
+                ¡Bienvenido a Naturaleza! Mira el video para conocer los elementos naturales a tu alrededor.
+            </p>
+        `;
+        container.innerHTML = videoHtml;
+        setStageComplete(true);
+        renderControls();
+    }
+
+    // =======================================================================
+    // 1 - ACTIVIDAD 1: ESCUCHA Y SELECCIONA (Traducción)
+    // =======================================================================
+    const stage1Data = [
+        // COMENTARIO: NOMBRES DE ARCHIVO ESTANDARIZADOS A MINÚSCULAS
+        { audio: "Wits", filename: "wits.mp3", correct: "Cerros", options: ["Cerros", "Río", "Arroyo", "Cueva"] },
+        { audio: "Kolem ja´", filename: "kolemja.mp3", correct: "Río Grande", options: ["Río Pequeño", "Río Grande", "Cerros", "Cuevas"] },
+        { audio: "Ch´eñ", filename: "cheñ.mp3", correct: "Cuevas", options: ["Arroyo", "Río", "Cuevas", "Pasto"] },
+        { audio: "Pa´", filename: "pa.mp3", correct: "Arroyo", options: ["Arroyo", "Cerros", "Cueva", "Nube"] },
+    ];
+    let currentRound1 = 0; 
+
+    function checkAnswer1(selectedOption, currentData, allOptionsElements) {
+        if (selectedOption === currentData.correct) {
+            setFeedback('¡Muy bien! ¡Correcto!', 'ok');
+        } else {
+            setFeedback('Incorrecto. ¡La respuesta correcta es: ' + currentData.correct + '!', 'bad');
+            allOptionsElements.forEach(el => { if (el.textContent === currentData.correct) { el.classList.add('ok'); } });
+        }
+        currentRound1++;
+        setTimeout(() => renderStage1(document.getElementById('stageArea')), selectedOption === currentData.correct ? 1200 : 2500);
+    }
+
+    function renderStage1(container) {
+        if (currentRound1 >= stage1Data.length) {
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las ${stage1Data.length} rondas.</h2>`;
+            setStageComplete(true);
+            renderControls();
+            return;
+        }
+        const currentData = stage1Data[currentRound1];
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha el elemento en Ch'ol y selecciona la **traducción**.</p>`;
+
+        // 1. Crear el botón como objeto DOM
+        const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho'); 
+        
+        // 2. Inicializar el controlsArea (solo con el feedback)
+        renderControls();
+        
+        // 3. Crear contenedor de centrado para el botón
+        const buttonWrapper = document.createElement('div');
+        buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
+        buttonWrapper.appendChild(audioBtn);
+
+        // COMENTARIO: CORRECCIÓN DE DOM. Se inserta el objeto DOM (buttonWrapper) directamente,
+        // eliminando el uso de outerHTML.
+        const feedbackEl = document.getElementById('feedback');
+        if (controlsArea) {
+            controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
+        }
+        
+        const row = document.createElement('div');
+        row.className = 'options-row';
+        currentData.options.sort(() => Math.random() - 0.5); 
+
+        currentData.options.forEach(opt => {
+            const b = document.createElement('div');
+            b.className = 'opt';
+            b.textContent = opt;
+            
+            b.onclick = () => {
+                disableOptions(); 
+                if (opt !== currentData.correct) { b.classList.add('bad'); }
+                checkAnswer1(opt, currentData, document.querySelectorAll('.opt'));
+            };
+            row.appendChild(b);
+        });
+
+        container.appendChild(row);
+        setStageComplete(false); 
+    }
+
+    // =======================================================================
+    // 2 - ACTIVIDAD 2: UNIR CH'OL CON IMAGEN (Matching)
+    // =======================================================================
+    const stage2Pairs = [
+        ['Wits', 'cerros_vista.png'], 
+        ['Kolem ja´', 'rio_vista.png'], 
+        ['Ch´eñ', 'cueva_vista.png'], 
+        ['Pa´', 'arroyo_vista.png'], 
+    ];
+    
+    // LÓGICA DE COMPROBACIÓN DE MATCHING
+    function checkAllMatches2() {
+        const dropzones = document.querySelectorAll('.answer-dropzone');
+        let allCorrect = true;
+        const questionsList = document.getElementById('questionsList'); 
+        
+        dropzones.forEach(dz => {
+            dz.classList.remove('ok', 'bad'); 
+            const droppedCard = dz.querySelector('.question-card');
+            const answerImg = dz.dataset.answer; // ej: 'rio_vista.png'
+            
+            if (droppedCard) {
+                const questionText = droppedCard.dataset.question; // ej: 'Kolem ja´'
+                const correctPair = stage2Pairs.find(p => p[0] === questionText);
+                
+                if (correctPair && correctPair[1] === answerImg) {
+                    dz.classList.add('ok');
+                    droppedCard.classList.add('matched-correct'); 
+                } else {
+                    dz.classList.add('bad');
+                    allCorrect = false;
+                    
+                    // Regresar tarjeta incorrecta
+                    droppedCard.classList.remove('matched-correct');
+                    questionsList.appendChild(droppedCard); 
+                }
+            } else {
+                dz.classList.add('bad'); 
+                allCorrect = false;
+            }
+        });
+        
+        if (allCorrect) {
+             setFeedback('¡Felicidades! Todos los pares son correctos.', 'ok');
+             setStageComplete(true);
+             document.querySelectorAll('.question-card').forEach(card => card.draggable = false);
+             document.querySelector('.ghost').style.pointerEvents = 'none';
+        } else {
+             setFeedback('¡Revisa los rojos! Las tarjetas incorrectas regresaron para que intentes de nuevo.', 'bad');
+        }
+    }
+
+    // RENDERIZADO DEL MATCHING
+    function renderStage2(container){
+        container.innerHTML = `<p class="stage0-info">Arrastra el **Nombre Ch'ol** (Izquierda) a la **Imagen** del lugar correcto (Derecha).</p>`;
+        
+        renderControls(`<button class="ghost" onclick="checkAllMatches2()">Comprobar</button>`);
+        
+        const matchingContainer = document.createElement('div');
+        matchingContainer.className = 'matching-container';
+        
+        const questionsCol = document.createElement('div');
+        questionsCol.className = 'matching-column';
+        questionsCol.innerHTML = '<h3>Ch\'ol (Arrastra)</h3><div id="questionsList" class="questions-list"></div>';
+
+        const answersCol = document.createElement('div');
+        answersCol.className = 'matching-column';
+        answersCol.innerHTML = '<h3>Imagen (Suelta Aquí)</h3><div id="answersList"></div>';
+        
+        const shuffledQuestions = [...stage2Pairs].sort(() => Math.random() - 0.5); 
+        const shuffledAnswers = [...stage2Pairs].map(p=>p[1]).sort(() => Math.random() - 0.5);
+
+        const questionsList = questionsCol.querySelector('#questionsList');
+        shuffledQuestions.forEach((pair, index) => {
+            const questionCard = document.createElement('div');
+            questionCard.className = 'question-card';
+            questionCard.id = `q-card-2-${index}`;
+            questionCard.draggable = true;
+            questionCard.dataset.question = pair[0];
+            questionCard.textContent = pair[0];
+            
+            // Lógica Drag-and-Drop: DRAGSTART/DRAGEND
+            questionCard.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/plain', e.target.id); e.target.classList.add('dragging'); });
+            questionCard.addEventListener('dragend', (e) => { e.target.classList.remove('dragging'); });
+            
+            questionsList.appendChild(questionCard);
+        });
+
+        const answersList = answersCol.querySelector('#answersList');
+        shuffledAnswers.forEach((answerImg, index) => {
+            const dropzone = document.createElement('div');
+            dropzone.className = 'answer-dropzone';
+            dropzone.id = `ans-dropzone-2-${index}`;
+            dropzone.dataset.answer = answerImg;
+
+            const img = document.createElement('img');
+            // COMENTARIO: RUTA DE IMAGEN CORREGIDA
+            img.src = `../assets/img/${answerImg}`; 
+            img.alt = answerImg;
+            dropzone.appendChild(img);
+            
+            // Lógica Drag-and-Drop: DRAGOVER/DROP
+            dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('hovered'); });
+            dropzone.addEventListener('dragleave', () => dropzone.classList.remove('hovered'));
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault(); dropzone.classList.remove('hovered');
+                const cardId = e.dataTransfer.getData('text/plain');
+                const draggedCard = document.getElementById(cardId);
+                
+                // Si ya hay una tarjeta, la devuelve a la lista
+                if (dropzone.children.length > 1 && dropzone.children[1].classList.contains('question-card')) { questionsList.appendChild(dropzone.children[1]); }
+                
+                dropzone.appendChild(draggedCard);
+                setStageComplete(false);
+            });
+             answersList.appendChild(dropzone);
+        });
+
+        matchingContainer.appendChild(questionsCol);
+        matchingContainer.appendChild(answersCol);
+        container.appendChild(matchingContainer);
+        setStageComplete(false);
+    }
+    
+    // =======================================================================
+    // 3 - ACTIVIDAD 3: SELECCIONAR IMAGEN DEL DUEÑO (Guardián)
+    // =======================================================================
+    const stage3Questions = [
+        // COMENTARIO: NOMBRES DE ARCHIVO ESTANDARIZADOS A MINÚSCULAS
+        { audio: "Yum wits", filename: "yumwits.mp3", correct: "dueño_cerro.png", word: "Dueño del cerro" },
+        { audio: "Yum ch´eñ", filename: "yumcheñ.mp3", correct: "dueño_cueva.png", word: "Dueño de la cueva" }, 
+        { audio: "Yum ja´", filename: "yumja.mp3", correct: "dueño_rio.png", word: "Dueño del río" },
+    ];
+    let currentRound3 = 0; 
+
+    function checkAnswer3(selectedImage, currentData) {
+        if (selectedImage === currentData.correct) {
+             setFeedback(`¡Correcto! Es el ${currentData.word}.`, 'ok');
+        } else {
+             setFeedback('Incorrecto. La figura correcta representa ' + currentData.word + '!', 'bad');
+             document.querySelectorAll('.img-option').forEach(el => { if (el.dataset.img === currentData.correct) { el.classList.add('ok'); } el.classList.add('disabled'); });
+        }
+        currentRound3++;
+        setTimeout(() => renderStage3(document.getElementById('stageArea')), selectedImage === currentData.correct ? 1200 : 2500);
+    }
+    
+    function renderStage3(container) {
+        if (currentRound3 >= stage3Questions.length) {
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Genial! Aprendiste sobre los Guardianes de la Naturaleza.</h2>`;
+            setStageComplete(true);
+            renderControls();
+            return; 
+        }
+
+        const currentData = stage3Questions[currentRound3];
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound3 + 1} de 3. Escucha quién es el **Guardián en Ch'ol** y selecciona su imagen.</p>`;
+        
+        // 1. Crear el botón como objeto DOM
+        const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho');
+        
+        // 2. Inicializar el controlsArea (solo con el feedback)
+        renderControls();
+
+        // 3. Crear contenedor de centrado para el botón
+        const buttonWrapper = document.createElement('div');
+        buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
+        buttonWrapper.appendChild(audioBtn);
+
+        // COMENTARIO: CORRECCIÓN DE DOM. Se inserta el objeto DOM (buttonWrapper) directamente.
+        const feedbackEl = document.getElementById('feedback');
+        if (controlsArea) {
+            controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
+        }
+        
+        // Simulación de opciones de imagen (DEBES LLENAR CON TUS RUTAS REALES)
+        const allOptions = [
+             { filename: currentData.correct, word: currentData.word },
+             { filename: 'dueño_distractor_1.png', word: 'Otro Guardián' },
+             { filename: 'dueño_distractor_2.png', word: 'Otro Guardián' }
+        ];
+
+        const row = document.createElement('div');
+        row.className = 'options-row';
+        allOptions.sort(() => Math.random() - 0.5);
+
+        allOptions.forEach(it => {
+            const b = document.createElement('div');
+            b.className = 'opt img-option'; 
+            b.dataset.img = it.filename;
+            
+            // COMENTARIO: RUTA DE IMAGEN CORREGIDA
+            b.innerHTML = `<img src="../assets/img/${it.filename}" alt="${it.word}"/>`; 
+            
+            b.onclick = ()=>{
+                disableOptions();
+                if (it.filename !== currentData.correct) { b.classList.add('bad'); }
+                checkAnswer3(it.filename, currentData);
+            };
+            row.appendChild(b);
+        });
+
+        container.appendChild(row);
+        setStageComplete(false);
+    }
+    
+    // =======================================================================
+    // 4 - FINAL DE TEMA
+    // =======================================================================
+    function renderStage4(container) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
+                <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 3 Completado! 🎉</h2>
+                <p style="font-size: 1.2rem;">Puntuación simulada: **${userScore}/${TOTAL_ACTIVITY_POINTS}**</p>
+                <p>Presiona **Siguiente** para volver al Módulo 2: Donde Vivo.</p>
+            </div>
+        `;
+        setStageComplete(true);
+        renderControls();
+    }
+
+    // --- Inicialización ---
+    document.addEventListener('DOMContentLoaded', () => {
+        render();
+    });
+</script>
+</body>
+</html>

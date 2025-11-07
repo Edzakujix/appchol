@@ -153,44 +153,53 @@
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
-            /* Usamos placeholders de colores para simular las imágenes */
-            content: url('https://placehold.co/150x150/FFC107/FFF?text=Ni%C3%B1o');
-        }
-        .demo-image-card[data-type="girl"] img {
-            content: url('https://placehold.co/150x150/F48FB1/FFF?text=Ni%C3%B1a');
         }
 
-        /* Estilos para la Actividad 4: Completar Frase (CRÍTICO para responsividad) */
-        .sentence-input-area {
-            font-size: clamp(1.2rem, 4vw, 1.6rem);
-            font-weight: bold;
+        /* Estilos para la Actividad 4: Traducción (Nuevo) */
+        .translation-container {
+            width: 100%;
+            max-width: 650px;
             text-align: center;
-            margin-bottom: 25px;
+            padding: 20px;
+            background-color: #e3f2fd;
+            border-radius: 20px;
+            border: 3px solid #90caf9;
+            margin-bottom: 20px;
         }
-        .word-slot {
-            display: inline-block;
-            min-width: 25vw; 
-            max-width: 150px;
-            height: 35px;
-            border-bottom: 3px solid var(--accent);
+        .translation-prompt {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            font-weight: 800;
             color: var(--accent);
-            margin: 0 5px;
-            text-align: center;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px #fff;
         }
-        .word-option {
-            background-color: #f0f0f0;
-            border: 3px solid #ccc;
-            border-radius: 10px;
-            padding: 8px 15px;
-            margin: 5px;
+        .translation-options-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .translation-option {
+            background-color: #fff;
+            border: 3px solid #FFCA28;
+            border-radius: 15px;
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.2s;
-            font-weight: 600;
-            font-size: clamp(1rem, 3vw, 1.2rem); 
         }
-        .word-option:hover:not(.disabled) {
-            transform: scale(1.05);
-            background-color: #fff;
+        .translation-option:hover:not(.disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        .translation-option.ok {
+            border-color: var(--ok);
+            background: #E8F5E9;
+        }
+        .translation-option.bad {
+            border-color: var(--bad);
+            background: #FFEBEE;
         }
 
         @media (max-width: 600px){
@@ -217,8 +226,11 @@
             }
             
             /* Actividad 4 específica en móvil */
-            .word-slot {
-                min-width: 100px; /* Ancho fijo para móvil */
+            .translation-prompt {
+                font-size: 1.3rem;
+            }
+            .translation-option {
+                font-size: 1rem;
             }
         }
     </style>
@@ -244,7 +256,7 @@
 <script>
     // ************************************************************************
     // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL
-    const MAIN_SCREEN_URL = 'pantalla1.html'; // Usarás el nombre de archivo real aquí
+    const MAIN_SCREEN_URL = '../U1/U1FAM.html'; 
     // ************************************************************************
     
     // Función de redirección para el botón de Inicio
@@ -252,7 +264,7 @@
         window.location.href = MAIN_SCREEN_URL;
     }
 
-    // Nueve etapas: 0 (Video) a 5 (Final)
+    // Seis etapas: 0 (Video) a 5 (Final)
     const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4, renderStage5];
     let currentStage = 0;
     let feedbackEl = null; 
@@ -263,17 +275,16 @@
     // Variables de Progreso
     let stageProgress = new Array(stages.length).fill(false); 
     let userScore = 0;
-    // Se mantiene TOTAL_ACTIVITY_POINTS solo para el alert interno, ya no es visible
     const TOTAL_ACTIVITY_POINTS = 40; 
 
-    // --- Utilidades del flujo y BD (preparación para el backend) ---
+    // --- Utilidades del flujo y BD ---
 
     function setStageComplete(isComplete = true) {
         if (isComplete && !stageProgress[currentStage]) {
-            // CORRECCIÓN 3: Se elimina la suma de userScore (puntuación interna)
-            // if(currentStage >= 2 && currentStage <= 4) { 
-            //     userScore += 10; 
-            // }
+            // Se suma la puntuación simulada para las actividades 2, 3 y 4
+             if(currentStage >= 2 && currentStage <= 4) { 
+                 userScore += 10; 
+             }
         }
         stageProgress[currentStage] = isComplete;
         nextBtn.classList.toggle('active', isComplete);
@@ -283,7 +294,6 @@
         if(feedbackEl) feedbackEl.textContent = ""; 
     }
     function setFeedback(text, kind){
-        // Se usa la variable global feedbackEl definida en renderControls
         if(!feedbackEl) return;
         feedbackEl.textContent = text;
         if(kind === 'ok'){ feedbackEl.style.color = 'var(--ok)' }
@@ -293,7 +303,6 @@
 
     function renderControls(html = '') {
         controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>${html}`;
-        // Inicialización de feedbackEl para que sea referenciable en setFeedback/clearFeedback
         feedbackEl = document.getElementById('feedback');
     }
 
@@ -305,8 +314,7 @@
 
         // --- PUNTO DE REDIRECCIÓN CRÍTICO (Stage 5) ---
         if (currentStage === 5) {
-            // CORRECCIÓN 4: Se elimina la puntuación del alert final
-            alert(`Tema Terminado. Guardando en BD...`);
+            alert(`✅ Tema Terminado. Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo a la pantalla principal...`);
             window.location.href = MAIN_SCREEN_URL; 
             return; 
         }
@@ -328,10 +336,10 @@
         const titles = [
             'Mini-Clase: Presentación Personal', 
             'Actividad 1: Demostración (Niño/Niña)', 
-            'Actividad 2: Identificar Familia (6 rondas)', 
-            'Actividad 3: Conteo y Números (4 rondas)',
-            'Actividad 4: Completar Frase (5 rondas)',
-            '¡Tema Terminado!' // CORRECCIÓN 5: Título final
+            'Actividad 2: Identificar Familia/Objetos (6 rondas)', 
+            'Actividad 3: Conteo Visual (4 rondas)',
+            'Actividad 4: Traducción de Preguntas (5 rondas)',
+            '¡Tema Terminado!' 
         ];
         titleEl.textContent = titles[currentStage];
 
@@ -343,7 +351,7 @@
         }
     }
 
-    // --- Utilidades de Audio (mantienen la misma lógica que Código 4) ---
+    // --- Utilidades de Audio (CORREGIDAS) ---
 
     function speakText(text, lang='es-ES'){
         if(!window.speechSynthesis) return;
@@ -353,20 +361,29 @@
         window.speechSynthesis.speak(u);
     }
     
+    // MEJORA: playAudio con manejo de Promise para errores de carga o formato
     function playAudio(audioFilename, text, lang = 'cho') {
-        const audioUrl = `assets/audio/${audioFilename}`; 
+        // RUTA DE AUDIO
+        const audioUrl = `../assets/audio/${audioFilename}`; 
         
-        try {
-            const audio = new Audio(audioUrl);
-            audio.play();
-            setFeedback(`Reproduciendo: "${text}"`, 'neutral');
-        } catch (e) {
-            console.warn(`No se encontró el audio real en: ${audioUrl}. Usando simulación de voz.`);
-            speakText(text, lang); 
-            setFeedback(`[TTS] Reproduciendo: "${text}"`, 'neutral');
-        }
+        const audio = new Audio(audioUrl);
+        
+        audio.play()
+            .then(() => {
+                // Éxito en la reproducción
+                setFeedback(`🔊 Reproduciendo: "${text}"`, 'neutral');
+            })
+            .catch(e => {
+                // Falla la reproducción (archivo no encontrado/bloqueo/formato)
+                console.error(`❌ Error al cargar o reproducir "${audioUrl}": ${e.message}`);
+                
+                // Recurrir a la simulación de voz (TTS)
+                speakText(text, lang); 
+                setFeedback(`[TTS] No se encontró el audio real. Reproduciendo: "${text}"`, 'neutral');
+            });
     }
 
+    // ARREGLO DEL REFERENCE ERROR: Movida a un ámbito global
     function createAudioButton(text, audioFilename, lang = 'cho') {
         const btn = document.createElement('button');
         btn.className = 'ghost';
@@ -393,14 +410,15 @@
     }
 
     // =======================================================================
-    // 1 - ACTIVIDAD 1: DEMOSTRACIÓN (NIÑO/NIÑA)
+    // 1 - ACTIVIDAD 1: DEMOSTRACIÓN (NIÑO/NIÑA) - USANDO ESTRUCTURA CH'OL
     // =======================================================================
     function renderStage1(container) {
-        container.innerHTML = `<p class="stage0-info">Toca una figura para escuchar cómo se presenta un niño o una niña.</p>`;
+        container.innerHTML = `<p class="stage0-info">Toca una figura para escuchar cómo se presenta un niño o una niña en Ch'ol.</p>`;
 
         const demoData = [
-            { type: 'boy', text: "Yo soy Juan. ¡Hola!", filename: "demo_boy.mp3" },
-            { type: 'girl', text: "Yo soy María. Mucho gusto.", filename: "demo_girl.mp3" }
+            // Nombres de archivo estandarizados
+            { type: 'niño', chool: "Jk´aba´ aj Octavio", translation: "Mi nombre es Octavio", filename: "mi_nombre_es_octavio.mp3" }, 
+            { type: 'niña', chool: "Jk´aba´ aj María", translation: "Mi nombre es María", filename: "mi_nombre_es_maria.mp3" }
         ];
 
         const row = document.createElement('div');
@@ -411,11 +429,13 @@
             b.className = 'demo-image-card';
             b.dataset.type = data.type;
             
+            // RUTA DE IMAGEN CORREGIDA
             const img = document.createElement('img');
-            img.setAttribute('src', 'assets/img/' + (data.type === 'girl' ? 'nina.png' : 'nino.png')); 
+            img.setAttribute('src', `../assets/img/${data.type === 'niña' ? 'niña.png' : 'niño.png'}`); 
 
             b.onclick = () => {
-                playAudio(data.filename, data.text, 'cho');
+                playAudio(data.filename, data.chool, 'cho');
+                setFeedback(`Ch'ol: **${data.chool}** (Español: ${data.translation})`, 'neutral');
             };
             
             b.appendChild(img);
@@ -428,15 +448,16 @@
     }
 
     // =======================================================================
-    // 2 - ACTIVIDAD 2: SELECCIONAR FIGURA (6 rondas - Familia/Presentación)
+    // 2 - ACTIVIDAD 2: SELECCIONAR FIGURA (6 rondas - Frases de Presentación)
     // =======================================================================
     const stage2Data = [
-        { audio: "Ella es mi mamá", filename: "mama.mp3", correct: "mama.png", options: ["mama.png", "abuelo.png", "perro.png"] },
-        { audio: "Él es mi papá", filename: "papa.mp3", correct: "papa.png", options: ["papa.png", "hermano.png", "gato.png"] },
-        { audio: "Yo tengo un perro", filename: "perro.mp3", correct: "perro.png", options: ["perro.png", "casa.png", "mama.png"] },
-        { audio: "Mi casa es grande", filename: "casa.mp3", correct: "casa.png", options: ["casa.png", "papa.png", "perro.png"] },
-        { audio: "Mi abuelo está aquí", filename: "abuelo.mp3", correct: "abuelo.png", options: ["abuelo.png", "niño.png", "niña.png"] },
-        { audio: "Yo tengo 5 años", filename: "cinco.mp3", correct: "5_dedos.png", options: ["5_dedos.png", "3_dedos.png", "4_dedos.png"] },
+        // NOMBRES DE AUDIO ESTANDARIZADOS A MINÚSCULAS
+        { audio: "Jiñi ili kña´", filename: "ella_es_mi_mama.mp3", correct: "mama.png", options: ["mama.png", "abuelo.png", "Abuela.png"], text: "Mi mamá" },
+        { audio: "Jiñi ili ktyaty", filename: "Mi papa.mp3", correct: "papa.png", options: ["papa.png", "hermano.png", "Tia.png"], text: "Mi papá" },
+        { audio: "Jiñi ili kts´i´ chutyjach", filename: "Mi perro es pequeno.mp3", correct: "perro_pequeño.png", options: ["Tio.png", "Niño.png", "hermano.png"], text: "Mi perro es pequeño" },
+        { audio: "Jiñi kotyoty xk´änk´äñ", filename: "Mi casa es amarilla.mp3", correct: "casa_amarilla.png", options: ["escenario_dia.png", "escenario_tarde.png", "escenario_noche.png"], text: "Mi casa es amarilla" },
+        { audio: "Jiñi ili kyum", filename: "El es mi abuelo.mp3", correct: "abuelo.png", options: ["abuelo.png", "tio.png", "hermano.png"], text: "Mi abuelo" },
+        { audio: "Joñoñ chuty wiñikoñ", filename: "Yo soy un niño.mp3", correct: "nino_pequeño.png", options: ["Niño.png", "Papa.png", "niña.png"], text: "Yo soy un niño" },
     ];
     let currentRound2 = 0; 
 
@@ -448,7 +469,7 @@
                 renderStage2(document.getElementById('stageArea'));
             }, 1200);
         } else {
-            setFeedback('Incorrecto. ¡La imagen correcta es: ' + currentData.correct + '!', 'bad');
+            setFeedback('Incorrecto. ¡La imagen correcta representa: ' + currentData.text + '!', 'bad');
             allOptionsElements.forEach(el => {
                 if (el.dataset.img === currentData.correct) {
                     el.classList.add('ok');
@@ -470,13 +491,26 @@
         }
 
         const currentData = stage2Data[currentRound2];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Data.length}: Escucha y selecciona la imagen que representa la frase.</p>`;
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Data.length}: Escucha la frase en Ch'ol y selecciona la imagen correcta.</p>`;
 
-        const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'es-ES'); 
+        // 1. Inicializar el área de controles (solo con el feedback)
+        renderControls(); 
         
-        const controls = `<div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">${audioBtn.outerHTML}</div>`;
-        renderControls(controls);
+        // 2. Crear el botón de audio como un objeto DOM
+        const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho'); 
         
+        // 3. Crear el contenedor del botón para darle el estilo de centrado
+        const buttonWrapper = document.createElement('div');
+        buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
+        buttonWrapper.appendChild(audioBtn);
+        
+        // 4. Insertar el objeto botón directamente en controlsArea para que el evento funcione
+        const feedbackEl = document.getElementById('feedback');
+        if (controlsArea) {
+            // Insertar el botón después del área de feedback si existe
+            controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
+        }
+
         const row = document.createElement('div');
         row.className = 'options-row';
         currentData.options.sort(() => Math.random() - 0.5); 
@@ -486,7 +520,8 @@
             b.className = 'opt';
             b.dataset.img = opt; 
             
-            b.innerHTML = `<img src="assets/img/${opt}" alt="Opción" style="width: 100px; height: 100px; border-radius: 10px;"/>`;
+            // RUTA DE IMAGEN
+            b.innerHTML = `<img src="../assets/img/${opt}" alt="Opción" style="width: 100px; height: 100px; border-radius: 10px;"/>`;
 
             b.onclick = (e) => {
                 const allOptions = document.querySelectorAll('.opt');
@@ -508,28 +543,58 @@
     }
     
     // =======================================================================
-    // 3 - ACTIVIDAD 3: SELECCIONAR NÚMERO (4 rondas - Conteo Visual + Audio)
+    // 3 - ACTIVIDAD 3: CONTEO (4 rondas - Números del 1 al 10)
     // =======================================================================
+    const choolNumbers = [
+        // NOMBRES DE AUDIO ESTANDARIZADOS A num_X.mp3
+        { num: 1, word: "Jump´ej", filename: "num_1.mp3" },
+        { num: 2, word: "Chap´ej", filename: "num_2.mp3" },
+        { num: 3, word: "Uxp´ej", filename: "num_3.mp3" },
+        { num: 4, word: "Chämp´ej", filename: "num_4.mp3" },
+        { num: 5, word: "Jop´ej", filename: "num_5.mp3" },
+        { num: 6, word: "Wäkp´ej", filename: "num_6.mp3" },
+        { num: 7, word: "Wukp´ej", filename: "num_7.mp3" },
+        { num: 8, word: "Waxäkp´ej", filename: "num_8.mp3" },
+        { num: 9, word: "Bolomp´ej", filename: "num_9.mp3" },
+        { num: 10, word: "Lujump´ej", filename: "num_10.mp3" }
+    ];
+
     const stage3Data = [
-        { count: 3, image: "3_personas.png", correctAudio: "somos_3.mp3", options: ["somos_3.mp3", "somos_4.mp3", "somos_2.mp3"] },
-        { count: 2, image: "2_animales.png", correctAudio: "hay_2.mp3", options: ["hay_1.mp3", "hay_2.mp3", "hay_5.mp3"] },
-        { count: 5, image: "5_cosas.png", correctAudio: "tengo_5.mp3", options: ["tengo_4.mp3", "tengo_6.mp3", "tengo_5.mp3"] },
-        { count: 4, image: "4_frutas.png", correctAudio: "cuatro_frutas.mp3", options: ["tres_frutas.mp3", "cinco_frutas.mp3", "cuatro_frutas.mp3"] },
+        // NOMBRES DE AUDIO ESTANDARIZADOS A conteo_X.mp3
+        { count: 3, wordChool: "Uxp´ej", filename: "conteo_3.mp3", image: "imagen_3_elementos.png" },
+        { count: 5, wordChool: "Jop´ej", filename: "conteo_5.mp3", image: "imagen_5_elementos.png" },
+        { count: 7, wordChool: "Wukp´ej", filename: "conteo_7.mp3", image: "imagen_7_elementos.png" },
+        { count: 10, wordChool: "Lujump´ej", filename: "conteo_10.mp3", image: "imagen_10_elementos.png" },
     ];
     let currentRound3 = 0;
 
-    function checkAnswer3(selectedAudio, currentData, allOptionsElements) {
-        if (selectedAudio === currentData.correctAudio) {
-            setFeedback('¡Correcto! El número coincide.', 'ok');
+    function getAudioOptions(correctWordChool) {
+        const correctOpt = choolNumbers.find(n => n.word === correctWordChool);
+        let options = [correctOpt];
+        
+        const allOther = choolNumbers.filter(n => n.word !== correctWordChool);
+        // Seleccionar 3 opciones incorrectas al azar (si hay suficientes)
+        while (options.length < 4 && allOther.length > 0) {
+            const randomIndex = Math.floor(Math.random() * allOther.length);
+            options.push(allOther[randomIndex]);
+            allOther.splice(randomIndex, 1); // Quitar para evitar duplicados
+        }
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+
+    function checkAnswer3(selectedWord, currentData, allOptionsElements) {
+        if (selectedWord === currentData.wordChool) {
+            setFeedback('¡Correcto! El número ' + currentData.wordChool + ' coincide.', 'ok');
             currentRound3++;
             setTimeout(() => {
                 renderStage3(document.getElementById('stageArea'));
             }, 1200);
         } else {
-            setFeedback('Incorrecto. ¡La frase correcta es la que suena ' + currentData.correctAudio.replace(".mp3", "") + '!', 'bad');
+            setFeedback('Incorrecto. El número correcto es: ' + currentData.wordChool + ' (' + currentData.count + ')', 'bad');
             
             allOptionsElements.forEach(el => {
-                if (el.dataset.audio === currentData.correctAudio) {
+                if (el.dataset.word === currentData.wordChool) {
                     el.classList.add('ok');
                 }
             });
@@ -551,41 +616,61 @@
         }
 
         const currentData = stage3Data[currentRound3];
+        const options = getAudioOptions(currentData.wordChool);
+
         container.innerHTML = `
-            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: **¿Cuántos hay?** Selecciona el audio con el número correcto.</p>
-            <img src="assets/img/${currentData.image}" alt="Elementos a contar" style="width: 200px; height: 200px; border-radius: 15px; margin-bottom: 20px; border: 3px solid var(--accent);"/>
+            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Mira la imagen y selecciona el número en **Ch'ol** que corresponde al conteo.</p>
+            <img src="../assets/img/${currentData.image}" alt="Elementos a contar" style="width: 200px; height: 200px; border-radius: 15px; margin-bottom: 20px; border: 3px solid var(--accent);"/>
         `;
         
+        // Uso de createAudioButton para la Actividad 3
+        const audioBtn = createAudioButton(currentData.wordChool, currentData.filename, 'cho'); 
+        
+        // 1. Inicializar el área de controles (solo con el feedback)
         renderControls(); 
+        
+        // 2. Crear el contenedor del botón para darle el estilo de centrado
+        const buttonWrapper = document.createElement('div');
+        buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; margin-top: 10px;";
+        buttonWrapper.appendChild(audioBtn);
+        
+        // 3. Insertar el objeto botón directamente en controlsArea 
+        const feedbackEl = document.getElementById('feedback');
+        if (controlsArea) {
+            controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
+        }
         
         const row = document.createElement('div');
         row.className = 'options-row';
-        currentData.options.sort(() => Math.random() - 0.5); 
 
-        currentData.options.forEach(opt => {
+        options.forEach(opt => {
             const b = document.createElement('div');
-            b.className = 'word-option';
-            b.dataset.audio = opt;
-            b.textContent = "🔊 Escuchar Opción";
+            b.className = 'word-option translation-option'; // Usamos el mismo estilo visual
+            b.dataset.word = opt.word;
+            b.dataset.filename = opt.filename;
+            b.textContent = opt.word + ' (🔊)'; // Muestra la palabra Ch'ol y el ícono de audio
             
             b.onclick = (e) => {
-                playAudio(opt, "Opción", 'es-ES'); 
+                const allOptions = document.querySelectorAll('.translation-option');
                 
-                if (b.classList.contains('clicked-once')) {
-                    const allOptions = document.querySelectorAll('.word-option');
-                    allOptions.forEach(el => el.classList.add('disabled'));
-                    
-                    if (opt !== currentData.correctAudio) {
-                        b.classList.add('bad');
-                    }
-                    
-                    checkAnswer3(opt, currentData, allOptions);
-
-                } else {
+                // Opción 1: Reproducir audio para verificar
+                if (!b.classList.contains('clicked-once') && !b.classList.contains('disabled')) {
+                    playAudio(opt.filename, opt.word, 'cho'); 
                     b.classList.add('clicked-once');
                     setTimeout(() => b.classList.remove('clicked-once'), 1500);
-                    setFeedback('Vuelve a tocar para seleccionar.', 'neutral');
+                    setFeedback(`Escuchaste: **${opt.word}**. Toca de nuevo para seleccionar.`, 'neutral');
+                    return;
                 }
+                
+                // Opción 2: Seleccionar y comprobar
+                allOptions.forEach(el => el.classList.add('disabled'));
+                b.classList.remove('clicked-once');
+                
+                if (opt.word !== currentData.wordChool) {
+                    b.classList.add('bad');
+                }
+
+                checkAnswer3(opt.word, currentData, allOptions);
             };
             row.appendChild(b);
         });
@@ -596,32 +681,32 @@
 
 
     // =======================================================================
-    // 4 - ACTIVIDAD 4: COMPLETAR FRASE (5 rondas)
+    // 4 - ACTIVIDAD 4: TRADUCCIÓN DE PREGUNTAS (5 rondas)
     // =======================================================================
     const stage4Data = [
-        { sentence: "Yo ____ Leda.", correct: "soy", options: ["soy", "vivo", "tengo", "como"], hint: "Palabra para presentarte" },
-        { sentence: "Yo ____ en Palenque.", correct: "vivo", options: ["soy", "vivo", "tengo", "como"], hint: "Palabra para decir dónde estás" },
-        { sentence: "Yo ____ 6 años.", correct: "tengo", options: ["soy", "vivo", "tengo", "voy"], hint: "Palabra para decir tu edad" },
-        { sentence: "Mi mamá ____ bonita.", correct: "es", options: ["es", "va", "tiene", "come"], hint: "Palabra que describe" },
-        { sentence: "¿Cómo ____?", correct: "estás", options: ["estás", "juegas", "corres", "duermes"], hint: "Frase de saludo y pregunta" },
+        // Pregunta/Traducción de Presentación
+        { question: "¿Cómo te llamas?", correct: "¿Bajche´ ak´aba´?", options: ["¿Ba´ki chumulety?", "¿Bajche´ ak´aba´?", "Jiñi ili kpap"] },
+        { question: "Mi nombre es Octavio", correct: "Jk´aba´ aj Octavio", options: ["Jk´aba´ aj Octavio", "Joñoñ wukp´ej ka´bilel", "Jiñi ili kña´"] },
+        { question: "¿Cuántos años tienes?", correct: "¿Bajche´aja´bilel?", options: ["¿Bajche´aja´bilel?", "¿Ba´ki tyälemety?", "¿Ba´ki ch´oyolety?"] },
+        { question: "Yo tengo 7 años", correct: "Joñoñ wukp´ej ka´bilel", options: ["Jiñi ili kyum", "Joñoñ wukp´ej ka´bilel", "Joñoñ chuty wiñikoñ"] },
+        { question: "¿Dónde vives?", correct: "¿Ba´ki chumulety?", options: ["¿Ba´ki chumulety?", "Jk´aba´ aj María", "Jiñi ili chuty wiñik"] },
     ];
     let currentRound4 = 0;
 
-    function checkAnswer4(selectedWord, currentData) {
-        if (selectedWord === currentData.correct) {
-            setFeedback('¡Correcto! La frase está completa.', 'ok');
+    function checkAnswer4(selectedOption, currentData, allOptionsElements) {
+        if (selectedOption === currentData.correct) {
+            setFeedback('¡Correcto! Es la traducción correcta.', 'ok');
             currentRound4++;
             setTimeout(() => {
                 renderStage4(document.getElementById('stageArea'));
             }, 1200);
         } else {
-            setFeedback('Incorrecto. La palabra correcta era: ' + currentData.correct, 'bad');
+            setFeedback('Incorrecto. La traducción correcta es: ' + currentData.correct, 'bad');
             
-            document.querySelectorAll('.word-option').forEach(el => {
+            allOptionsElements.forEach(el => {
                 if (el.textContent === currentData.correct) {
                     el.classList.add('ok');
                 }
-                el.classList.add('disabled');
             });
 
             currentRound4++; 
@@ -634,41 +719,40 @@
 
     function renderStage4(container) {
         if (currentRound4 >= stage4Data.length) {
-            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Terminaste las 5 frases.</h2>`;
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Terminaste las 5 preguntas.</h2>`;
             setStageComplete(true);
             renderControls();
             return;
         }
 
         const currentData = stage4Data[currentRound4];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound4 + 1} de ${stage4Data.length}: Selecciona la palabra que completa la frase:</p>`;
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound4 + 1} de ${stage4Data.length}: Selecciona la traducción correcta a **Ch'ol** para la siguiente frase en Español:</p>`;
         
-        const sentenceArea = document.createElement('div');
-        sentenceArea.className = 'sentence-input-area';
-        const displayedSentence = currentData.sentence.replace('____', `<span id="wordSlot" class="word-slot">?</span>`);
-        sentenceArea.innerHTML = displayedSentence;
-        container.appendChild(sentenceArea);
+        const translationContainer = document.createElement('div');
+        translationContainer.className = 'translation-container';
+        translationContainer.innerHTML = `<div class="translation-prompt">${currentData.question}</div>`;
+        container.appendChild(translationContainer);
 
         const optionsContainer = document.createElement('div');
-        optionsContainer.className = 'options-row';
+        optionsContainer.className = 'translation-options-row';
         currentData.options.sort(() => Math.random() - 0.5); 
 
         currentData.options.forEach(opt => {
             const b = document.createElement('div');
-            b.className = 'word-option';
+            b.className = 'translation-option';
             b.textContent = opt;
             
             b.onclick = () => {
-                document.getElementById('wordSlot').textContent = opt;
-
-                const allOptions = document.querySelectorAll('.word-option');
+                const allOptions = document.querySelectorAll('.translation-option');
                 allOptions.forEach(el => el.classList.add('disabled'));
 
-                if (opt !== currentData.correct) {
+                if (opt === currentData.correct) {
+                    b.classList.add('ok');
+                } else {
                     b.classList.add('bad');
                 }
                 
-                checkAnswer4(opt, currentData);
+                checkAnswer4(opt, currentData, allOptions);
             };
             optionsContainer.appendChild(b);
         });
@@ -686,7 +770,8 @@
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 2 Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Has terminado todas las actividades de Presentación Personal.</p>
+                <p style="font-size: 1.2rem;">Puntuación simulada: **${userScore}/${TOTAL_ACTIVITY_POINTS}**</p>
+                <p>Has terminado todas las actividades de Presentación Personal.</p>
                 <p>Presiona **Siguiente** para volver a la pantalla principal.</p>
             </div>
         `;

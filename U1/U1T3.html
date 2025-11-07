@@ -7,6 +7,9 @@
     <style>
         /* 🌈 Estilo para Niños 🎨 */
         :root{
+            --color-cielo: #ADE4FF; /* AZUL CLARO (Fondo nuevo) */
+            --color-pasto: #6AA84F; /* VERDE PAST (Fondo nuevo) */
+            
             --bg1: #FFECB3;
             --card: #ffffff;
             --accent: #FF7043;
@@ -17,14 +20,31 @@
             font-family: 'Comic Sans MS', cursive, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
         }
         html,body{height:100%;margin:0}
+        
+        /* COMENTARIO: CAMBIO DE FONDO A ESTILO CIELO/PASTO */
         body{
-            background: linear-gradient(180deg, var(--bg1) 0%, #AEC6E6 100%);
+            background: linear-gradient(180deg, var(--color-cielo) 65%, #ADD8E6 100%);
             display:flex;
             align-items:center;
             justify-content:center;
             padding:20px;
             color: var(--text-color);
+            position: relative;
+            box-sizing: border-box;
+            min-height: 100vh;
         }
+        /* COMENTARIO: Se añade simulación de pasto */
+        .ground-sim {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 20vh;
+            background-color: var(--color-pasto);
+            border-top-left-radius: 60% 30%;
+            border-top-right-radius: 60% 30%;
+            z-index: -1;
+        }
+        
         .app{
             width:100%;
             max-width:900px;
@@ -309,11 +329,14 @@
 
         <footer>Prototipo educativo · Tema 3: Familia</footer>
     </div>
+    
+    <div class="ground-sim"></div>
+
 
 <script>
     // ************************************************************************
     // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL
-    const MAIN_SCREEN_URL = 'pantalla1.html'; // MANTENEMOS: pantalla1.html
+    const MAIN_SCREEN_URL = '../U1/U1FAM.html'; // MANTENEMOS: pantalla1.html
     // ************************************************************************
     
     // Función de redirección para el botón de Inicio
@@ -337,11 +360,10 @@
     // Funciones de Control de Etapa y Puntuación
     function setStageComplete(isComplete = true) {
         if (isComplete && !stageProgress[currentStage]) {
-            // CORRECCIÓN 3: Se elimina la lógica de puntuación visible para el usuario.
-            // if(currentStage >= 1 && currentStage <= 4) { 
-            //     userScore += 10; 
-            //     console.log(`Puntos ganados! Total: ${userScore}/${TOTAL_ACTIVITY_POINTS}`);
-            // }
+            // Se mantiene la lógica de puntuación, aunque no se usa visiblemente.
+             if(currentStage >= 1 && currentStage <= 4) { 
+                 userScore += 10; 
+             }
         }
         stageProgress[currentStage] = isComplete;
         nextBtn.classList.toggle('active', isComplete);
@@ -372,8 +394,8 @@
         }
 
         if (currentStage === 5) {
-            // CORRECCIÓN 4: Se elimina la mención a la puntuación del alert final.
-            alert(`Tema Terminado. Guardando en BD...`);
+            // COMENTARIO: Redirección final.
+            alert(`Tema Terminado. Volviendo a la pantalla principal...`);
             window.location.href = MAIN_SCREEN_URL; 
             return; 
         }
@@ -393,24 +415,32 @@
         window.speechSynthesis.speak(u);
     }
     
+    // COMENTARIO: FUNCIÓN DE AUDIO MEJORADA (Manejo de Promise para diagnóstico)
     function playAudio(audioFilename, text, lang = 'cho') {
-        const audioUrl = `assets/audio/${audioFilename}`; 
+        // COMENTARIO: Se corrige la ruta a la ruta relativa correcta (../assets/audio)
+        // ASUMIENDO que este archivo está dentro de una carpeta de tema (Ej: U3/T3.html)
+        const audioUrl = `../assets/audio/${audioFilename}`; 
         
-        try {
-            const audio = new Audio(audioUrl);
-            audio.play();
-            setFeedback(`Reproduciendo: "${text}"`, 'neutral');
-        } catch (e) {
-            console.warn(`No se encontró el audio real en: ${audioUrl}. Usando simulación de voz.`);
-            speakText(text, lang); 
-            setFeedback(`[TTS] Reproduciendo: "${text}"`, 'neutral');
-        }
+        const audio = new Audio(audioUrl);
+        
+        audio.play()
+            .then(() => {
+                setFeedback(`🔊 Reproduciendo: "${text}"`, 'neutral');
+            })
+            .catch(e => {
+                // COMENTARIO: Si el archivo no carga (404 o formato), este error aparecerá en la Consola.
+                console.error(`❌ Error al cargar o reproducir "${audioUrl}": ${e.message}`);
+                speakText(text, lang); 
+                setFeedback(`[TTS] No se encontró el audio real. Reproduciendo: "${text}"`, 'neutral');
+            });
     }
 
+    // COMENTARIO: createAudioButton se coloca en el ámbito global (aquí) para evitar ReferenceError.
     function createAudioButton(text, audioFilename, lang = 'cho') {
         const btn = document.createElement('button');
         btn.className = 'ghost';
         btn.innerHTML = '🔊 Reproducir Audio';
+        // COMENTARIO: El evento onclick se adjunta al objeto DOM.
         btn.onclick = () => { playAudio(audioFilename, text, lang); };
         return btn;
     }
@@ -427,7 +457,7 @@
             'Actividad 2: Lee y Selecciona (Frase)', 
             'Actividad 3: Forma la Palabra (Construcción)',
             'Actividad 4: Unir Preguntas y Respuestas',
-            '¡Tema Terminado!' // CORRECCIÓN 5: Título final actualizado
+            '¡Tema Terminado!' 
         ];
         titleEl.textContent = titles[currentStage];
 
@@ -460,6 +490,7 @@
     // 1 - ACTIVIDAD 1: SELECCIONAR MIEMBRO (5 rondas - Audio a Imagen)
     // =======================================================================
     const stage1Data = [
+        // COMENTARIO: NOMBRES DE AUDIO ESTANDARIZADOS A MINÚSCULAS (ej: "nana.mp3")
         { audio: "Nana' ", filename: "nana.mp3", correct: "mama.png", options: ["mama.png", "hermano.png", "abuelo.png"] },
         { audio: "Tat", filename: "tat.mp3", correct: "papa.png", options: ["papa.png", "tia.png", "primo.png"] },
         { audio: "Wäy", filename: "way.mp3", correct: "hermano.png", options: ["papa.png", "hermano.png", "mama.png"] },
@@ -500,10 +531,23 @@
         const currentData = stage1Data[currentRound1];
         container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha el audio y selecciona la imagen del miembro de la familia.</p>`;
 
+        // 1. Crear el botón como objeto DOM
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho'); 
         
-        const controls = `<div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">${audioBtn.outerHTML}</div>`;
-        renderControls(controls);
+        // 2. Inicializar el controlsArea (solo con el feedback)
+        renderControls();
+
+        // 3. Crear contenedor de centrado para el botón
+        const buttonWrapper = document.createElement('div');
+        buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
+        buttonWrapper.appendChild(audioBtn);
+
+        // COMENTARIO: CORRECCIÓN DE DOM. Se inserta el objeto DOM (buttonWrapper) directamente en controlsArea, 
+        // eliminando el uso de outerHTML para mantener el evento onclick.
+        const feedbackEl = document.getElementById('feedback');
+        if (controlsArea) {
+            controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
+        }
         
         const row = document.createElement('div');
         row.className = 'options-row';
@@ -514,7 +558,9 @@
             b.className = 'opt';
             b.dataset.img = opt; 
             
-            b.innerHTML = `<img src="assets/img/${opt}" alt="Opción" style="width: 100px; height: 100px; border-radius: 10px;"/>`;
+            // COMENTARIO: Se corrige la ruta de la imagen para usar la ruta relativa (../assets/img)
+            // ASUMIENDO que la carpeta assets está un nivel arriba.
+            b.innerHTML = `<img src="../assets/img/${opt}" alt="Opción" style="width: 100px; height: 100px; border-radius: 10px;"/>`;
 
             b.onclick = (e) => {
                 const allOptions = document.querySelectorAll('.opt');
@@ -539,6 +585,7 @@
     // 2 - ACTIVIDAD 2: LEE Y SELECCIONA (5 rondas - Frase a Imagen)
     // =======================================================================
     const stage2Data = [
+        // COMENTARIO: NOMBRES DE IMAGEN ESTANDARIZADOS (si aplica)
         { phrase: "Mi papá es alto.", correct: "papa.png", options: ["papa.png", "mama.png", "nino.png"] },
         { phrase: "Tengo un hermano mayor.", correct: "hermano_mayor.png", options: ["hermano_mayor.png", "hermana_menor.png", "primo_amigo.png"] },
         { phrase: "Mi abuela cocina.", correct: "abuela_cocinando.png", options: ["abuela_cocinando.png", "abuelo_leyendo.png", "nino_jugando.png"] },
@@ -595,7 +642,8 @@
             b.className = 'opt';
             b.dataset.img = opt; 
             
-            b.innerHTML = `<img src="assets/img/${opt}" alt="Opción" style="width: 120px; height: 120px; border-radius: 10px;"/>`;
+            // COMENTARIO: Se corrige la ruta de la imagen
+            b.innerHTML = `<img src="../assets/img/${opt}" alt="Opción" style="width: 120px; height: 120px; border-radius: 10px;"/>`;
 
             b.onclick = (e) => {
                 const allOptions = document.querySelectorAll('.opt');
@@ -620,10 +668,11 @@
     // 3 - ACTIVIDAD 3: FORMAR LA PALABRA (5 rondas - Construcción de Letras)
     // =======================================================================
     const stage3Data = [
+        // COMENTARIO: NOMBRES DE IMAGEN ESTANDARIZADOS (si aplica)
         { word: "ABUELO", image: "abuelo.png", letters: "KOCLAPBZUNE" },
         { word: "MAMA", image: "mama.png", letters: "OMSMSAEA" }, 
-        { word: "HIJO", image: "niño.png", letters: "HIFJGOE" }, 
-        { word: "PRIMA", image: "niña.png", letters: "PRXIMAY" }, 
+        { word: "HIJO", image: "nino.png", letters: "HIFJGOE" }, 
+        { word: "PRIMA", image: "nina.png", letters: "PRXIMAY" }, 
         { word: "TIA", image: "tia.png", letters: "TPITAZO" },
     ];
     let currentRound3 = 0;
@@ -688,7 +737,7 @@
         
         container.innerHTML = `
             <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Forma la palabra **"${currentData.word}"**.</p>
-            <img src="assets/img/${currentData.image}" alt="Palabra a formar" style="width: 150px; height: 150px; border-radius: 10px; margin-bottom: 20px; border: 3px solid var(--accent);"/>
+            <img src="../assets/img/${currentData.image}" alt="Palabra a formar" style="width: 150px; height: 150px; border-radius: 10px; margin-bottom: 20px; border: 3px solid var(--accent);"/>
             
             <div style="text-align: center; width: 100%;">
                 <div class="word-to-build-display">Palabra Objetivo: ${currentData.word}</div>
@@ -696,7 +745,7 @@
             </div>
             
             <div id="letterTray" class="letter-tray options-row">
-                </div>
+                 </div>
         `;
         
         renderControls();
@@ -753,7 +802,7 @@
                     dz.classList.add('bad');
                     allCorrect = false;
                     
-                    // Devolver la tarjeta a la columna de preguntas si es incorrecta
+                    // COMENTARIO: Devolver la tarjeta a la columna de preguntas si es incorrecta
                     droppedCard.classList.remove('matched-correct', 'dragging');
                     questionsList.appendChild(droppedCard); 
                     

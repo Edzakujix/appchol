@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Principal - Ch'ol App</title>
+    <style>
+        :root {
+            --color-cielo: #ADE4FF;
+            --color-pasto: #6AA84F;
+            --color-marco: #E0E0E0;
+            --color-texto: #FFFFFF;
+            --btn-donde-vivo: #FF9933; 
+            --btn-escuela: #8FBC8F;    
+            --btn-cuerpo: #FFD966;     
+            --btn-pasatiempos: #FF5E5E;
+            --btn-familia: #5FA8D3;    
+            --btn-perfil: #FFC0CB;     
+            font-family: 'Varela Round', sans-serif;
+        }
+
+        body {
+            background-color: var(--color-cielo);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            overflow: hidden; 
+        }
+
+        .ground {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 30vh;
+            background-color: var(--color-pasto);
+            border-top-left-radius: 50% 10%;
+            border-top-right-radius: 50% 10%;
+            z-index: 0;
+        }
+
+        .interface-box {
+            background-color: rgba(255, 255, 255, 0.612); 
+            border-radius: 25px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            margin-top: 5vh;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            padding: 10px 0; 
+            width: 100%;
+        }
+
+        header h1 {
+            color: #4A4A4A;
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin: 0;
+        }
+        
+        .profile-button {
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            background-color: var(--btn-perfil); 
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease-in-out;
+            z-index: 100; 
+        }
+
+        .profile-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            background-color: #FFB6C1; 
+        }
+
+        .button-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 480px; 
+            padding: 40px;
+        }
+
+        .center-content {
+            width: 250px; 
+            height: 250px;
+            
+            background-color: transparent; 
+            border: none;
+            box-shadow: none;
+            border-radius: 0; 
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            overflow: hidden; 
+        }
+        
+        .center-content img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .nav-btn {
+            position: absolute;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            color: var(--color-texto);
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.2);
+            transition: all 0.1s ease-in-out; 
+            text-decoration: none;
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 0 0 rgba(0, 0, 0, 0.2); 
+            filter: brightness(1.1); 
+        }
+
+        .nav-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 0 rgba(0, 0, 0, 0.2);
+        }
+
+        #btn-familia { background-color: var(--btn-familia); top: 30px; left: 50%; transform: translateX(-50%); }
+        #btn-donde-vivo { background-color: var(--btn-donde-vivo); top: 100px; left: 50px; } 
+        #btn-escuela { background-color: var(--btn-escuela); top: 100px; right: 50px; }  
+
+        @media (max-width: 600px) {
+            .interface-box {
+                margin-top: 10vh; 
+                padding: 10px; 
+                margin-bottom: 20px; 
+            }
+            header {
+                padding: 5px 0;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .profile-button {
+                top: 10px;
+                right: 10px;
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+            .button-area {
+                height: 350px; 
+                padding: 20px 0; 
+            }
+            .center-content {
+                width: 140px; 
+                height: 140px;
+                top: 60%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+                white-space: nowrap; 
+            }
+
+            
+            #btn-familia { 
+                top: 30px; 
+                left: 50%; 
+                transform: translateX(-50%); 
+            }
+            #btn-donde-vivo { 
+                top: 110px; 
+                left: 50%; 
+                transform: translateX(-100%) translateX(-15px);
+            } 
+            #btn-escuela { 
+                top: 110px; 
+                left: 50%; 
+                transform: translateX(0) translateX(15px);
+            }
+        }
+    </style>
+</head>
+<body>
+    
+<a href="user.html" class="profile-button">Mi Perfil</a>
+
+    <div class="interface-box">
+        <header>
+            <h1>MÓDULOS</h1>
+        </header>
+
+        <div class="button-area">
+            
+            <div class="center-content">
+                <img src="assets\img\mama.png" alt="Imagen representativa del módulo">
+            </div>
+            
+            <a href="U1/U1FAM.html" class="nav-btn" id="btn-familia">1 FAMILIA</a>
+            
+            <a href="U2/U2DOVI.html" class="nav-btn" id="btn-donde-vivo">2 DONDE VIVO</a>
+            <a href="U3/U3ESC.html" class="nav-btn" id="btn-escuela">3 ESCUELA</a>
+        </div>
+    </div>
+    
+    <div class="ground"></div>
+
+</body>
+</html>

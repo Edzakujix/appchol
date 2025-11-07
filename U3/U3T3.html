@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ch'ol App - Tema 3: Verbos</title>
+
+    <style>
+/* (Se mantiene el CSS completo de la plantilla para consistencia) */
+:root {
+    --color-cielo: #ADE4FF; 
+    --color-pasto: #6AA84F; 
+    --color-principal: #75b4c7;
+    --color-acentos: #2A9D8F;
+    --color-texto: #333;
+    --accent: #FF7043; 
+    --card: #ffffff;
+    --next: #29B6F6;
+    --ok: #4CAF50;
+    --bad: #E53935;
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
+    background: linear-gradient(180deg, var(--color-cielo) 65%, #ADD8E6 100%); 
+    color: var(--color-texto);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    position: relative;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.ground-sim {
+    position: fixed; bottom: 0; width: 100%; height: 20vh; background-color: var(--color-pasto);
+    border-top-left-radius: 60% 30%; border-top-right-radius: 60% 30%; z-index: -1;
+}
+
+.app {
+    width: 100%; max-width: 900px; background: var(--card); border-radius: 30px;
+    box-shadow: 0 15px 40px rgba(255, 112, 67, 0.2); padding: 30px; border: 5px solid var(--accent);
+    max-height: 95vh; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
+}
+
+header{
+    display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom: 20px; flex-shrink: 0; 
+}
+h1{
+    font-size: clamp(1.5rem, 3vw, 2rem); margin:0; color: var(--accent); text-shadow: 2px 2px #fff;
+}
+.stage-area{
+    overflow-y: auto; padding-right: 10px; padding-bottom: 20px; display: flex; 
+    flex-direction: column; justify-content: flex-start; align-items: center; scrollbar-width: thin;
+}
+.controls{
+    display:flex;gap:15px;justify-content:space-between;align-items:center; margin-top:10px;
+    flex-shrink: 0; padding-top: 10px; border-top: 1px solid #eee;
+}
+
+button.primary, button.ghost{
+    padding:12px 20px; border-radius: 15px; font-weight:700; cursor:pointer; transition: all .1s ease;
+}
+button.primary{
+    background:var(--next); color:white; border:none; box-shadow: 0 5px 0 0 #0288D1; opacity: 0.5; pointer-events: none;
+}
+button.primary.active{
+    opacity: 1; pointer-events: auto;
+}
+button.primary.active:active{
+    transform: translateY(5px); box-shadow: 0 0px 0 0 #0288D1;
+}
+button.ghost{
+    background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; font-weight: 600;
+}
+
+.options-row{display:flex; gap:20px; flex-wrap:wrap; justify-content:center}
+
+.opt{
+    min-width:140px; padding:20px; border-radius: 20px; background:#fff;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); display:flex;flex-direction:column;align-items:center;gap:10px; cursor:pointer;
+    border: 4px solid #E0E0E0; font-size: 1.1rem; font-weight: 600; transition: all .2s;
+}
+.opt:not(.disabled):hover{
+    transform:translateY(-5px) scale(1.05); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+.opt.disabled{pointer-events: none; opacity: 0.7;}
+.opt.ok{border-color:var(--ok); box-shadow:0 8px 20px rgba(76,175,80,0.3); background:#E8F5E9;}
+.opt.bad{border-color:var(--bad); box-shadow:0 8px 20px rgba(229,57,53,0.3); background:#FFEBEE;}
+
+.feedback{ font-weight:800; font-size: 1.4rem; }
+
+.video-wrapper {
+    position: relative; width: 100%; max-width: 600px; padding-bottom: 56.25%; 
+    height: 0; overflow: hidden; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.video-wrapper iframe {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
+}
+
+.day-image-option img {
+    width: 100px; height: 100px; border-radius: 10px; object-fit: cover;
+}
+    </style>
+
+</head>
+<body>
+    <div class="app" role="application" aria-label="Prototipo actividades para primaria">
+        <header>
+            <h1 id="title">Mini-Clase: Verbos Ch'ol</h1>
+            <div style="display: flex; gap: 10px;">
+                <button class="ghost" onclick="goHome()" style="font-weight: 500; padding: 10px;">🏠 Inicio</button>
+                <button class="primary" id="nextBtn" onclick="next()">Siguiente</button>
+            </div>
+        </header>
+
+        <main class="stage-area" id="stageArea"></main>
+
+        <div class="controls" id="controlsArea">
+        </div>
+
+        <footer>Prototipo educativo · Módulo 3: Tema 3</footer>
+    </div>
+
+    <div class="ground-sim"></div>
+
+
+<script>
+    // ************************************************************************
+    // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL (UNIFICADO)
+    const MAIN_SCREEN_URL = '../U3/U3ESC.html'; 
+    const USER_GOOGLE_ID = 'ID_DEL_USUARIO_AUTENTICADO'; 
+    const TOTAL_ACTIVITY_POINTS = 40; 
+    // ************************************************************************
+    
+    function goHome() { window.location.href = MAIN_SCREEN_URL; }
+
+    // VARIABLES CRÍTICAS
+    const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4];
+    let currentStage = 0;
+    let feedbackEl = null; 
+    const titleEl = document.getElementById('title');
+    const nextBtn = document.getElementById('nextBtn');
+    const controlsArea = document.getElementById('controlsArea');
+    
+    // Variables de Progreso
+    let stageProgress = new Array(stages.length).fill(false); 
+    let userScore = 0; 
+
+    // Funciones de Control de Etapa 
+    function setStageComplete(isComplete = true) {
+        if (isComplete && !stageProgress[currentStage]) {
+            if(currentStage >= 1 && currentStage <= 3) { userScore += 10; }
+        }
+        stageProgress[currentStage] = isComplete;
+        nextBtn.classList.toggle('active', isComplete);
+    }
+
+    function clearFeedback(){ if(feedbackEl) feedbackEl.textContent = ""; }
+    
+    function setFeedback(text, kind){
+        if(!feedbackEl) return;
+        feedbackEl.innerHTML = text; 
+        if(kind === 'ok'){ feedbackEl.style.color = 'var(--ok)' }
+        else if(kind === 'bad'){ feedbackEl.style.color = 'var(--bad)' }
+        else { feedbackEl.style.color = 'var(--color-texto)' }
+    }
+    
+    function disableOptions() {
+        document.querySelectorAll('.opt').forEach(el => el.classList.add('disabled'));
+    }
+
+    function renderControls(html = '') {
+        controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>${html}`;
+        feedbackEl = document.getElementById('feedback');
+    }
+
+    function next(){ 
+        if (!stageProgress[currentStage]) {
+            setFeedback("¡Termina esta parte antes de continuar!", 'bad');
+            return;
+        }
+
+        if (currentStage === 4) {
+             alert(`✅ Tema Terminado. Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo a la pantalla principal...`);
+             window.location.href = MAIN_SCREEN_URL; 
+             return; 
+        }
+
+        currentStage++;
+        if (currentStage >= stages.length) { currentStage = stages.length - 1; }
+        render(); 
+    }
+
+    function speakText(text, lang='es-ES'){
+        if(!window.speechSynthesis) return;
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = lang;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+    }
+    
+    function render(){ 
+        clearFeedback(); 
+        setStageComplete(false);
+        const container = document.getElementById('stageArea'); 
+        container.innerHTML=''; 
+
+        // Títulos para el Tema 3
+        const titles = [
+            'Mini-Clase: Verbos Ch\'ol', 
+            'Actividad 1: Verbo a Figura', 
+            'Actividad 2: Oración de Acción', 
+            'Actividad 3: Completa la Oración', 
+            '¡Tema Terminado!'
+        ];
+        titleEl.textContent = titles[currentStage];
+
+        stages[currentStage](container);
+        
+        if (currentStage === 0 || currentStage === 4) { setStageComplete(true); }
+    }
+
+
+    // =======================================================================
+    // FUNCIÓN CRÍTICA DE AUDIO Y CREACIÓN DE BOTONES
+    // =======================================================================
+    function playAudio(audioFilename, text, lang = 'cho') {
+        const audioUrl = `../assets/audio/${audioFilename}`; 
+        const audio = new Audio(audioUrl);
+        
+        audio.play()
+            .then(() => { setFeedback(`🔊 Reproduciendo: "${text}"`, 'neutral'); })
+            .catch(e => {
+                console.error(`❌ Error al cargar o reproducir "${audioUrl}": ${e.message}`);
+                speakText(text, lang); 
+                setFeedback(`[TTS] No se encontró el audio real. Reproduciendo: "${text}"`, 'neutral');
+            });
+    }
+
+    function createAudioButton(text, audioFilename, lang = 'cho') {
+        const btn = document.createElement('button');
+        btn.className = 'ghost';
+        btn.innerHTML = '🔊 Reproducir Audio';
+        btn.onclick = () => { playAudio(audioFilename, text, lang); };
+        return btn;
+    }
+
+    // =======================================================================
+    // 0 - MINI-CLASE (VIDEO)
+    // =======================================================================
+    function renderStage0(container){
+        const videoHtml = `
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/URL_DEL_VIDEO_TEMA3?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <p style="text-align:center; max-width: 600px; margin-top: 20px;">
+                ¡Mira el video para aprender sobre los **Verbos** en Ch'ol! Luego, presiona **Siguiente**.
+            </p>
+        `;
+        container.innerHTML = videoHtml;
+        setStageComplete(true);
+        renderControls();
+    }
+
+    // =======================================================================
+    // 1 - ACTIVIDAD 1: VERBO CH'OL A IMAGEN (LÉXICO) - 6 RONDAS
+    // =======================================================================
+    const stage1Questions = [
+        { ch_word: "Päty bäñäk´äl", filename: "cocinar.mp3", correct: "cocinar.png", word: "Cocinar" },
+        { ch_word: "Pokoñel", filename: "lavar.mp3", correct: "lavar.png", word: "Lavar" }, 
+        { ch_word: "Sujkuñ", filename: "limpiar.mp3", correct: "limpiar.png", word: "Limpiar" },
+        { ch_word: "Misujel", filename: "barrer.mp3", correct: "barrer.png", word: "Barrer" },
+        { ch_word: "Päk´oñel", filename: "sembrar.mp3", correct: "sembrar.png", word: "Sembrar" },
+        { ch_word: "lukbäl", filename: "pescar.mp3", correct: "pescar.png", word: "Pescar" },
+    ];
+    let currentRound1 = 0; 
+
+    const stage1AllOptions = [
+        { filename: "cocinar.png", word: "Cocinar" },
+        { filename: "lavar.png", word: "Lavar" },
+        { filename: "limpiar.png", word: "Limpiar" },
+        { filename: "barrer.png", word: "Barrer" },
+        { filename: "sembrar.png", word: "Sembrar" },
+        { filename: "pescar.png", word: "Pescar" },
+        { filename: "distractor_v1.png", word: "Cazar" } 
+    ];
+
+    function checkAnswer1(selectedImage, currentData, allOptionsElements) {
+        if (selectedImage === currentData.correct) {
+            setFeedback(`¡Correcto! Es **${currentData.word}**.`, 'ok');
+            currentRound1++;
+            setTimeout(() => { renderStage1(document.getElementById('stageArea')); }, 1200);
+        } else {
+            setFeedback('Incorrecto. ¡La figura correcta representa ' + currentData.word + '!', 'bad');
+            allOptionsElements.forEach(el => {
+                if (el.dataset.img === currentData.correct) { el.classList.add('ok'); }
+            });
+            currentRound1++;
+            setTimeout(() => { renderStage1(document.getElementById('stageArea')); }, 2500);
+        }
+    }
+    
+    function renderStage1(container) {
+        if (currentRound1 >= stage1Questions.length) {
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las ${stage1Questions.length} rondas de verbos léxicos.</h2>`;
+            setStageComplete(true);
+            renderControls();
+            return; 
+        }
+
+        const currentData = stage1Questions[currentRound1];
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Questions.length}. Escucha el audio y selecciona la figura que muestra la acción: **${currentData.word}**.</p>`;
+        
+        // Botón de Audio
+        const audioBtn = createAudioButton(currentData.ch_word, currentData.filename, 'cho');
+        audioBtn.innerHTML = '🔊 Reproducir Verbo';
+        renderControls();
+        const buttonWrapper = document.createElement('div');
+        buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
+        buttonWrapper.appendChild(audioBtn);
+        const feedbackEl = document.getElementById('feedback');
+        if (controlsArea) { controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); }
+
+        const row = document.createElement('div');
+        row.className = 'options-row';
+        
+        let optionsToDisplay = stage1AllOptions.filter(opt => opt.filename === currentData.correct);
+        let distractionOptions = stage1AllOptions.filter(opt => opt.filename !== currentData.correct);
+        
+        while(optionsToDisplay.length < 4 && distractionOptions.length > 0) {
+            const randomIndex = Math.floor(Math.random() * distractionOptions.length);
+            optionsToDisplay.push(distractionOptions.splice(randomIndex, 1)[0]);
+        }
+        optionsToDisplay.sort(() => Math.random() - 0.5);
+
+        optionsToDisplay.forEach(it => {
+            const b = document.createElement('div');
+            b.className = 'opt day-image-option'; 
+            b.dataset.img = it.filename;
+            
+            b.innerHTML = `<img src="../assets/img/${it.filename}" alt="${it.word}"/> <span style="margin-top: 5px; font-size: 0.9rem;">${it.word}</span>`;
+            
+            b.onclick = ()=>{
+                const allOptions = document.querySelectorAll('.opt');
+                disableOptions();
+                if (it.filename === currentData.correct) { b.classList.add('ok'); } else { b.classList.add('bad'); }
+                checkAnswer1(it.filename, currentData, allOptions); 
+            };
+            row.appendChild(b);
+        });
+
+        container.appendChild(row);
+        setStageComplete(false);
+    }
+
+    // =======================================================================
+    // 2 - ACTIVIDAD 2: ORACIÓN A IMAGEN (VERBO SINTÁCTICO) - 4 RONDAS
+    // =======================================================================
+    const stage2Data = [
+        { ch_sentence: "Jiñi kpap muk´ tyi toñel tyi cholel", audio: "papa_trabaja.mp3", correct_img: "papa_trabaja.png", distractor_img: "papa_descansa.png", hint: "Mi papá trabaja en la milpa" },
+        { ch_sentence: "Jiñi kermañu´ ilok´el majlel tyi xäñtye´el tyi ik´añ", audio: "hermano_caza.mp3", correct_img: "hermano_caza.png", distractor_img: "hermano_corre.png", hint: "Mi hermano sale a cazar en la noche" },
+        { ch_sentence: "Jiñi kmam ipäty ibäñik´ tyi k´ajk", audio: "mama_cocina.mp3", correct_img: "mama_cocina.png", distractor_img: "mama_lava.png", hint: "Mi mamá cocina en el fogon" },
+        { ch_sentence: "Jiñi kchicho´ imisuño´ li otyoty", audio: "hermanas_barren.mp3", correct_img: "hermanas_barren.png", distractor_img: "hermanas_juegan.png", hint: "Mis hermanas barren la casa" },
+    ];
+    let currentRound2 = 0;
+
+    function checkAnswer2(selectedImage, currentData, allOptionsElements) {
+        if (selectedImage === currentData.correct_img) {
+            setFeedback('¡Muy bien! ¡Correcto!', 'ok');
+            currentRound2++;
+            setTimeout(() => { renderStage2(document.getElementById('stageArea')); }, 1500);
+        } else {
+            setFeedback(`Incorrecto. ¡La oración significa: **${currentData.hint}**!`, 'bad');
+            allOptionsElements.forEach(el => {
+                if (el.dataset.img === currentData.correct_img) { el.classList.add('ok'); }
+            });
+            currentRound2++;
+            setTimeout(() => { renderStage2(document.getElementById('stageArea')); }, 3000);
+        }
+    }
+
+    function renderStage2(container) {
+        if (currentRound2 >= stage2Data.length) {
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las ${stage2Data.length} rondas de oraciones de acción.</h2>`;
+            setStageComplete(true);
+            renderControls();
+            return;
+        }
+
+        const currentData = stage2Data[currentRound2];
+        renderControls();
+        
+        container.innerHTML = `
+            <p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Data.length}: Escucha la oración y selecciona la **acción correcta**.</p>
+            <p style="font-size: 1.4rem; font-weight: bold; color: var(--accent);">**${currentData.ch_sentence}**</p>
+        `;
+        
+        // Botón de Audio
+        const audioBtn = createAudioButton(currentData.ch_sentence, currentData.audio, 'cho');
+        audioBtn.innerHTML = '🔊 Reproducir Oración';
+        const buttonWrapper = document.createElement('div');
+        buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
+        buttonWrapper.appendChild(audioBtn);
+        controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
+
+        const options = [currentData.correct_img, currentData.distractor_img, "distractor_a1.png", "distractor_a2.png"];
+        options.sort(() => Math.random() - 0.5); 
+
+        const row = document.createElement('div');
+        row.className = 'options-row';
+        
+        options.forEach(imgName => {
+            const b = document.createElement('div');
+            b.className = 'opt day-image-option'; 
+            b.dataset.img = imgName;
+            
+            b.innerHTML = `<img src="../assets/img/${imgName}" alt="Opción de acción" style="width: 150px; height: 150px;"/>`;
+            
+            b.onclick = ()=>{
+                const allOptions = document.querySelectorAll('.opt');
+                disableOptions();
+                
+                if (imgName === currentData.correct_img) { b.classList.add('ok'); } else { b.classList.add('bad'); }
+                
+                checkAnswer2(imgName, currentData, allOptions); 
+            };
+            row.appendChild(b);
+        });
+
+        container.appendChild(row);
+        setStageComplete(false);
+    }
+
+
+    // =======================================================================
+    // 3 - ACTIVIDAD 3: COMPLETAR LA ORACIÓN (OPCIÓN MÚLTIPLE) - 4 RONDAS
+    // =======================================================================
+    const stage3Data = [
+        { sentence: "Jiñi xchuty alo´ chonko ___ ijuñ", correct: "boñ", options: ["boñ", "ts´ijbuñ", "sety´"], hint_es: "El niño esta pintando" },
+        { sentence: "Li alpeñalo´ chonkolo´ tyi ñak tyi yorojlel ___", correct: "uch´el", options: ["uch´el", "ka´y", "tsik"], hint_es: "Los niños están jugando en la hora del recreo" },
+        { sentence: "Li xpäsjuño´ muk´o´ tyi ___", correct: "käñtyisaj", options: ["käñtyisaj", "lukbäl", "soñ"], hint_es: "Los maestros enseñan" },
+        { sentence: "¿Ba´ki año´ li ___?", correct: "alp´eñalo´", options: ["alp´eñalo´", "dibru", "mam"], hint_es: "¿Dónde están los niños?" },
+    ];
+    let currentRound3 = 0; 
+
+    function checkAnswer3(selectedOption, currentData, allOptionsElements) {
+        if (selectedOption === currentData.correct) {
+            setFeedback('¡Muy bien! ¡Correcto!', 'ok');
+            currentRound3++;
+            setTimeout(() => { renderStage3(document.getElementById('stageArea')); }, 1500);
+        } else {
+            setFeedback(`Incorrecto. ¡La respuesta correcta era: **${currentData.correct}**! (${currentData.hint_es})`, 'bad');
+            allOptionsElements.forEach(el => {
+                if (el.textContent === currentData.correct) { el.classList.add('ok'); }
+            });
+            currentRound3++;
+            setTimeout(() => { renderStage3(document.getElementById('stageArea')); }, 3500);
+        }
+    }
+
+    function renderStage3(container) {
+        if (currentRound3 >= stage3Data.length) {
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las ${stage3Data.length} rondas de completar oraciones.</h2>`;
+            setStageComplete(true);
+            renderControls();
+            return;
+        }
+
+        const currentData = stage3Data[currentRound3];
+        container.innerHTML = `
+            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Completa la oración en Ch'ol seleccionando la **palabra correcta**.</p>
+            <p style="font-size: 1.4rem; font-weight: bold; color: var(--accent);">
+                ${currentData.sentence.replace('___', '<span style="color: var(--bad); text-decoration: underline;">___</span>')}
+            </p>
+        `;
+
+        renderControls(); 
+        
+        const row = document.createElement('div');
+        row.className = 'options-row';
+        currentData.options.sort(() => Math.random() - 0.5); 
+
+        currentData.options.forEach(opt => {
+            const b = document.createElement('div');
+            b.className = 'opt';
+            b.textContent = opt;
+            
+            b.onclick = (e) => {
+                const allOptions = document.querySelectorAll('.opt');
+                disableOptions(); 
+                
+                if (opt === currentData.correct) { b.classList.add('ok'); } else { b.classList.add('bad'); }
+                
+                checkAnswer3(opt, currentData, allOptions);
+            };
+            row.appendChild(b);
+        });
+
+        container.appendChild(row);
+        setStageComplete(false); 
+    }
+    
+    // =======================================================================
+    // 4 - FINAL DE TEMA (UNIFICADO)
+    // =======================================================================
+    function renderStage4(container) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
+                <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 3 Completado! 🎉</h2>
+                <p style="font-size: 1.2rem;">Puntuación simulada: **${userScore}/${TOTAL_ACTIVITY_POINTS}**</p>
+                <p>Presiona **Siguiente** para volver a la pantalla principal.</p>
+            </div>
+        `;
+        setStageComplete(true);
+        renderControls();
+    }
+
+
+    // --- Inicialización ---
+    document.addEventListener('DOMContentLoaded', () => {
+        render();
+    });
+</script>
+</body>
+</html>

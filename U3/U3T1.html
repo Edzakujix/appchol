@@ -3,39 +3,71 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Ch'ol App - Tema 1: Saludos</title>
+    <title>Ch'ol App - Tema 1: Profesiones y Oficios</title>
+
     <style>
-        :root{
-            --bg1: #FFECB3;
-            --card: #ffffff;
-            --accent: #FF7043;
-            --next: #29B6F6;
-            --ok: #4CAF50;
-            --bad: #E53935;
-            --text-color: #333333;
-            font-family: 'Comic Sans MS', cursive, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-        }
-        html,body{height:100%;margin:0}
-        body{
-            background: linear-gradient(180deg, var(--bg1) 0%, #AEC6E6 100%);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:20px;
-            color: var(--text-color);
-        }
-        .app{
-            width:100%;
-            max-width:900px;
-            background:var(--card);
-            border-radius: 30px;
-            box-shadow: 0 15px 40px rgba(255, 112, 67, 0.2);
-            padding: 30px;
-            border: 5px solid var(--accent);
-            max-height: 95vh; 
-            display: flex;
-            flex-direction: column; 
-        }
+:root {
+    --color-cielo: #ADE4FF; /* Azul claro */
+    --color-pasto: #6AA84F; /* Verde pasto */
+    --color-principal: #75b4c7;
+    --color-acentos: #2A9D8F;
+    --color-texto: #333;
+    --accent: #FF7043; /* Naranja para títulos */
+    --card: #ffffff;
+    --next: #29B6F6;
+    --ok: #4CAF50;
+    --bad: #E53935;
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
+    background: linear-gradient(180deg, var(--color-cielo) 65%, #ADD8E6 100%); 
+    color: var(--color-texto);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    position: relative;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+/* Simulación del pasto inferior */
+.ground-sim {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 20vh;
+    background-color: var(--color-pasto);
+    border-top-left-radius: 60% 30%;
+    border-top-right-radius: 60% 30%;
+    z-index: -1;
+}
+
+/* Contenedor principal centrado */
+.app {
+    width: 100%;
+    max-width: 900px;
+    background: var(--card);
+    border-radius: 30px;
+    box-shadow: 0 15px 40px rgba(255, 112, 67, 0.2);
+    padding: 30px;
+    border: 5px solid var(--accent);
+    max-height: 95vh; 
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+/* Mantén tus otros estilos aquí (header, h1, .stage-area, .controls, etc.) */
+
         header{
             display:flex;
             justify-content:space-between;
@@ -188,7 +220,6 @@
         }
 
         .question-card {
-            /* MANTENEMOS LOS ESTILOS ORIGINALES DE LA TARJETA DRAGGEABLE */
             background-color: #FFF9C4; 
             border: 3px solid #FFCA28; 
             border-radius: 15px;
@@ -207,6 +238,8 @@
             pointer-events: none;
             box-shadow: none;
             transform: none;
+            background-color: #f3e5f5; /* Color de match */
+            border-color: #AB47BC;
         }
 
         .answer-dropzone {
@@ -262,13 +295,14 @@
             }
         }
     </style>
+
 </head>
 <body>
     <div class="app" role="application" aria-label="Prototipo actividades para primaria">
         <header>
-            <h1 id="title">Mini-Clase: Saludos Ch'ol</h1>
+            <h1 id="title">Mini-Clase: Profesiones Ch'ol</h1>
             <div style="display: flex; gap: 10px;">
-                <button class="ghost" onclick="window.location.href='pantalla1.html'" style="font-weight: 500; padding: 10px;">🏠 Inicio</button>
+                <button class="ghost" onclick="goHome()" style="font-weight: 500; padding: 10px;">🏠 Inicio</button>
                 <button class="primary" id="nextBtn" onclick="next()">Siguiente</button>
             </div>
         </header>
@@ -276,57 +310,70 @@
         <main class="stage-area" id="stageArea"></main>
 
         <div class="controls" id="controlsArea">
-             </div>
+        </div>
 
-        <footer>Prototipo educativo · Tema 1: Saludos</footer>
+        <footer>Prototipo educativo · Módulo 3: Tema 1</footer>
     </div>
+
+    <div class="ground-sim"></div>
+
 
 <script>
     // ************************************************************************
-    // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL
-    const MAIN_SCREEN_URL = 'pantalla1.html'; 
+    // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL (UNIFICADO)
+    // Se cambia la URL de regreso al nuevo módulo 3
+    const MAIN_SCREEN_URL = '../U3/U3ESC.html'; 
+    const USER_GOOGLE_ID = 'ID_DEL_USUARIO_AUTENTICADO'; 
+    const TOTAL_ACTIVITY_POINTS = 40; // 4 actividades * 10 puntos 
     // ************************************************************************
     
+    // Función de redirección para el botón de Inicio
+    function goHome() {
+        window.location.href = MAIN_SCREEN_URL;
+    }
+
     // VARIABLES CRÍTICAS
     const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4];
     let currentStage = 0;
-    // Se ha redefinido feedbackEl sin 'window.' para mantener consistencia
     let feedbackEl = null; 
     const titleEl = document.getElementById('title');
     const nextBtn = document.getElementById('nextBtn');
     const controlsArea = document.getElementById('controlsArea');
     
-    // Variables de Progreso (Mantener para el flujo, pero eliminando la lógica de puntuación)
-    let stageProgress = [false, false, false, false, false]; 
-    
+    // Variables de Progreso (UNIFICADO)
+    let stageProgress = new Array(stages.length).fill(false); 
+    let userScore = 0; // Puntuación simulada
+
     // Funciones de Control de Etapa 
     function setStageComplete(isComplete = true) {
-        // Lógica de puntuación eliminada. Solo se mantiene la lógica de avance.
+        if (isComplete && !stageProgress[currentStage]) {
+            // Se suma la puntuación simulada para las actividades 1, 2, 3, y 4 (Stages 1, 2, 3)
+            if(currentStage >= 1 && currentStage <= 3) { 
+                userScore += 10; 
+            }
+        }
         stageProgress[currentStage] = isComplete;
         nextBtn.classList.toggle('active', isComplete);
     }
 
     function clearFeedback(){ 
-        // Se usa la variable local feedbackEl
         if(feedbackEl) feedbackEl.textContent = ""; 
     }
     
     function setFeedback(text, kind){
-        // Se usa la variable local feedbackEl
         if(!feedbackEl) return;
-        feedbackEl.textContent = text;
+        feedbackEl.innerHTML = text; // Usamos innerHTML para permitir negritas
         if(kind === 'ok'){ feedbackEl.style.color = 'var(--ok)' }
         else if(kind === 'bad'){ feedbackEl.style.color = 'var(--bad)' }
         else { feedbackEl.style.color = 'var(--text-color)' }
     }
     
     function disableOptions() {
-          document.querySelectorAll('.opt').forEach(el => el.classList.add('disabled'));
+        document.querySelectorAll('.opt').forEach(el => el.classList.add('disabled'));
     }
 
     function renderControls(html = '') {
         controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>${html}`;
-        // Inicialización de feedbackEl para que sea referenciable
         feedbackEl = document.getElementById('feedback');
     }
 
@@ -336,12 +383,14 @@
             return;
         }
 
+        // --- PUNTO DE REDIRECCIÓN Y GUARDADO CRÍTICO (Stage 4) ---
         if (currentStage === 4) {
-            // Se elimina la mención a la puntuación
-            alert(`Tema Terminado. Volviendo a la pantalla principal...`);
-            window.location.href = MAIN_SCREEN_URL; 
-            return; 
+             // Simulación de guardado en la BD 
+             alert(`✅ Tema Terminado. Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo a la pantalla principal...`);
+             window.location.href = MAIN_SCREEN_URL; 
+             return; 
         }
+        // --------------------------------------------------
 
         currentStage++;
         if (currentStage >= stages.length) {
@@ -364,11 +413,19 @@
         const container = document.getElementById('stageArea'); 
         container.innerHTML=''; 
 
-        const titles = ['Mini-Clase: Saludos Ch\'ol', 'Actividad 1: Escucha y Selecciona', 'Actividad 2: Partes del Día', 'Actividad 3: Unir Palabras', '¡Módulo Terminado!'];
+        // Se actualizan los títulos para el Tema 1 (Profesiones)
+        const titles = [
+            'Mini-Clase: Profesiones Ch\'ol', 
+            'Actividad 1: Observa y Escribe', 
+            'Actividad 2: Escucha y Selecciona Figura', 
+            'Actividad 3: Relaciona la Profesión', 
+            '¡Tema Terminado!'
+        ];
         titleEl.textContent = titles[currentStage];
 
         stages[currentStage](container);
         
+        // El video y la pantalla final se completan inmediatamente
         if (currentStage === 0 || currentStage === 4) {
             setStageComplete(true);
         }
@@ -376,38 +433,42 @@
 
 
     // =======================================================================
-    // FUNCIÓN CRÍTICA: CREACIÓN DEL BOTÓN DE AUDIO 
+    // FUNCIÓN CRÍTICA DE AUDIO Y CREACIÓN DE BOTONES (ÁMBITO GLOBAL)
     // =======================================================================
+    function playAudio(audioFilename, text, lang = 'cho') {
+        const audioUrl = `../assets/audio/${audioFilename}`; 
+        
+        const audio = new Audio(audioUrl);
+        
+        audio.play()
+            .then(() => {
+                setFeedback(`🔊 Reproduciendo: "${text}"`, 'neutral');
+            })
+            .catch(e => {
+                console.error(`❌ Error al cargar o reproducir "${audioUrl}": ${e.message}`);
+                speakText(text, lang); 
+                setFeedback(`[TTS] No se encontró el audio real. Reproduciendo: "${text}"`, 'neutral');
+            });
+    }
+
     function createAudioButton(text, audioFilename, lang = 'cho') {
         const btn = document.createElement('button');
         btn.className = 'ghost';
         btn.innerHTML = '🔊 Reproducir Audio';
-        const audioUrl = `assets/audio/${audioFilename}`; 
-
-        btn.onclick = () => {
-            try {
-                const audio = new Audio(audioUrl);
-                audio.play();
-                setFeedback(`Reproduciendo: "${text}"`, 'neutral');
-            } catch (e) {
-                console.warn(`No se encontró el audio real en: ${audioUrl}. Usando simulación de voz.`);
-                speakText(text, lang); 
-                setFeedback(`[TTS] Reproduciendo: "${text}"`, 'neutral');
-            }
-        };
+        btn.onclick = () => { playAudio(audioFilename, text, lang); };
         return btn;
     }
 
     // =======================================================================
-    // 0 - MINI-CLASE (VIDEO) - AHORA RESPONSIVO
+    // 0 - MINI-CLASE (VIDEO) - RUTA PENDIENTE
     // =======================================================================
     function renderStage0(container){
         const videoHtml = `
             <div class="video-wrapper">
-                <iframe src="https://www.youtube.com/embed/z4fR0S2T-R0?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/URL_DEL_VIDEO_TEMA1?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
             <p style="text-align:center; max-width: 600px; margin-top: 20px;">
-                ¡Mira el video para aprender los saludos básicos en Ch'ol! Luego, presiona **Siguiente** para comenzar las actividades.
+                ¡Mira el video para aprender sobre las **Profesiones y Oficios** en Ch'ol! Luego, presiona **Siguiente** para comenzar las actividades.
             </p>
         `;
         container.innerHTML = videoHtml;
@@ -416,111 +477,115 @@
     }
 
     // =======================================================================
-    // 1 - ACTIVIDAD 1: ESCUCHA Y SELECCIONA (Funcional)
+    // 1 - ACTIVIDAD 1: OBSERVA IMAGEN, LEE CH'OL, ESCRIBE ESPAÑOL (NUEVA)
     // =======================================================================
     const stage1Data = [
-        { audio: "Lekil k'in", filename: "Lekil_kin.mp3", correct: "Buenos días", options: ["Buenos días", "Buenas tardes", "Hola", "Adiós"] },
-        { audio: "Lekil ak'wal", filename: "Lekil_akwal.mp3", correct: "Buenas tardes", options: ["Buenos días", "Buenas tardes", "Gracias", "Perdón"] },
-        { audio: "Lekilix", filename: "Lekilix.mp3", correct: "Hola", options: ["Hola", "Yo", "Tú", "Nosotros"] },
-        { audio: "T'yoj", filename: "Tyoj.mp3", correct: "Gracias", options: ["¿Cómo estás?", "Gracias", "Estoy bien", "Mal"] },
-        { audio: "Baxik", filename: "Baxik.mp3", correct: "Adiós", options: ["Adiós", "Hasta mañana", "Hasta luego", "Ya me voy"] },
-        { audio: "Yom a k'ajt", filename: "Yom_k_ajt.mp3", correct: "¿Cómo te llamas?", options: ["¿Cuántos años tienes?", "¿Cómo te llamas?", "¿Eres tú?", "¿Quién es?"] },
+        // 6 RONDAS
+        { ch_word: "Aj lukbäl", es_word: "PESCADOR", img: "pescador.png" },
+        { ch_word: "Xts´ak", es_word: "CURANDERO", img: "curandero.png" },
+        { ch_word: "Xpäsjuñ", es_word: "MAESTRO", img: "maestro.png" },
+        { ch_word: "Xpäty otyoty", es_word: "ALBAÑIL", img: "albañil.png" },
+        { ch_word: "Aj cholejel", es_word: "CAMPESINO", img: "campesino.png" },
+        { ch_word: "Toñel", es_word: "TRABAJO", img: "trabajo.png" } 
     ];
-    let currentRound1 = 0; 
+    let currentRound1 = 0;
 
-    function checkAnswer1(selectedOption, currentData, allOptionsElements) {
-        if (selectedOption === currentData.correct) {
+    function checkAnswer1(inputEl, currentData) {
+        const userInput = inputEl.value.toUpperCase().trim();
+        const correctAnswer = currentData.es_word.toUpperCase();
+
+        if (userInput === correctAnswer) {
             setFeedback('¡Muy bien! ¡Correcto!', 'ok');
+            inputEl.style.borderColor = 'var(--ok)';
+            inputEl.disabled = true;
             currentRound1++;
             setTimeout(() => {
                 renderStage1(document.getElementById('stageArea'));
-            }, 1200);
+            }, 1500);
         } else {
-            setFeedback('Incorrecto. ¡La respuesta correcta es: ' + currentData.correct + '!', 'bad');
-            allOptionsElements.forEach(el => {
-                if (el.textContent === currentData.correct) {
-                    el.classList.add('ok');
-                }
-            });
+            setFeedback(`Incorrecto. La respuesta correcta era: **${currentData.es_word}**`, 'bad');
+            inputEl.style.borderColor = 'var(--bad)';
+            inputEl.disabled = true;
             currentRound1++;
             setTimeout(() => {
                 renderStage1(document.getElementById('stageArea'));
-            }, 2500);
+            }, 3000);
         }
     }
 
     function renderStage1(container) {
         if (currentRound1 >= stage1Data.length) {
-            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las 6 rondas.</h2>`;
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las ${stage1Data.length} rondas.</h2>`;
             setStageComplete(true);
             renderControls();
             return;
         }
+
         const currentData = stage1Data[currentRound1];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha el audio y selecciona la **traducción** correcta.</p>`;
+        renderControls(); // Limpiar controles
 
-        const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho'); 
-        
-        const controls = `<div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">${audioBtn.outerHTML}</div>`;
-        renderControls(controls);
-        
-        const row = document.createElement('div');
-        row.className = 'options-row';
-        currentData.options.sort(() => Math.random() - 0.5); 
+        container.innerHTML = `
+            <p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Mira la imagen, lee la palabra en Ch'ol y **escribe su significado en Español**.</p>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; max-width: 400px; margin: 20px auto; padding: 20px; border: 3px solid var(--color-acentos); border-radius: 15px; background: #E0F7FA;">
+                <img src="../assets/img/${currentData.img}" alt="${currentData.ch_word}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 10px; border: 3px solid #FFF;">
+                <p style="font-size: 1.5rem; font-weight: bold; color: var(--color-acentos);">**${currentData.ch_word}**</p>
+                <input type="text" id="answerInput" placeholder="Escribe aquí en Español" style="padding: 10px; font-size: 1.1rem; border-radius: 8px; border: 2px solid #ccc; width: 100%; text-align: center;">
+                <button class="primary active" id="checkBtn1" style="width: 100%;">Comprobar</button>
+            </div>
+        `;
 
-        currentData.options.forEach(opt => {
-            const b = document.createElement('div');
-            b.className = 'opt';
-            b.textContent = opt;
-            
-            b.onclick = (e) => {
-                const allOptions = document.querySelectorAll('.opt');
-                disableOptions(); 
-                
-                if (opt === currentData.correct) {
-                    b.classList.add('ok');
-                } else {
-                    b.classList.add('bad');
-                }
-                
-                checkAnswer1(opt, currentData, allOptions);
-            };
-            row.appendChild(b);
+        const inputEl = document.getElementById('answerInput');
+        const checkBtn = document.getElementById('checkBtn1');
+        
+        checkBtn.onclick = () => {
+            if (inputEl.value.trim() === "") {
+                setFeedback("¡Debes escribir algo!", 'bad');
+                return;
+            }
+            checkBtn.classList.remove('active');
+            checkBtn.disabled = true;
+            checkAnswer1(inputEl, currentData);
+        };
+        
+        inputEl.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && checkBtn.classList.contains('active')) {
+                checkBtn.click();
+            }
         });
 
-        container.appendChild(row);
-        setStageComplete(false); 
+        setStageComplete(false);
     }
-
+    
     // =======================================================================
-    // 2 - ACTIVIDAD 2: ELEGIR FIGURAS SEGÚN EL AUDIO (CORREGIDA)
+    // 2 - ACTIVIDAD 2: ESCUCHA AUDIO Y SELECCIONA FIGURA (SUSTITUCIÓN)
     // =======================================================================
     const stage2Questions = [
-        // Las rutas en 'correct' son ahora solo el nombre del archivo, ya que 'assets/img/' se añade en renderStage2
-        { audio: "Lekil k'in", filename: "Lekil_kin.mp3", correct: "escenario dia.jpg", word: "Día" },
-        { audio: "Lekil ak'wal", filename: "Lekil_akwal.mp3", correct: "escenario tarde.jpg", word: "Tarde" }, 
-        { audio: "Lekilix", filename: "Lekilix.mp3", correct: "escenario noche.jpg", word: "Noche" },
+        // 4 RONDAS
+        { audio: "Xpäsjuñ", filename: "maestro.mp3", correct: "maestro.png", word: "Maestro" },
+        { audio: "Aj cholejel", filename: "campesino.mp3", correct: "campesino.png", word: "Campesino" }, 
+        { audio: "Aj lukbäl", filename: "pescador.mp3", correct: "pescador.png", word: "Pescador" },
+        { audio: "Xts´ak", filename: "curandero.mp3", correct: "curandero.png", word: "Curandero" },
     ];
     let currentRound2 = 0; 
 
+    // Opciones para la actividad 2: Se usa el nombre de archivo estandarizado
     const stage2AllOptions = [
-        // Las rutas en 'filename' son ahora solo el nombre del archivo
-        { filename: "escenario dia.jpg", word: "Día" },
-        { filename: "escenario tarde.jpg", word: "Tarde" },
-        { filename: "escenario noche.jpg", word: "Noche" },
-        { filename: "lluvia.png", word: "Lluvia" }, 
-        { filename: "escenario selva.jpg", word: "Nublado" }
+        { filename: "maestro.png", word: "Maestro" },
+        { filename: "campesino.png", word: "Campesino" },
+        { filename: "pescador.png", word: "Pescador" },
+        { filename: "curandero.png", word: "Curandero" },
+        { filename: "albañil.png", word: "Albañil" }, 
+        { filename: "florista.png", word: "Florista" } // Distracción
     ];
 
     function checkAnswer2(selectedImage, currentData, allOptionsElements) {
         if (selectedImage === currentData.correct) {
-            setFeedback(`¡Correcto! Es la ${currentData.word}.`, 'ok');
+            setFeedback(`¡Correcto! Es el ${currentData.word}.`, 'ok');
             currentRound2++;
             setTimeout(() => {
                 renderStage2(document.getElementById('stageArea'));
             }, 1200);
         } else {
-            // El mensaje de feedback fue limpiado para usar solo el nombre del archivo.
             setFeedback('Incorrecto. ¡La figura correcta representa ' + currentData.word + '!', 'bad');
             allOptionsElements.forEach(el => {
                 if (el.dataset.img === currentData.correct) {
@@ -536,33 +601,48 @@
     
     function renderStage2(container) {
         if (currentRound2 >= stage2Questions.length) {
-            container.innerHTML = `<h2 style="color: var(--ok);">¡Genial! Terminaste las 3 rondas del día.</h2>`;
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Genial! Terminaste las ${stage2Questions.length} rondas.</h2>`;
             setStageComplete(true);
             renderControls();
             return; 
         }
 
         const currentData = stage2Questions[currentRound2];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de 3. Escucha el saludo y selecciona la figura que representa: **${currentData.word}**.</p>`;
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Questions.length}. Escucha el audio y selecciona la figura: **${currentData.word}**.</p>`;
         
+        // 1. Crear el botón de audio
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho');
         
-        const controls = `<div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">${audioBtn.outerHTML}</div>`;
-        renderControls(controls);
-        
+        // 2. Inicializar el controlsArea y centrar el botón de audio
+        renderControls();
+        const buttonWrapper = document.createElement('div');
+        buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
+        buttonWrapper.appendChild(audioBtn);
+        const feedbackEl = document.getElementById('feedback');
+        if (controlsArea) {
+            controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
+        }
+
         const row = document.createElement('div');
         row.className = 'options-row';
         
-        // Barajamos las opciones para que no siempre aparezcan en el mismo orden
-        stage2AllOptions.sort(() => Math.random() - 0.5);
+        // Crear opciones: 4 o 5 opciones por ronda (la correcta + 3/4 aleatorias)
+        let optionsToDisplay = stage2AllOptions.filter(opt => opt.filename === currentData.correct);
+        let distractionOptions = stage2AllOptions.filter(opt => opt.filename !== currentData.correct);
+        
+        // Seleccionar 3 a 5 opciones en total
+        while(optionsToDisplay.length < 4 && distractionOptions.length > 0) {
+            const randomIndex = Math.floor(Math.random() * distractionOptions.length);
+            optionsToDisplay.push(distractionOptions.splice(randomIndex, 1)[0]);
+        }
+        optionsToDisplay.sort(() => Math.random() - 0.5);
 
-        stage2AllOptions.forEach(it => {
+        optionsToDisplay.forEach(it => {
             const b = document.createElement('div');
             b.className = 'opt day-image-option'; 
             b.dataset.img = it.filename;
             
-            // CORRECCIÓN CLAVE: Usamos 'assets/img/' como prefijo base
-            b.innerHTML = `<img src="assets/img/${it.filename}" alt="${it.word}"/>`;
+            b.innerHTML = `<img src="../assets/img/${it.filename}" alt="${it.word}"/> <span style="margin-top: 5px; font-size: 0.9rem;">${it.word}</span>`;
             
             b.onclick = ()=>{
                 const allOptions = document.querySelectorAll('.opt');
@@ -583,22 +663,24 @@
         setStageComplete(false);
     }
 
+
     // =======================================================================
-    // 3 - ACTIVIDAD 3: UNIR PALABRAS (DISEÑO ORIGINAL)
+    // 3 - ACTIVIDAD 3: UNIR PALABRAS (MATCHING) - 6 PARES
     // =======================================================================
     const stage3Pairs = [
-        ['Lekil k\'in', 'Buenos días'],
-        ['Lekil ak\'wal', 'Buenas tardes'],
-        ['Lekilix', 'Hola'],
-        ['T\'yoj', 'Gracias'],
-        ['Baxik', 'Adiós'],
-        ['Yom a k\'ajt', '¿Cómo te llamas?'],
+        // 6 RONDAS
+        ['Xpäsjuñ', 'Maestro'],
+        ['Aj cholejel', 'Campesino'],
+        ['Xts´ak', 'Curandero'],
+        ['Aj lukbäl', 'Pescador'],
+        ['Xpäty otyoty', 'Albañil'],
+        ['Toñel', 'Trabajar'],
     ];
 
     function checkAllMatches3() {
         const dropzones = document.querySelectorAll('.answer-dropzone');
         let allCorrect = true;
-        const questionsList = document.getElementById('questionsList'); // La lista de preguntas arrastrables
+        const questionsList = document.getElementById('questionsList'); 
 
         dropzones.forEach(dz => {
             dz.classList.remove('ok', 'bad'); 
@@ -610,14 +692,13 @@
                 const correctPair = stage3Pairs.find(p => p[0] === questionText);
                 
                 if (correctPair && correctPair[1] === answerText) {
-                    // Correcto
                     dz.classList.add('ok');
                     droppedCard.classList.add('matched-correct'); 
                 } else {
-                    // Incorrecto: La tarjeta regresa.
                     dz.classList.add('bad');
                     allCorrect = false;
                     
+                    // Devolver la tarjeta si es incorrecta.
                     droppedCard.classList.remove('matched-correct', 'dragging');
                     questionsList.appendChild(droppedCard); 
                     
@@ -638,7 +719,7 @@
                 card.draggable = false;
                 card.classList.add('matched-correct'); 
             });
-            // La variable controlsArea está definida globalmente
+            nextBtn.classList.add('active'); 
             controlsArea.querySelector('button.ghost').style.pointerEvents = 'none';
         } else {
             setFeedback('¡Revisa los rojos! Las tarjetas incorrectas regresaron para que intentes de nuevo.', 'bad');
@@ -647,7 +728,7 @@
 
 
     function renderStage3(container){
-        container.innerHTML = `<p class="stage0-info">Arrastra el **Saludo en Ch'ol** (Amarillo) a su **Traducción en Español** (Azul).</p>`;
+        container.innerHTML = `<p class="stage0-info">Arrastra el **Nombre/Acción en Ch'ol** (Amarillo) a su **Traducción en Español** (Azul).</p>`;
         
         renderControls(`<button class="ghost" onclick="checkAllMatches3()">Comprobar</button>`);
         
@@ -737,13 +818,13 @@
     }
     
     // =======================================================================
-    // 4 - FINAL DE TEMA (SIN PUNTUACIÓN)
+    // 4 - FINAL DE TEMA (UNIFICADO)
     // =======================================================================
     function renderStage4(container) {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 1 Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Has terminado todas las actividades de Saludos.</p>
+                <p style="font-size: 1.2rem;">Puntuación simulada: **${userScore}/${TOTAL_ACTIVITY_POINTS}**</p>
                 <p>Presiona **Siguiente** para volver a la pantalla principal.</p>
             </div>
         `;
@@ -752,7 +833,7 @@
     }
 
 
-    // --- Inicialización (Solución al ReferenceError) ---
+    // --- Inicialización ---
     document.addEventListener('DOMContentLoaded', () => {
         render();
     });
