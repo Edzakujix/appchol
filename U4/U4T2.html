@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ch'ol App - Tema 2: Pasatiempos</title>
+
+    <style>
+/* --- ESTILOS UNIFICADOS (Basados en U1T1.html) --- */
+:root {
+    --color-cielo: #ADE4FF; 
+    --color-pasto: #6AA84F; 
+    --color-principal: #75b4c7;
+    --color-acentos: #2A9D8F;
+    --color-texto: #333;
+    --accent: #FF7043; 
+    --card: #ffffff;
+    --next: #29B6F6;
+    --ok: #4CAF50;
+    --bad: #E53935;
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
+    background: linear-gradient(180deg, var(--color-cielo) 65%, #ADD8E6 100%); 
+    color: var(--color-texto);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    position: relative;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.ground-sim {
+    position: fixed; bottom: 0; width: 100%; height: 20vh; background-color: var(--color-pasto);
+    border-top-left-radius: 60% 30%; border-top-right-radius: 60% 30%; z-index: -1;
+}
+
+.app {
+    width: 100%; max-width: 900px; background: var(--card); border-radius: 30px;
+    box-shadow: 0 15px 40px rgba(255, 112, 67, 0.2); padding: 30px; border: 5px solid var(--accent);
+    max-height: 95vh; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
+}
+
+header{
+    display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom: 20px; flex-shrink: 0; 
+}
+h1{
+    font-size: clamp(1.5rem, 3vw, 2rem); margin:0; color: var(--accent); text-shadow: 2px 2px #fff;
+}
+.stage-area{
+    overflow-y: auto; padding-right: 10px; padding-bottom: 20px; display: flex; 
+    flex-direction: column; justify-content: flex-start; align-items: center; scrollbar-width: thin;
+}
+.controls{
+    display:flex;gap:15px;justify-content:space-between;align-items:center; margin-top:10px;
+    flex-shrink: 0; padding-top: 10px; border-top: 1px solid #eee;
+}
+
+button.primary, button.ghost{
+    padding:12px 20px; border-radius: 15px; font-weight:700; cursor:pointer; transition: all .1s ease;
+}
+button.primary{
+    background:var(--next); color:white; border:none; box-shadow: 0 5px 0 0 #0288D1; opacity: 0.5; pointer-events: none;
+}
+button.primary.active{
+    opacity: 1; pointer-events: auto;
+}
+button.primary.active:active{
+    transform: translateY(5px); box-shadow: 0 0px 0 0 #0288D1;
+}
+button.ghost{
+    background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; font-weight: 600;
+}
+
+.options-row{display:flex; gap:20px; flex-wrap:wrap; justify-content:center}
+
+.opt{
+    min-width:140px; padding:20px; border-radius: 20px; background:#fff;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); display:flex;flex-direction:column;align-items:center;gap:10px; cursor:pointer;
+    border: 4px solid #E0E0E0; font-size: 1.1rem; font-weight: 600; transition: all .2s;
+}
+.opt:not(.disabled):hover{
+    transform:translateY(-5px) scale(1.05); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+.opt.disabled{pointer-events: none; opacity: 0.7;}
+.opt.ok{border-color:var(--ok); box-shadow:0 8px 20px rgba(76,175,80,0.3); background:#E8F5E9;}
+.opt.bad{border-color:var(--bad); box-shadow:0 8px 20px rgba(229,57,53,0.3); background:#FFEBEE;}
+
+.feedback{ font-weight:800; font-size: 1.4rem; }
+
+/* Contenedor responsivo para video (DE U1T1) */
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+    height: 0;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Estilos de Botón de Audio Centrado */
+.audio-button-wrapper {
+    display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;
+}
+.audio-button {
+    background-color: var(--accent); box-shadow: 0 4px #e05b29; font-size: 1.5rem;
+    width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; border: none; cursor: pointer; color: white;
+    transition: all 0.1s;
+}
+.audio-button:active {
+    transform: translateY(4px); box-shadow: 0 0px 0 0 #e05b29;
+}
+
+/* --- ESTILOS PARA ORDENAR ORACIÓN (Sintaxis D&D) --- */
+.sentence-builder-area {
+    width: 100%;
+    max-width: 650px;
+    padding: 20px;
+    background-color: #e3f2fd;
+    border-radius: 20px;
+    border: 3px solid #90caf9;
+    margin-bottom: 20px;
+}
+
+.target-sentence {
+    min-height: 50px;
+    border-bottom: 3px solid var(--accent);
+    padding: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+}
+
+.word-slot {
+    width: 100px;
+    min-height: 40px;
+    border: 2px dashed #90caf9;
+    background-color: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+    color: #90caf9;
+    margin: 5px;
+    flex-shrink: 0;
+}
+
+.word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.word-tile {
+    padding: 10px 15px;
+    background-color: #FFF9C4;
+    border: 3px solid #FFCA28;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: grab;
+    box-shadow: 0 3px 0 0 #FFB300;
+    transition: transform 0.1s, box-shadow 0.1s;
+    user-select: none;
+}
+.word-tile:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 0 0 #FFB300;
+}
+.word-tile.disabled {
+    opacity: 0.5;
+    cursor: default;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Media Queries */
+@media (max-width: 600px){
+    .app{ max-height: 100vh; padding: 15px; }
+    .sentence-builder-area { padding: 10px; }
+    .word-slot { width: 80px; font-size: 0.9rem; }
+    .controls{ flex-direction: column; gap: 10px; align-items: stretch; }
+    button.primary, button.ghost{ padding: 8px 15px; font-size: 0.9rem; }
+}
+    </style>
+
+</head>
+<body>
+    <div class="app" role="application" aria-label="Prototipo actividades para primaria">
+        <header>
+            <h1 id="title">Mini-Clase: Pasatiempos y Acciones</h1>
+            <div style="display: flex; gap: 10px;">
+                <!-- Botón de Inicio, usa el estilo 'ghost' de U1T1 -->
+                <button class="ghost" onclick="goHome()" style="font-weight: 500; padding: 10px;">🏠 Inicio</button>
+                <button class="primary" id="nextBtn" onclick="next()">Siguiente</button>
+            </div>
+        </header>
+
+        <main class="stage-area" id="stageArea"></main>
+
+        <div class="controls" id="controlsArea">
+            <!-- Puntuación visible eliminada de la UI -->
+        </div>
+
+        <footer>Prototipo educativo · Módulo 4: Tema 2</footer>
+    </div>
+
+    <div class="ground-sim"></div>
+
+
+<script>
+    // ************************************************************************
+    // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL (UNIFICADO)
+    // ************************************************************************
+    const MAIN_SCREEN_URL = '../U4/U4GUPA.html'; 
+    const TOTAL_ACTIVITY_POINTS = 90; // 3 actividades * 3 rondas * 10 puntos por ronda
+    
+    // Función de redirección para el botón de Inicio
+    function goHome() {
+        window.location.href = MAIN_SCREEN_URL;
+    }
+
+    // --- Definición de Datos (Actualizada con 3 Rondas) ---
+    const VOCABULARY = {
+        acciones: [
+            { ch: 'Ñak', es: 'Jugar', img: 'jugar.png', audio: 'audio_ñak.mp3' },
+            { ch: 'Xämbal', es: 'Caminar', img: 'caminar.png', audio: 'audio_xämbal.mp3' },
+            { ch: 'Ajñe', es: 'Correr', img: 'correr.png', audio: 'audio_ajñe.mp3' },
+            { ch: 'Ñuxejel', es: 'Nadar', img: 'nadar.png', audio: 'audio_ñuxejel.mp3' },
+            { ch: 'Jula’ al', es: 'Visitar', img: 'visitar.png', audio: 'audio_julaal.mp3' },
+            { ch: 'Letsel', es: 'Trepar', img: 'trepar.png', audio: 'audio_letsel.mp3' },
+            { ch: 'Ts’ijb', es: 'Escribir', img: 'escribir.png', audio: 'audio_tsijb.mp3' },
+            { ch: 'K’el', es: 'Ver', img: 'ver.png', audio: 'audio_kel.mp3' },
+        ],
+    };
+
+    const DATA = {
+        stages: [
+            { type: 'video', title: 'Mini-Clase: Pasatiempos y Acciones', videoUrl: 'https://www.youtube.com/embed/URL_DEL_VIDEO_PASATIEMPOS?rel=0' },
+            { 
+                type: 'select_image_audio', 
+                title: 'Actividad 1: ¡Verbo en Acción!',
+                // 6 Rondas (Mantenidas)
+                rounds: [
+                    { ch: 'Xämbal', audio: 'audio_xämbal.mp3', correct: 'caminar.png', 
+                        options: ['caminar.png', 'correr.png', 'trepar.png', 'nadar.png'] },
+                    { ch: 'Ajñe', audio: 'audio_ajñe.mp3', correct: 'correr.png', 
+                        options: ['correr.png', 'caminar.png', 'jugar.png', 'visitar.png'] },
+                    { ch: 'Ñuxejel', audio: 'audio_ñuxejel.mp3', correct: 'nadar.png', 
+                        options: ['nadar.png', 'visitar.png', 'trepar.png', 'escribir.png'] },
+                    { ch: 'Jula’ al', audio: 'audio_julaal.mp3', correct: 'visitar.png', 
+                        options: ['visitar.png', 'nadar.png', 'ver.png', 'caminar.png'] },
+                    { ch: 'Letsel', audio: 'audio_letsel.mp3', correct: 'trepar.png', 
+                        options: ['trepar.png', 'jugar.png', 'escribir.png', 'ver.png'] },
+                    { ch: 'Ñak', audio: 'audio_ñak.mp3', correct: 'jugar.png', 
+                        options: ['jugar.png', 'caminar.png', 'correr.png', 'nadar.png'] },
+                ]
+            },
+            {
+                type: 'sentence_builder',
+                title: 'Actividad 2: ¡Construye la Frase!',
+                // *** REDUCIDO a 3 RONDAS ***
+                rounds: [
+                    // Oración 1: Yo camino a la milpa
+                    { es: 'Yo camino a la milpa', ch_sentence: 'Joñoñ muk’oñ tyi xämbal tyi cholel', audio: 'audio_yo_camino_milpa.mp3',
+                        words: ['Joñoñ', 'tyi', 'cholel', 'muk’oñ', 'xämbal', 'tyi'] },
+                    // Oración 2: Los niños nadan en el río
+                    { es: 'Los niños nadan en el río', ch_sentence: 'Jiñi alp’eñalo’ muk’o’ tyi ñuxejel tyi kolem ja’', audio: 'audio_ninos_nadan_rio.mp3',
+                        words: ['Jiñi', 'tyi', 'muk’o’', 'kolem', 'alp’eñalo’', 'ñuxejel', 'ja’', 'tyi'] },
+                    // Oración 3: Mis hermanos corren por el campo
+                    { es: 'Mis hermanos corren por el campo', ch_sentence: 'Jiñi kermañujo’ muk’o’ tyi ajñel tyi jami', audio: 'audio_hermanos_corren_campo.mp3',
+                        words: ['Jiñi', 'jami', 'muk’o’', 'kermañujo’', 'ajñel', 'tyi', 'tyi'] },
+                ]
+            },
+            {
+                type: 'translation_multichoice',
+                title: 'Actividad 3: Traduce la Frase',
+                // *** REDUCIDO a 3 RONDAS ***
+                rounds: [
+                    // Oración 1: Yo camino a la milpa
+                    { es: 'Yo camino a la milpa', correct: 'Joñoñ muk’oñ tyi xämbal tyi cholel', 
+                        options: ['Jiñi alp’eñalo’ muk’o’ tyi xämbal.', 'Joñoñ muk’oñ tyi xämbal tyi cholel', 'Jiñi kermañujo’ muk’o’ tyi ajñel tyi jami'] },
+                    // Oración 2: Los niños nadan en el río
+                    { es: 'Los niños nadan en el río', correct: 'Jiñi alp’eñalo’ muk’o’ tyi ñuxejel tyi kolem ja’', 
+                        options: ['Jiñi kermañujo’ muk’o’ tyi ajñel tyi jami', 'Joñoñ muk’oñ tyi ñuxejel.', 'Jiñi alp’eñalo’ muk’o’ tyi ñuxejel tyi kolem ja’'] },
+                    // Oración 3: Mis hermanos corren por el campo
+                    { es: 'Mis hermanos corren por el campo', correct: 'Jiñi kermañujo’ muk’o’ tyi ajñel tyi jami', 
+                        options: ['Joñoñ muk’oñ tyi ajñel tyi cholel', 'Jiñi kermañujo’ muk’o’ tyi ajñel tyi jami', 'Jiñi alp’eñalo’ muk’o’ tyi jula’ al.'] },
+                ]
+            },
+            { type: 'final' } 
+        ]
+    };
+
+    // --- VARIABLES CRÍTICAS (DE U1T1) ---
+    const stages = [renderStage0, renderStage1_SelectImage, renderStage2_SentenceBuilder, renderStage3_Translation, renderStageFinal];
+    let currentStage = 0;
+    let currentActivityRound = 0;
+    let userScore = 0;
+    let stageProgress = new Array(stages.length).fill(false);
+    let feedbackEl = null; 
+    const titleEl = document.getElementById('title');
+    const nextBtn = document.getElementById('nextBtn');
+    const controlsArea = document.getElementById('controlsArea');
+    
+    // --- Utilidades de Control y Flujo (DE U1T1) ---
+    
+    function setStageComplete(isComplete = true) {
+         if (isComplete && !stageProgress[currentStage]) {
+            // Se suma la puntuación simulada (30 pts por actividad)
+            if(currentStage >= 1 && currentStage <= 3) { 
+                 // Asumiendo 10 puntos por ronda. 3 rondas = 30 puntos por actividad.
+                 // NOTE: La puntuación se suma en addPoints, esta función solo habilita el botón si la actividad termina.
+            }
+        }
+        stageProgress[currentStage] = isComplete;
+        nextBtn.classList.toggle('active', isComplete); 
+    }
+    
+    function clearFeedback(){ if(feedbackEl) feedbackEl.textContent = ""; }
+    
+    function setFeedback(text, kind){
+        if(!feedbackEl) return;
+        feedbackEl.textContent = text;
+        if(kind === 'ok'){ feedbackEl.style.color = 'var(--ok)' }
+        else if(kind === 'bad'){ feedbackEl.style.color = 'var(--bad)' }
+        else { feedbackEl.style.color = 'var(--color-texto)' }
+    }
+    
+    function disableOptions() {
+        document.querySelectorAll('.opt, .img-option, .word-tile').forEach(el => {
+            el.classList.add('disabled', 'prevent-click');
+            el.onclick = null;
+            if (el.draggable) el.draggable = false;
+        });
+        const checkBtn = document.querySelector('.controls .ghost');
+        if(checkBtn) checkBtn.style.pointerEvents = 'none';
+    }
+
+    function renderControls(html = '') {
+        // Renderiza solo el área de feedback y el botón Siguiente
+        controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>${html}`;
+        feedbackEl = document.getElementById('feedback');
+    }
+
+    function addPoints(points = 10) {
+        userScore += points;
+        // La puntuación no se muestra en la UI
+    }
+
+    function speakText(text, lang='es-ES'){
+        if(!window.speechSynthesis) return;
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = lang;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+    }
+
+    function playAudio(audioFilename, text = audioFilename.replace('.mp3', ''), lang = 'cho') {
+        const audioUrl = `../assets/audio/${audioFilename}`; 
+        const audio = new Audio(audioUrl);
+        
+        audio.play()
+            .then(() => { setFeedback(`🔊 Reproduciendo: "${text}"`, 'neutral'); })
+            .catch(e => {
+                console.error(`❌ Error al cargar o reproducir "${audioUrl}": ${e.message}`);
+                speakText(text, lang); 
+                setFeedback(`[TTS] No se encontró el audio real. Reproduciendo: "${text}"`, 'neutral');
+            });
+    }
+
+    function next() {
+        if (!nextBtn.classList.contains('active')) {
+            setFeedback("¡Termina esta parte antes de continuar!", 'bad');
+            return;
+        }
+
+        if (currentStage === stages.length - 1) {
+            alert(`✅ Tema Terminado. Puntuación: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo al Módulo 4...`);
+            window.location.href = MAIN_SCREEN_URL; 
+            return; 
+        }
+
+        currentStage++;
+        currentActivityRound = 0;
+        render();
+    }
+    
+    function render() {
+        clearFeedback(); 
+        setStageComplete(false);
+        const container = document.getElementById('stageArea'); 
+        container.innerHTML=''; 
+
+        const titles = [DATA.stages[0].title, DATA.stages[1].title, DATA.stages[2].title, DATA.stages[3].title, '¡Tema Terminado!'];
+        titleEl.textContent = titles[currentStage];
+
+        stages[currentStage](container, DATA.stages[currentStage]);
+
+        if (currentStage === 0 || currentStage === stages.length - 1) {
+            setStageComplete(true);
+        }
+    }
+    
+    // --- Nueva función para la pantalla de éxito (similar a U1T1) ---
+    function showActivitySuccessScreen(activityTitle) {
+        const container = document.getElementById('stageArea');
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; background-color: var(--card); border-radius: 20px; border: 3px solid var(--ok); max-width: 400px; margin-top: 50px;">
+                <h2 style="color: var(--ok); font-size: 2rem;">¡Felicidades!</h2>
+                <p style="font-size: 1.1rem;">Completaste la actividad: **${activityTitle}**.</p>
+                <p style="margin-top: 20px;">Presiona **Siguiente** para continuar.</p>
+            </div>
+        `;
+        setStageComplete(true);
+    }
+
+    // =======================================================================
+    // 0 - MINI-CLASE (VIDEO)
+    // =======================================================================
+    function renderStage0(container, currentData) {
+        // Se usa la estructura de video-wrapper de U1T1
+        const videoHtml = `
+            <div class="video-wrapper">
+                <iframe src="${currentData.videoUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <p style="text-align:center; max-width: 600px; margin-top: 20px;">
+                ¡Mira el video para aprender sobre los **Pasatiempos y Acciones** en Ch'ol! Luego, presiona **Siguiente**.
+            </p>
+        `;
+        container.innerHTML = videoHtml;
+        setStageComplete(true);
+        renderControls();
+    }
+
+    // 1 - ACTIVIDAD 1: ESCUCHA Y SELECCIONA IMAGEN (Verbo Léxico)
+    function renderStage1_SelectImage(container, currentData) {
+        const roundData = currentData.rounds[currentActivityRound];
+        const correctVerb = VOCABULARY.acciones.find(v => v.ch === roundData.ch);
+        const totalRounds = currentData.rounds.length;
+
+        container.innerHTML = `
+            <p class="question-stage-info">Ronda ${currentActivityRound + 1} / ${totalRounds}</p>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <p class="question-text">Escucha la acción en Ch'ol (${correctVerb.es}) y selecciona la imagen correcta.</p>
+                <div class="audio-button-wrapper">
+                    <button class="audio-button" onclick="playAudio('${roundData.audio}', '${roundData.ch}')">🔊</button>
+                </div>
+            </div>
+            <div class="options-row" id="imageOptionsRow"></div>
+        `;
+
+        const row = document.getElementById('imageOptionsRow');
+        const allOptions = VOCABULARY.acciones
+            .filter(v => roundData.options.includes(v.img)) 
+            .sort(() => Math.random() - 0.5);
+
+        allOptions.forEach(item => {
+            const b = document.createElement('div');
+            b.className = 'opt day-image-option';
+            b.dataset.img = item.img;
+            
+            b.innerHTML = `<img src="../assets/img/${item.img}" alt="${item.es}"/> <p>${item.es}</p>`; 
+            
+            b.onclick = () => {
+                disableOptions();
+                
+                if (item.img === roundData.correct) { 
+                    b.classList.add('ok');
+                    addPoints(10);
+                } else { 
+                    b.classList.add('bad');
+                    const correctEl = document.querySelector(`.opt[data-img="${roundData.correct}"]`);
+                    if(correctEl) correctEl.classList.add('ok');
+                }
+
+                setTimeout(() => {
+                    currentActivityRound++;
+                    if (currentActivityRound < totalRounds) { render(); } else { showActivitySuccessScreen(currentData.title); }
+                }, 1500);
+            };
+            row.appendChild(b);
+        });
+        setStageComplete(false);
+        renderControls();
+    }
+    
+    // 2 - ACTIVIDAD 2: ORDENAR LA ORACIÓN (Sintaxis D&D)
+    function renderStage2_SentenceBuilder(container, currentData) {
+        const roundData = currentData.rounds[currentActivityRound];
+        const correctWords = roundData.ch_sentence.split(' ');
+        const totalRounds = currentData.rounds.length;
+
+        // Limpiar y configurar controles para esta actividad
+        renderControls(`
+            <button class="ghost" onclick="checkAllWords2()">Comprobar Frase</button>
+        `); // Reasigna feedbackEl
+
+        container.innerHTML = `
+            <p class="question-stage-info">Ronda ${currentActivityRound + 1} / ${totalRounds}</p>
+            <p class="question-text">Ordena las palabras para formar la frase en Ch'ol:</p>
+            <p style="font-size: 1.2rem; color: var(--color-acentos); font-weight: bold;">(Español: ${roundData.es})</p>
+            
+            <div class="audio-button-wrapper">
+                <!-- *** REQUERIMIENTO CUMPLIDO: AUDIO GUÍA *** -->
+                <button class="audio-button" onclick="playAudio('${roundData.audio}', '${roundData.ch_sentence}')">🔊 Guía</button>
+            </div>
+
+            <div class="sentence-builder-area">
+                <div class="target-sentence" id="targetSentence">
+                    </div>
+                <hr style="border: 1px solid #ccc; margin: 15px 0;">
+                <div class="word-bank" id="wordBank">
+                    </div>
+            </div>
+        `;
+
+        const targetSentence = document.getElementById('targetSentence');
+        const wordBank = document.getElementById('wordBank');
+
+        // 1. Crear Slots (tantos como palabras correctas)
+        correctWords.forEach((word, index) => {
+            const slot = document.createElement('div');
+            slot.className = 'word-slot';
+            slot.dataset.index = index;
+            slot.dataset.correct = word;
+
+            slot.addEventListener('dragover', (e) => { e.preventDefault(); slot.style.backgroundColor = '#e0f7fa'; });
+            slot.addEventListener('dragleave', () => { slot.style.backgroundColor = '#fff'; });
+            slot.addEventListener('drop', handleSlotDrop);
+            targetSentence.appendChild(slot);
+        });
+
+        // 2. Crear Tarjetas de Palabras (revueltas)
+        const shuffledWords = roundData.words.sort(() => Math.random() - 0.5);
+        shuffledWords.forEach((word, index) => {
+            const tile = document.createElement('div');
+            tile.className = 'word-tile';
+            tile.id = `tile-${currentActivityRound}-${index}`;
+            tile.textContent = word;
+            tile.draggable = true;
+            tile.dataset.word = word;
+
+            tile.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', e.target.dataset.word);
+                e.dataTransfer.setData('sourceId', e.target.id);
+                e.target.classList.add('dragging');
+            });
+            tile.addEventListener('dragend', (e) => {
+                e.target.classList.remove('dragging');
+            });
+
+            wordBank.appendChild(tile);
+        });
+
+        function handleSlotDrop(e) {
+            e.preventDefault();
+            const droppedWord = e.dataTransfer.getData('text/plain');
+            const sourceId = e.dataTransfer.getData('sourceId');
+            const draggedTile = document.getElementById(sourceId);
+            const targetSlot = e.target.closest('.word-slot');
+
+            if (!targetSlot || !draggedTile || draggedTile.classList.contains('disabled')) return;
+
+            // Devolver tile que ya estaba
+            if (targetSlot.children.length > 0) {
+                const oldTile = targetSlot.children[0];
+                wordBank.appendChild(oldTile);
+                oldTile.classList.remove('disabled');
+            }
+            
+            // Mover la nueva tile
+            targetSlot.innerHTML = '';
+            targetSlot.appendChild(draggedTile);
+            draggedTile.classList.remove('dragging');
+            draggedTile.classList.add('disabled'); // Deshabilita para que no se arrastre de nuevo del banco
+            
+            targetSlot.style.backgroundColor = '#fff';
+            targetSlot.style.borderStyle = 'solid';
+            targetSlot.style.borderColor = '#90caf9';
+        }
+
+        // 3. Comprobar la oración
+        window.checkAllWords2 = function() {
+            const currentSentence = Array.from(targetSentence.children)
+                .map(slot => (slot.children.length > 0) ? slot.children[0].dataset.word : null);
+            
+            // Chequear si todos los slots están llenos
+            if (currentSentence.includes(null) || currentSentence.length !== correctWords.length) {
+                setFeedback('¡Faltan palabras por ordenar!', 'bad');
+                return;
+            }
+
+            const formedSentence = currentSentence.join(' ');
+            
+            // Comparación estricta con la frase correcta en Ch'ol
+            if (formedSentence === roundData.ch_sentence) {
+                setFeedback('¡Correcto! ¡Excelente trabajo armando la frase!', 'ok');
+                addPoints(10);
+                disableOptions();
+                
+                setTimeout(() => {
+                    currentActivityRound++;
+                    if (currentActivityRound < totalRounds) { render(); } else { showActivitySuccessScreen(currentData.title); }
+                }, 1500);
+            } else {
+                setFeedback('Incorrecto. Revisa el orden y vuelve a intentarlo.', 'bad');
+                
+                // Opción simple: Devolver todas las palabras al banco (reset)
+                targetSentence.querySelectorAll('.word-tile').forEach(tile => {
+                    tile.classList.remove('disabled');
+                    wordBank.appendChild(tile);
+                });
+                targetSentence.querySelectorAll('.word-slot').forEach(slot => {
+                    slot.innerHTML = ''; // Vaciar el slot
+                    slot.style.borderStyle = 'dashed';
+                    slot.style.borderColor = '#90caf9';
+                });
+            }
+        };
+
+        setStageComplete(false);
+    }
+
+
+    // 3 - ACTIVIDAD 3: TRADUCE LA FRASE (Opción Múltiple)
+    function renderStage3_Translation(container, currentData) {
+        const roundData = currentData.rounds[currentActivityRound];
+        const totalRounds = currentData.rounds.length;
+
+        container.innerHTML = `
+            <p class="question-stage-info">Ronda ${currentActivityRound + 1} / ${totalRounds}</p>
+            <p class="question-text" style="color: var(--color-acentos); border: 2px solid var(--color-acentos); padding: 15px; border-radius: 10px; background: #e0f7fa;">
+                Traduce al Ch'ol: **"${roundData.es}"**
+            </p>
+            <div class="options-row" id="optionsContainer"></div>
+        `;
+
+        const optionsContainer = document.getElementById('optionsContainer');
+        // Se desordena para asegurar que la respuesta no siempre esté en la misma posición
+        const allOptions = roundData.options.sort(() => Math.random() - 0.5);
+        
+        allOptions.forEach(opt => {
+            const b = document.createElement('div');
+            b.className = 'opt';
+            b.textContent = opt;
+            
+            b.onclick = () => {
+                disableOptions();
+
+                if (opt === roundData.correct) { 
+                    b.classList.add('ok');
+                    addPoints(10);
+                } else { 
+                    b.classList.add('bad'); 
+                    document.querySelectorAll('.opt').forEach(btn => {
+                        if (btn.textContent === roundData.correct) {
+                            btn.classList.add('ok');
+                        }
+                    });
+                }
+                
+                setTimeout(() => {
+                    currentActivityRound++;
+                    if (currentActivityRound < totalRounds) { render(); } else { showActivitySuccessScreen(currentData.title); }
+                }, 2500);
+            };
+            optionsContainer.appendChild(b);
+        });
+        setStageComplete(false); 
+        renderControls();
+    }
+
+    // 4 - FINAL DE TEMA
+    function renderStageFinal(container) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
+                <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 2: Pasatiempos Completado! 🎉</h2>
+                <p style="font-size: 1.2rem;">Puntuación total: **${userScore} / ${TOTAL_ACTIVITY_POINTS}**</p>
+                <p>Presiona **Siguiente** para volver a la pantalla de módulos.</p>
+            </div>
+        `;
+        setStageComplete(true);
+        renderControls();
+    }
+
+
+    // --- Inicialización ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Renderiza los controles iniciales (feedback y botón siguiente)
+        document.getElementById('controlsArea').innerHTML = `
+            <div id="feedback" class="feedback"></div>
+            <button class="primary" id="nextBtn" onclick="next()">Siguiente</button>
+        `;
+        render();
+    });
+</script>
+</body>
+</html>

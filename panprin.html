@@ -3,185 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aprendiendo Ch'ol</title>
+    <title>Menú Principal - Ch'ol App</title>
     <style>
-        /* Paleta de colores para referencia: 
-         * Fondo Base: #7BE3C7 (Menta)
-         * Color Principal (H1): #0081A7 (Azul Oscuro)
-         * Color Acento (Span): #F88F8F (Rosa Salmón)
-        */
+        /* Paleta y Fondo basados en la imagen */
+        :root {
+            --color-cielo: #ADE4FF;
+            --color-pasto: #6AA84F;
+            --color-marco: #E0E0E0;
+            --color-texto: #FFFFFF;
+            --btn-donde-vivo: #FF9933; 
+            --btn-escuela: #8FBC8F;    
+            --btn-cuerpo: #FFD966;     
+            --btn-pasatiempos: #FF5E5E;
+            --btn-familia: #5FA8D3;    
+            --btn-perfil: #FFC0CB;     
+            font-family: 'Varela Round', sans-serif;
+        }
 
         body {
-            /* Mantenemos el body como referencia de posición para el botón absoluto */
-            position: relative; 
-            background: linear-gradient(135deg, #7BE3C7, #B5EAD7); 
-            font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
+            background-color: var(--color-cielo);
             margin: 0;
-            padding: 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: flex-start;
             min-height: 100vh;
-            color: #4B4B4B;
-            text-align: center;
+            overflow: hidden; 
         }
 
-        /* ------------------ BOTÓN DE INICIO DE SESIÓN EN ESQUINA ------------------ */
-        .google-login-button {
-            /* Lo posicionamos de forma absoluta respecto al body */
-            position: absolute;
-            top: 20px; /* Separación de arriba */
-            right: 20px; /* Separación de la derecha */
-            
-            /* Estilos y animación */
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            background-color: #FFFFFF;
-            border: 1px solid #DADCE0;
-            border-radius: 24px;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-decoration: none;
-            color: #555;
-            transition: all 0.2s;
-            z-index: 100; /* Aseguramos que esté por encima de cualquier otro elemento */
-        }
-
-        .google-login-button:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .google-icon {
-            width: 20px;
-            height: 20px;
-        }
-
-        /* ------------------ CONTENEDOR PRINCIPAL ------------------ */
-        .container {
-            padding: 0 20px; /* Añadimos padding horizontal para que el contenido no toque los bordes */
-            max-width: 900px;
+        /* Diseño del terreno */
+        .ground {
+            position: fixed;
+            bottom: 0;
             width: 100%;
+            height: 30vh;
+            background-color: var(--color-pasto);
+            border-top-left-radius: 50% 10%;
+            border-top-right-radius: 50% 10%;
+            z-index: 0;
         }
 
-        .header {
-            margin-bottom: 40px;
-            /* Añadimos un margen superior para que el contenido no quede debajo del botón */
-            padding-top: 60px; 
-        }
-
-        .header h1 {
-            font-size: clamp(2.2rem, 4vw, 4rem); 
-            font-weight: bold;
-            color: #0081A7; 
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            margin-bottom: 0.5rem;
-        }
-
-        .header p {
-            font-size: 1.5rem;
-            color: #555;
-            margin-top: 0;
-        }
-
-        /* ------------------ VIDEO RESPONSIVO ------------------ */
-        .video-container {
+        /* Contenedor de la interfaz principal */
+        .interface-box {
+            background-color: rgba(255, 255, 255, 0.612); 
+            border-radius: 25px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            margin-top: 5vh;
+            padding: 20px;
+            box-sizing: border-box;
             position: relative;
-            padding-bottom: 56.25%; 
-            height: 0;
-            overflow: hidden;
-            border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            z-index: 10;
         }
 
-        .video-container video {
-            position: absolute;
-            top: 0;
-            left: 0;
+        /* Encabezado */
+        header {
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            padding: 10px 0; 
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+        }
+
+        header h1 {
+            color: #4A4A4A;
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin: 0;
         }
         
-        /* ============================================== */
-        /* === MEDIA QUERIES PARA RESPONSIVIDAD MÓVIL === */
-        /* ============================================== */
-        @media (max-width: 768px) {
-            /* Ajustes para tabletas y móviles grandes */
-            .header h1 {
-                font-size: 3rem;
-            }
-            .header p {
-                font-size: 1.2rem;
-            }
-            
-            /* Ajustamos la posición del botón para que no quede pegado al borde */
-            .google-login-button {
-                 top: 15px;
-                 right: 15px;
-                 padding: 10px 15px; /* Reducimos un poco el tamaño */
-            }
+        /* Botón de perfil flotante fuera del cajón */
+        .profile-button {
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            background-color: var(--btn-perfil); 
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease-in-out;
+            z-index: 100; 
         }
 
-        @media (max-width: 500px) {
-            /* Ajustes para la mayoría de los teléfonos móviles */
+        .profile-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            background-color: #FFB6C1; 
+        }
+
+        /* Área de Botones */
+        .button-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Aumentamos la altura para acomodar el nuevo espaciado */
+            height: 480px; 
+            padding: 40px;
+        }
+
+        .center-content {
+            /* Hacemos el contenedor más grande */
+            width: 250px; 
+            height: 250px;
             
-            /* Hacemos el botón MÁS PEQUEÑO para que quepa bien en la esquina */
-            .google-login-button {
+            /* Quitamos el marco, fondo y sombra */
+            background-color: transparent; 
+            border: none;
+            box-shadow: none;
+            border-radius: 0; 
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            overflow: hidden; 
+        }
+        
+        .center-content img {
+            /* La imagen ocupa el nuevo contenedor grande */
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Estilo para los nuevos enlaces (<a>) de navegación */
+        .nav-btn {
+            position: absolute;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            color: var(--color-texto);
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.2);
+            transition: all 0.1s ease-in-out; 
+            text-decoration: none;
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Efecto al pasar el cursor (hover) para todos los enlaces de navegación */
+        .nav-btn:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 0 0 rgba(0, 0, 0, 0.2); 
+            filter: brightness(1.1); 
+        }
+
+        .nav-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 0 rgba(0, 0, 0, 0.2);
+        }
+
+        /* Posicionamiento específico de los enlaces - DESKTOP */
+        /* Familia: Arriba centrado */
+        #btn-familia { background-color: var(--btn-familia); top: 30px; left: 50%; transform: translateX(-50%); }
+
+        /* Fila 2: Donde Vivo y Cuerpo (bajadas 30px) */
+        #btn-donde-vivo { background-color: var(--btn-donde-vivo); top: 100px; left: 50px; } 
+        #btn-cuerpo { background-color: var(--btn-cuerpo); top: 100px; right: 50px; } 
+
+        /* Fila 3: Escuela y Pasatiempos (bajadas 30px) */
+        #btn-escuela { background-color: var(--btn-escuela); top: 250px; left: 20px; } 
+        #btn-pasatiempos { background-color: var(--btn-pasatiempos); top: 250px; right: 20px; } 
+
+        /* ========================================================= */
+        /* MEDIA QUERY: OPTIMIZACIÓN MÓVIL (MAX-WIDTH: 600PX) */
+        /* ========================================================= */
+        @media (max-width: 600px) {
+            .interface-box {
+                margin-top: 10vh; 
+                padding: 10px; 
+                margin-bottom: 20px; 
+            }
+            header {
+                padding: 5px 0;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .profile-button {
                 top: 10px;
                 right: 10px;
-                padding: 8px 12px;
-                font-size: 0.8rem; /* Reducimos el texto */
+                padding: 8px 15px;
+                font-size: 0.85rem;
             }
-            .google-icon {
-                width: 16px;
-                height: 16px;
+            .button-area {
+                height: 350px; 
+                padding: 20px 0; 
+            }
+            .center-content {
+                width: 140px; 
+                height: 140px;
+                /* El centro se mantiene en la misma posición relativa para móvil */
+                top: 60%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+                white-space: nowrap; 
+            }
+
+            /* Reajuste de posiciones para móvil: (Mantenemos los valores corregidos) */
+            
+            /* Fila Superior */
+            #btn-familia { 
+                top: 30px; 
+                left: 50%; 
+                transform: translateX(-50%); 
+            }
+            /* Fila 2 (Donde Vivo y Cuerpo) */
+            #btn-donde-vivo { 
+                top: 110px; 
+                left: 50%; 
+                transform: translateX(-100%) translateX(-15px);
+            } 
+            #btn-cuerpo { 
+                top: 110px; 
+                left: 50%; 
+                transform: translateX(0) translateX(15px);
             }
             
-            /* Aseguramos que el contenido principal no se superponga con el botón */
-            .header {
-                padding-top: 50px; /* Reducimos el padding superior */
-                margin-bottom: 20px;
-            }
-            .header h1 {
-                font-size: 2.2rem;
-            }
+            /* Fila 3 (Escuela y Pasatiempos) */
+            #btn-escuela { 
+                top: 240px; 
+                left: 0; 
+                transform: translateX(10px); 
+            } 
+            #btn-pasatiempos { 
+                top: 240px; 
+                right: 0; 
+                transform: translateX(-10px); 
+            } 
         }
     </style>
 </head>
 <body>
+    
+<a href="user.html" class="profile-button">Mi Perfil</a>
 
-    <a href="#" class="google-login-button" id="btn-login">
-        <img src="https://www.google.com/favicon.ico" alt="Google Icon" class="google-icon">
-        Acceder con Google
-    </a>
-
-    <div class="container">
-        <header class="header">
-            <h1>Bienvenidos a <span style="color: #F88F8F;">Aprendiendo CH'OL</span></h1>
-            <p>¡Aquí aprenderás cosas nuevas y muy divertidas!</p>
+    <div class="interface-box">
+        <header>
+            <h1>MÓDULOS</h1>
         </header>
 
-        <div class="video-container">
-            <video controls autoplay muted>
-                <source src="videos/personaje_presentacion.mp4" type="video/mp4"> 
-                Tu navegador no soporta la etiqueta de video.
-            </video>
+        <div class="button-area">
+            
+            <div class="center-content">
+                <img src="assets\img\mama.png" alt="Imagen representativa del módulo">
+            </div>
+            
+            <!-- FAMILIA (1) - Arriba Centrado -->
+            <a href="U1/U1FAM.html" class="nav-btn" id="btn-familia">1 FAMILIA</a>
+            
+            <!-- DONDE VIVO (2) y CUERPO (4) - Fila Media Superior -->
+            <a href="U2/U2DOVI.html" class="nav-btn" id="btn-donde-vivo">2 DONDE VIVO</a>
+            <a href="U3/U3ESC.html" class="nav-btn" id="btn-cuerpo">3 ESCUELA</a>
         </div>
     </div>
     
-    <script>
-        document.getElementById('btn-login').addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Simulación de la lógica de Backend/API
-            alert("Simulando Inicio de Sesión Exitoso. Redireccionando...");
-            
-            // Redirección automática al Código 2 (puedes cambiar el nombre del archivo)
-            window.location.href = "pantalla2.html"; 
-        });
-    </script>
+    <div class="ground"></div>
+
 </body>
 </html>

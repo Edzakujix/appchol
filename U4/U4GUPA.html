@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidad 4 - Mis Gustos y Pasatiempos</title>
+    <style>
+        /* Nuevos Colores de Fondo y Temas (Mantenemos el tema cielo/pasto) */
+        :root {
+            --color-cielo: #ADE4FF; /* Azul claro */
+            --color-pasto: #6AA84F; /* Verde pasto */
+            --color-principal: #75b4c7;
+            --color-acentos: #2A9D8F;
+            --color-texto: #333;
+        }
+
+        /* Estilos Base (Copiados de U1FAM.html) */
+        body {
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
+            margin: 0;
+            padding: 0; 
+            background: linear-gradient(180deg, var(--color-cielo) 65%, #ADD8E6 100%); 
+            color: var(--color-texto);
+            text-align: center;
+            min-height: 100vh;
+            position: relative; 
+        }
+        
+        /* Simulación del pasto inferior (como elemento decorativo) */
+        .ground-sim {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 20vh;
+            background-color: var(--color-pasto);
+            border-top-left-radius: 60% 30%;
+            border-top-right-radius: 60% 30%;
+            z-index: -1; 
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 60px; 
+            position: relative;
+        }
+
+        /* Botón de Retroceso */
+        .back-button {
+            position: absolute; 
+            top: 15px; 
+            left: 20px;
+            background-color: #FFF;
+            border: 3px solid var(--color-principal);
+            color: var(--color-texto);
+            padding: 10px 15px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s;
+            z-index: 10;
+        }
+        .back-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Nuevo Título del Módulo */
+        h1 {
+            color: var(--color-acentos);
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px #fff;
+        }
+
+        /* ------------------ CONTENIDO PRINCIPAL Y LECCIONES ------------------ */
+        .main-content {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: nowrap;
+            align-items: flex-start;
+        }
+
+        .character-area {
+            background-color: #fff;
+            border: 5px solid var(--color-acentos); 
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            width: 300px; 
+            flex-shrink: 0; 
+        }
+
+        .character-area img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+        }
+
+        .lessons-and-games {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 50%;
+            max-width: 600px;
+        }
+
+        .lesson-card {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-align: left;
+            text-decoration: none; 
+            opacity: 1; 
+            color: var(--color-texto); /* Asegura que el texto sea visible */
+        }
+        
+        /* Se elimina .lesson-card.locked */
+
+        .lesson-card:hover {
+            transform: scale(1.02); 
+        }
+
+        .lesson-card .icon {
+            font-size: 2.5rem; 
+            color: var(--color-acentos);
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+
+        .lesson-card h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--color-texto);
+        }
+
+        /* MEDIA QUERIES PARA RESPONSIVIDAD MÓVIL (Copiados) */
+        @media (max-width: 768px) {
+            
+            h1 { font-size: 2rem; }
+            
+            .back-button { top: 10px; left: 10px; padding: 8px 12px; font-size: 1.2rem; }
+            
+            .container { padding-top: 50px; }
+
+            .main-content {
+                flex-direction: column; 
+                align-items: center;
+                gap: 30px;
+            }
+
+            .character-area {
+                width: 90%; 
+                max-width: 400px;
+            }
+
+            .lessons-and-games {
+                width: 100%; 
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../panprin.html" class="back-button" title="Regresar">◀️</a>
+    
+    <div class="container">
+        <h1>MÓDULO 4: MIS GUSTOS Y PASATIEMPOS</h1>
+        
+        <div class="main-content">
+            <div class="character-area">
+                <img src="../assets/img/img1.png" alt="Personaje principal del Módulo 4">
+            </div>
+
+            <div class="lessons-and-games">
+                
+                <a class="lesson-card" href="../U4/U4T1.html">
+                    <span class="icon">1</span> 
+                    <h3>Gustos</h3>
+                </a>
+                
+                <a class="lesson-card" href="../U4/U4T2.html">
+                    <span class="icon">2</span> 
+                    <h3>Pasatiempos</h3>
+                </a>
+                
+                <a href="../U4/U4T3.html" class="lesson-card">
+                    <span class="icon">3</span> 
+                    <h3>Mi Mundo</h3>
+                </a>
+                
+                </div>
+        </div>
+    </div>
+    
+    <div class="ground-sim"></div>
+</body>
+</html>

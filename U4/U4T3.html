@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ch'ol App - Tema 3: Mi Mundo</title>
+
+    <style>
+/* --- ESTILOS GENERALES --- */
+:root {
+    --color-cielo: #ADE4FF; 
+    --color-pasto: #6AA84F; 
+    --color-principal: #75b4c7;
+    --color-acentos: #2A9D8F;
+    --color-texto: #333;
+    --accent: #FF7043; 
+    --card: #ffffff;
+    --next: #29B6F6;
+    --ok: #4CAF50;
+    --bad: #E53935;
+    /* Colores para Actividad 2 */
+    --matching-bg: #8AC257; 
+    --matching-card-bg: #E7F6E1; 
+    --select-highlight: #FF7043; 
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
+    background: linear-gradient(180deg, var(--color-cielo) 65%, #ADD8E6 100%); 
+    color: var(--color-texto);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    position: relative;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.ground-sim {
+    position: fixed; bottom: 0; width: 100%; height: 20vh; background-color: var(--color-pasto);
+    border-top-left-radius: 60% 30%; border-top-right-radius: 60% 30%; z-index: -1;
+}
+
+.app {
+    width: 100%; max-width: 900px; background: var(--card); border-radius: 30px;
+    box-shadow: 0 15px 40px rgba(255, 112, 67, 0.2); padding: 30px; border: 5px solid var(--accent);
+    max-height: 95vh; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
+}
+
+header{
+    display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom: 20px; flex-shrink: 0; 
+}
+h1{
+    font-size: clamp(1.5rem, 3vw, 2rem); margin:0; color: var(--accent); text-shadow: 2px 2px #fff;
+}
+.stage-area{
+    overflow-y: auto; padding-right: 10px; padding-bottom: 20px; display: flex; 
+    flex-direction: column; justify-content: flex-start; align-items: center; scrollbar-width: thin;
+    flex-grow: 1; /* Para ocupar el espacio disponible */
+}
+
+/* --- CONTROLES (FOOTER) --- */
+.controls{
+    display:flex; gap:15px; justify-content:center; align-items:center; margin-top:10px;
+    flex-shrink: 0; padding-top: 10px; border-top: 1px solid #eee; min-height: 50px;
+}
+
+button.primary, button.ghost{
+    padding:12px 20px; border-radius: 15px; font-weight:700; cursor:pointer; transition: all .1s ease;
+}
+/* Botón Siguiente (Solo Header) */
+button.primary{
+    background:var(--next); color:white; border:none; box-shadow: 0 5px 0 0 #0288D1; opacity: 0.5; pointer-events: none;
+}
+button.primary.active{
+    opacity: 1; pointer-events: auto;
+}
+button.primary.active:active{
+    transform: translateY(5px); box-shadow: 0 0px 0 0 #0288D1;
+}
+button.ghost{
+    background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; font-weight: 600;
+}
+
+/* --- ESTILOS DEL VIDEO (Corrección para que se vea) --- */
+.video-wrapper {
+    width: 100%;
+    position: relative;
+    padding-bottom: 56.25%; /* Aspect Ratio 16:9 */
+    height: 0;
+    overflow: hidden;
+    border-radius: 15px;
+    border: 3px solid var(--accent);
+    background: #000;
+    margin-bottom: 20px;
+}
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- ESTILOS DE BOTONES Y OPCIONES --- */
+.options-row{display:flex; gap:20px; flex-wrap:wrap; justify-content:center}
+
+.opt{
+    min-width:140px; padding:20px; border-radius: 20px; background:#fff;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); display:flex;flex-direction:column;align-items:center;gap:10px; cursor:pointer;
+    border: 4px solid #E0E0E0; font-size: 1.1rem; font-weight: 600; transition: all .2s;
+}
+.opt:not(.disabled):hover{
+    transform:translateY(-5px) scale(1.05); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+.opt.disabled{pointer-events: none; opacity: 0.7;}
+.opt.ok{border-color:var(--ok); box-shadow:0 8px 20px rgba(76,175,80,0.3); background:#E8F5E9;}
+.opt.bad{border-color:var(--bad); box-shadow:0 8px 20px rgba(229,57,53,0.3); background:#FFEBEE;}
+
+.feedback{ font-weight:800; font-size: 1.4rem; min-height: 1.5em; }
+
+/* --- ACTIVIDAD 1: IMAGEN --- */
+.image-target-wrapper {
+    width: 100%;
+    display: flex; 
+    justify-content: center; 
+    margin-bottom: 20px;
+}
+.image-target {
+    max-width: 350px; 
+    height: 220px; 
+    border: 5px solid var(--accent);
+    border-radius: 15px;
+    overflow: hidden;
+    background: white;
+}
+.image-target img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; 
+}
+
+
+/* --- ACTIVIDAD 2: MATCHING --- */
+.matching-click-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: var(--matching-bg); 
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.matching-card {
+    background-color: var(--matching-card-bg);
+    border-radius: 12px;
+    padding: 15px 20px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
+    border: 2px solid transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.matching-card:hover:not(.matched):not(.selected) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 0 rgba(0,0,0,0.15);
+}
+.matching-card.selected {
+    border-color: var(--select-highlight);
+    box-shadow: 0 0 0 4px var(--select-highlight);
+    background-color: #F8E3DD; 
+}
+.matching-card.matched {
+    background-color: var(--ok);
+    color: white;
+    pointer-events: none;
+    cursor: default;
+    box-shadow: none;
+    border-color: var(--ok);
+}
+.matching-card.shaking {
+    animation: shake 0.5s;
+    animation-iteration-count: 2;
+    border-color: var(--bad) !important;
+    box-shadow: 0 0 0 4px var(--bad) !important;
+    background-color: #FFEBEE !important;
+    color: var(--bad);
+}
+@keyframes shake {
+    0%, 100% {transform: translateX(0);}
+    20%, 60% {transform: translateX(-5px);}
+    40%, 80% {transform: translateX(5px);}
+}
+.questions-stack, .answers-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.5);
+}
+.stack-title {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--color-texto);
+    margin-bottom: 5px;
+    text-align: left;
+    padding-left: 10px;
+}
+@media (min-width: 601px) {
+    .matching-click-container {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+    .questions-stack, .answers-stack {
+        flex-basis: 48%;
+    }
+}
+
+/* Media Queries */
+@media (max-width: 600px){
+    .app{ max-height: 100vh; padding: 15px; }
+    .image-target { max-width: 200px; height: 120px; } 
+    .matching-container { flex-direction: column; }
+    .matching-column { min-width: 100%; }
+    .opt { min-width: 80%; font-size: 1rem; }
+    .controls{ flex-direction: column; gap: 10px; align-items: stretch; }
+}
+    </style>
+
+</head>
+<body>
+    <div class="app" role="application" aria-label="Prototipo actividades para primaria">
+        <header>
+            <h1 id="title">Mini-Clase: Números, Figuras y Clima</h1>
+            <div style="display: flex; gap: 10px;">
+                <button class="ghost" onclick="goHome()" style="font-weight: 500; padding: 10px;">🏠 Inicio</button>
+                <button class="primary" id="nextBtn" onclick="next()">Siguiente</button>
+            </div>
+        </header>
+
+        <main class="stage-area" id="stageArea"></main>
+
+        <div class="controls" id="controlsArea"></div>
+
+        <footer>Prototipo educativo · Módulo 4: Tema 3</footer>
+    </div>
+
+    <div class="ground-sim"></div>
+
+
+<script>
+    const MAIN_SCREEN_URL = '../U4/U4GUPA.html'; 
+    const TOTAL_ACTIVITY_POINTS = 180; 
+    
+    function goHome() {
+        window.location.href = MAIN_SCREEN_URL;
+    }
+
+    const DATA = {
+        stages: [
+            { type: 'video', title: 'Mini-Clase: Números, Figuras y Clima', videoUrl: 'https://www.youtube.com/embed/URL_DEL_VIDEO_MI_MUNDO?rel=0' },
+            { 
+                type: 'select_image_multichoice', 
+                title: 'Actividad 1: ¡Conteo y Figuras!',
+                rounds: [
+                    { q_type: 'count', target: '7', target_chol: 'Wukp’ej', target_img: 'img1.png', options: ['Wäkp’ej', 'Wukp’ej', 'Bolomp’ej'] },
+                    { q_type: 'count', target: '10', target_chol: 'Lujump’ej', target_img: '10_naranjas.png', options: ['Waxäkp’ej', 'Lujump’ej', 'Wukp’ej'] },
+                    { q_type: 'count', target: '12', target_chol: 'Cha’lujump’ej', target_img: '12_ciruelas.png', options: ['Lujump’ej', 'Cha’lujump’ej', 'Junlujump’ej'] },
+                    { q_type: 'figure', target: 'Cuadrado', target_chol: 'Lakal', target_img: 'cuadrado.png', options: ['Selekña', 'Ts’ujki’bal', 'Lakal'] },
+                    { q_type: 'figure', target: 'Círculo', target_chol: 'Selekña', target_img: 'circulo.png', options: ['Lakal', 'Ts’ujki’bal', 'Selekña'] },
+                    { q_type: 'count', target: '20', target_chol: 'Junk’al', target_img: '20_frijoles.png', options: ['Bolomp’ej', 'Cha’lujump’ej', 'Junk’al'] },
+                ]
+            },
+            {
+                type: 'matching_clima',
+                title: 'Actividad 2: Clima y Calendario',
+                rounds: [
+                    { ch: 'K’iñ', es: 'Días / Sol' },
+                    { ch: 'kiñtyuñil', es: 'Temporada de calor' },
+                    { ch: 'Tsiñäle k’iñ', es: 'Temporada de frío' },
+                    { ch: 'Waxäkp’ej', es: '8' },
+                    { ch: 'Bolomp’ej', es: '9' },
+                    { ch: 'Junlujump’ej', es: '11' }
+                ]
+            },
+            {
+                type: 'translation_from_es',
+                title: 'Actividad 3: ¡Traduce lo Aprendido!',
+                rounds: [
+                    { es_phrase: 'Círculo', correct_chol: 'Selekña', options: ['Lakal', 'Ts’ujki’bal', 'Selekña'] },
+                    { es_phrase: '7 (número)', correct_chol: 'Wukp’ej', options: ['Wäkp’ej', 'Wukp’ej', 'Bolomp’ej'] },
+                    { es_phrase: '20 (número)', correct_chol: 'Junk’al', options: ['Lujump’ej', 'Cha’lujump’ej', 'Junk’al'] },
+                    { es_phrase: 'Temporada de frío', correct_chol: 'Tsiñäle k’iñ', options: ['K’iñ', 'kiñtyuñil', 'Tsiñäle k’iñ'] },
+                    { es_phrase: '8 (número)', correct_chol: 'Waxäkp’ej', options: ['Bolomp’ej', 'Wäkp’ej', 'Waxäkp’ej'] },
+                    { es_phrase: 'Días / Sol', correct_chol: 'K’iñ', options: ['Tsiñäle k’iñ', 'kiñtyuñil', 'K’iñ'] }
+                ]
+            },
+            { type: 'final' } 
+        ]
+    };
+
+    const stages = [renderStage0, renderStage1_Recog, renderStage2_MatchingClick, renderStage3_TranslationFromEs, renderStageFinal];
+    let currentStage = 0;
+    let currentActivityRound = 0;
+    let userScore = 0;
+    let stageProgress = new Array(stages.length).fill(false);
+    let feedbackEl = null; 
+    
+    // REFERENCIAS FIJAS
+    const titleEl = document.getElementById('title');
+    // Aquí obtenemos el botón de la cabecera y NO lo sobreescribimos
+    const nextBtn = document.getElementById('nextBtn'); 
+    const controlsArea = document.getElementById('controlsArea');
+
+    let selectedQuestion = null;
+    let matchedPairsCount = 0;
+    
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+    
+    function setStageComplete(isComplete = true) {
+        stageProgress[currentStage] = isComplete;
+        // Esto activa/desactiva el botón de la cabecera
+        nextBtn.classList.toggle('active', isComplete); 
+    }
+    
+    function clearFeedback(){ if(feedbackEl) feedbackEl.textContent = ""; }
+    
+    function setFeedback(text, kind){
+        if(!feedbackEl) return;
+        feedbackEl.textContent = text;
+        if(kind === 'ok'){ feedbackEl.style.color = 'var(--ok)' }
+        else if(kind === 'bad'){ feedbackEl.style.color = 'var(--bad)' }
+        else { feedbackEl.style.color = 'var(--color-texto)' }
+    }
+    
+    function disableOptions() {
+        document.querySelectorAll('.opt, .matching-card').forEach(el => {
+            el.classList.add('disabled', 'prevent-click');
+            el.onclick = null;
+        });
+    }
+
+    function renderControls(html = '') {
+        // CORRECCIÓN: YA NO SE CREA EL BOTÓN NEXT AQUÍ
+        // Solo renderiza el área de feedback y contenido extra si es necesario
+        controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>${html}`;
+        feedbackEl = document.getElementById('feedback');
+    }
+
+    function addPoints(points = 10) {
+        userScore += points;
+    }
+
+    function next() {
+        // Verificación sobre el botón de cabecera
+        if (!nextBtn.classList.contains('active')) {
+            setFeedback("¡Termina esta parte antes de continuar!", 'bad');
+            return;
+        }
+
+        if (currentStage === stages.length - 1) {
+            alert(`✅ Tema Terminado. Puntuación: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo al Módulo 4...`);
+            window.location.href = MAIN_SCREEN_URL; 
+            return; 
+        }
+
+        currentStage++;
+        currentActivityRound = 0;
+        render();
+    }
+    
+    function render() {
+        clearFeedback(); 
+        setStageComplete(false);
+        const container = document.getElementById('stageArea'); 
+        container.innerHTML=''; 
+
+        const titles = ['Mini-Clase: Números, Figuras y Clima', DATA.stages[1].title, DATA.stages[2].title, DATA.stages[3].title, '¡Tema Terminado!'];
+        titleEl.textContent = titles[currentStage];
+
+        stages[currentStage](container, DATA.stages[currentStage]);
+
+        if (currentStage === 0 || currentStage === stages.length - 1) {
+            setStageComplete(true);
+        }
+    }
+    
+    function showActivitySuccessScreen(activityTitle) {
+        const container = document.getElementById('stageArea');
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; background-color: var(--card); border-radius: 20px; border: 3px solid var(--ok); max-width: 400px; margin-top: 50px;">
+                <h2 style="color: var(--ok); font-size: 2rem;">¡Felicidades!</h2>
+                <p style="font-size: 1.1rem;">Completaste la actividad: **${activityTitle}**.</p>
+                <p style="margin-top: 20px;">Presiona **Siguiente** (arriba) para continuar.</p>
+            </div>
+        `;
+        setStageComplete(true);
+    }
+
+    // 0 - MINI-CLASE (VIDEO)
+    function renderStage0(container, currentData) {
+        // Ahora el .video-wrapper tiene estilos CSS definidos
+        const videoHtml = `
+            <div class="video-wrapper">
+                <iframe src="${currentData.videoUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <p style="text-align:center; max-width: 600px; margin-top: 20px;">
+                ¡Mira el video para aprender los **Números, Figuras y Clima** en Ch'ol! Luego, presiona **Siguiente**.
+            </p>
+        `;
+        container.innerHTML = videoHtml;
+        renderControls(); // Renderiza el footer sin botón
+        setStageComplete(true); // Activa el botón de cabecera
+    }
+
+    // 1 - ACTIVIDAD 1
+    function renderStage1_Recog(container, currentData) {
+        const roundData = currentData.rounds[currentActivityRound];
+        const totalRounds = currentData.rounds.length;
+
+        container.innerHTML = `
+            <p class="question-stage-info">Ronda ${currentActivityRound + 1} / ${totalRounds}</p>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <p class="question-text">${roundData.q_type === 'count' ? '¿Qué número en Ch’ol representa la cantidad de objetos?' : 'Selecciona el nombre de la figura en Ch’ol:'}</p>
+                <div class="image-target-wrapper">
+                    <div class="image-target">
+                        <img src="../assets/img/${roundData.target_img}" alt="${roundData.target}" />
+                    </div>
+                </div>
+            </div>
+            <div class="options-row" id="optionsContainer"></div>`;
+        
+        renderControls(); // Sin botón inferior
+
+        const optionsContainer = document.getElementById('optionsContainer');
+        const allOptions = roundData.options.sort(() => Math.random() - 0.5);
+
+        allOptions.forEach(opt => {
+            const b = document.createElement('div');
+            b.className = 'opt';
+            b.textContent = opt;
+            
+            b.onclick = () => {
+                disableOptions();
+                if (opt === roundData.target_chol) { 
+                    b.classList.add('ok');
+                    addPoints(10);
+                } else { 
+                    b.classList.add('bad');
+                    document.querySelectorAll('.opt').forEach(btn => {
+                        if (btn.textContent === roundData.target_chol) btn.classList.add('ok');
+                    });
+                }
+                setTimeout(() => {
+                    currentActivityRound++;
+                    if (currentActivityRound < totalRounds) { render(); } else { showActivitySuccessScreen(currentData.title); }
+                }, 1500);
+            };
+            optionsContainer.appendChild(b);
+        });
+        setStageComplete(false);
+    }
+
+    // 2 - ACTIVIDAD 2: MATCHING
+    function handleQuestionClick(cardEl, question) {
+        if (cardEl.classList.contains('matched')) return;
+        if (cardEl.classList.contains('selected')) {
+            cardEl.classList.remove('selected');
+            selectedQuestion = null;
+            setFeedback('Selecciona el concepto en Ch\'ol y luego su traducción en español.', 'neutral');
+            return;
+        }
+        document.querySelectorAll('.questions-stack .matching-card.selected').forEach(el => el.classList.remove('selected'));
+        cardEl.classList.add('selected');
+        selectedQuestion = question;
+        setFeedback(`Seleccionaste **${question.ch}**. ¡Ahora elige su traducción!`, 'neutral');
+    }
+
+    function handleAnswerClick(cardEl, answer) {
+        const totalPairs = DATA.stages[2].rounds.length;
+        if (cardEl.classList.contains('matched')) return;
+
+        if (!selectedQuestion) {
+            setFeedback('Selecciona primero un concepto Ch\'ol de la columna izquierda.', 'bad');
+            cardEl.classList.add('shaking');
+            setTimeout(() => cardEl.classList.remove('shaking'), 500);
+            return;
+        }
+
+        const questionCardEl = document.querySelector(`.questions-stack .matching-card[data-chol="${selectedQuestion.ch}"]`);
+
+        if (selectedQuestion.es === answer.es) {
+            setFeedback('¡Emparejamiento Correcto!', 'ok');
+            cardEl.classList.add('matched');
+            questionCardEl.classList.add('matched');
+            questionCardEl.classList.remove('selected');
+            selectedQuestion = null;
+            matchedPairsCount++;
+            addPoints(10);
+            if (matchedPairsCount === totalPairs) {
+                showActivitySuccessScreen(DATA.stages[2].title); 
+            }
+        } else {
+            setFeedback('Incorrecto. Intenta de nuevo.', 'bad');
+            cardEl.classList.add('shaking');
+            questionCardEl.classList.add('shaking');
+            setTimeout(() => {
+                cardEl.classList.remove('shaking');
+                questionCardEl.classList.remove('shaking');
+            }, 500);
+        }
+    }
+
+    function renderStage2_MatchingClick(container, currentData) {
+        matchedPairsCount = 0; 
+        selectedQuestion = null;
+        
+        container.innerHTML = `
+            <p class="stage0-info">Haz clic en el **Concepto en Ch'ol** (Izquierda) y luego en su **traducción en Español** (Derecha).</p>
+            <div class="matching-click-container">
+                <div id="questionGroup" class="questions-stack">
+                    <p class="stack-title">Ch'ol:</p>
+                </div>
+                <div id="answerGroup" class="answers-stack">
+                    <p class="stack-title">Español:</p>
+                </div>
+            </div>
+        `;
+        
+        renderControls();
+        setFeedback('Selecciona el concepto en Ch\'ol y luego su traducción en español.', 'neutral');
+
+        const questionGroup = document.getElementById('questionGroup');
+        const answerGroup = document.getElementById('answerGroup');
+        const shuffledQuestions = shuffleArray([...currentData.rounds]);
+        const shuffledAnswers = shuffleArray([...currentData.rounds]);
+
+        shuffledQuestions.forEach(pair => {
+            const qCard = document.createElement('div');
+            qCard.className = 'matching-card';
+            qCard.dataset.chol = pair.ch;
+            qCard.textContent = pair.ch;
+            qCard.onclick = () => handleQuestionClick(qCard, pair);
+            questionGroup.appendChild(qCard);
+        });
+
+        shuffledAnswers.forEach(pair => {
+            const aCard = document.createElement('div');
+            aCard.className = 'matching-card';
+            aCard.dataset.es = pair.es;
+            aCard.textContent = pair.es;
+            aCard.onclick = () => handleAnswerClick(aCard, pair);
+            answerGroup.appendChild(aCard);
+        });
+        setStageComplete(false);
+    }
+
+    // 3 - ACTIVIDAD 3: TRADUCCIÓN
+    function renderStage3_TranslationFromEs(container, currentData) {
+        const roundData = currentData.rounds[currentActivityRound];
+        const totalRounds = currentData.rounds.length;
+
+        container.innerHTML = `
+            <p class="question-stage-info">Ronda ${currentActivityRound + 1} / ${totalRounds}</p>
+            <div style="background: #fff3e0; padding: 20px; border-radius: 15px; border: 3px solid var(--accent); margin-bottom: 20px; max-width: 400px; text-align: center; margin-left: auto; margin-right: auto;">
+                <p class="question-text" style="font-size: 1.5rem; font-weight: 700; margin: 0;">¿Cómo se traduce:</p>
+                <p style="font-size: 1.8rem; color: var(--accent); font-weight: 800; margin: 10px 0;">"${roundData.es_phrase}"</p>
+                <p class="question-text" style="font-size: 1.5rem; font-weight: 700; margin: 0;">al Ch'ol?</p>
+            </div>
+            <div class="options-row" id="optionsContainer"></div>
+        `;
+        renderControls();
+
+        const optionsContainer = document.getElementById('optionsContainer');
+        const allOptions = roundData.options.sort(() => Math.random() - 0.5);
+
+        allOptions.forEach(opt => {
+            const b = document.createElement('div');
+            b.className = 'opt';
+            b.textContent = opt;
+            
+            b.onclick = () => {
+                disableOptions();
+                if (opt === roundData.correct_chol) { 
+                    b.classList.add('ok');
+                    addPoints(10);
+                    setFeedback('¡Correcto!', 'ok');
+                } else { 
+                    b.classList.add('bad');
+                    document.querySelectorAll('.opt').forEach(btn => {
+                        if (btn.textContent === roundData.correct_chol) btn.classList.add('ok');
+                    });
+                    setFeedback('Incorrecto.', 'bad');
+                }
+                setTimeout(() => {
+                    currentActivityRound++;
+                    if (currentActivityRound < totalRounds) { render(); } else { showActivitySuccessScreen(currentData.title); }
+                }, 2500);
+            };
+            optionsContainer.appendChild(b);
+        });
+        setStageComplete(false);
+    }
+
+    function renderStageFinal(container) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
+                <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡MÓDULO 4 COMPLETADO! 🎉</h2>
+                <p style="font-size: 1.2rem;">Puntuación total: **${userScore} / ${TOTAL_ACTIVITY_POINTS}**</p>
+                <p>Presiona **Siguiente** para volver a la pantalla de módulos.</p>
+            </div>
+        `;
+        setStageComplete(true);
+        renderControls();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Inicialización inicial
+        document.getElementById('controlsArea').innerHTML = `<div id="feedback" class="feedback"></div>`;
+        feedbackEl = document.getElementById('feedback');
+        render();
+    });
+</script>
+</body>
+</html>
