@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ch'ol App - Tema 1: Mi Cuerpo</title>
+
+<link rel="stylesheet" href="../css/styles.css">
+
+</head>
+<body>
+    <div class="app">
+        <header>
+            <h1 id="title">U5 - Tema 1: Mi Cuerpo</h1>
+            <div style="display: flex; gap: 10px;">
+                <button class="ghost" onclick="goHome()">🏠 Inicio</button>
+            </div>
+        </header>
+
+        <main class="stage-area" id="stageArea"></main>
+
+        <div class="controls" id="controlsArea">
+            <div id="feedback" class="feedback"></div>
+            </div>
+        
+        <footer>Prototipo educativo · Unidad 5</footer>
+    </div>
+    <div class="ground-sim"></div>
+
+    <script src="../assets/js/core.js"></script>
+
+<script>
+    // --- CONFIGURACIÓN ---
+    const MAIN_SCREEN_URL = './U5MICU.html'; 
+    
+    function goHome() { window.location.href = MAIN_SCREEN_URL; }
+
+    // --- DATOS DEL TEMA (Extraídos de tu documento) ---
+    
+    // Actividad 1: Vocabulario (Partes del Cuerpo)
+    const VOCAB_BODY = [
+        { word: 'Jol', es: 'Cabeza', img: 'RUTAS_PENDIENTES/cabeza.png', audio: 'RUTAS_PENDIENTES/jol.mp3' },
+        { word: 'Wuty', es: 'Ojos', img: 'RUTAS_PENDIENTES/ojos.png', audio: 'RUTAS_PENDIENTES/wuty.mp3' },
+        { word: 'Ni’', es: 'Nariz', img: 'RUTAS_PENDIENTES/nariz.png', audio: 'RUTAS_PENDIENTES/ni.mp3' },
+        { word: 'Tyi’', es: 'Boca', img: 'RUTAS_PENDIENTES/boca.png', audio: 'RUTAS_PENDIENTES/tyi.mp3' },
+        { word: 'Chikiñ', es: 'Orejas', img: 'RUTAS_PENDIENTES/orejas.png', audio: 'RUTAS_PENDIENTES/chikin.mp3' },
+        { word: 'K’ä’', es: 'Manos', img: 'RUTAS_PENDIENTES/manos.png', audio: 'RUTAS_PENDIENTES/ka.mp3' },
+        { word: 'Yalo’ k’ä’', es: 'Dedos', img: 'RUTAS_PENDIENTES/dedos.png', audio: 'RUTAS_PENDIENTES/yalo_ka.mp3' },
+        { word: 'Ya’', es: 'Piernas', img: 'RUTAS_PENDIENTES/piernas.png', audio: 'RUTAS_PENDIENTES/ya.mp3' },
+        { word: 'Ok', es: 'Pie', img: 'RUTAS_PENDIENTES/pie.png', audio: 'RUTAS_PENDIENTES/ok.mp3' }
+    ];
+
+    // Actividad 2: Adjetivos (Matching)
+    const PAIRS_ADJECTIVES = [
+        { ch: 'Bi’bi’', es: 'Feo' },
+        { ch: 'Lekax', es: 'Bonito / Guapo' },
+        { ch: 'Tyijikña', es: 'Feliz' },
+        { ch: 'Ch’äjyem', es: 'Triste' },
+        { ch: 'Bo’yem', es: 'Cansado' },
+        { ch: 'Mich’', es: 'Enojado' }
+    ];
+
+    // Actividad 3: Sensaciones (Estado físico)
+    const SENSATIONS = [
+        { word: 'Wi’ñal', es: 'Con hambre', img: 'RUTAS_PENDIENTES/hambre.png', audio: 'RUTAS_PENDIENTES/winal.mp3' },
+        { word: 'Tyäkiñ tyi’', es: 'Con sed', img: 'RUTAS_PENDIENTES/sed.png', audio: 'RUTAS_PENDIENTES/tyakin_tyi.mp3' },
+        { word: 'Bo’yem', es: 'Cansado', img: 'RUTAS_PENDIENTES/cansado.png', audio: 'RUTAS_PENDIENTES/boyem.mp3' },
+        { word: 'Tyijikña', es: 'Feliz', img: 'RUTAS_PENDIENTES/feliz.png', audio: 'RUTAS_PENDIENTES/tyijikna.mp3' },
+        { word: 'Ch’äjyem', es: 'Triste', img: 'RUTAS_PENDIENTES/triste.png', audio: 'RUTAS_PENDIENTES/chajyem.mp3' }
+    ];
+
+    // --- CONTROL DE FLUJO ---
+    const stages = [renderVideo, renderActivity1, renderActivity2, renderActivity3, renderFinal];
+    let currentStage = 0;
+    let round = 0;
+    let matchedCount = 0;
+    let selectedMatch = null;
+
+    const titleEl = document.getElementById('title');
+    const stageArea = document.getElementById('stageArea');
+    const feedbackEl = document.getElementById('feedback');
+    const controlsArea = document.getElementById('controlsArea');
+
+    // --- FUNCIONES AUXILIARES ---
+    function playAudio(path) {
+        const audio = new Audio(path);
+        audio.play().catch(e => {
+            console.log("Audio placeholder:", path); // Para depuración
+            // No mostramos error al usuario para mantener la limpieza visual
+        });
+    }
+
+    function setFeedback(msg, type) {
+        feedbackEl.textContent = msg;
+        feedbackEl.style.color = type === 'ok' ? 'var(--ok)' : (type === 'bad' ? 'var(--bad)' : 'var(--text-color)');
+    }
+
+    function createNextBtn() {
+        const btn = document.createElement('button');
+        btn.className = 'primary';
+        btn.textContent = 'Siguiente ➡';
+        btn.onclick = nextStage;
+        btn.id = 'nextBtn';
+        btn.style.display = 'none'; // Oculto hasta terminar actividad
+        return btn;
+    }
+
+    function nextStage() {
+        currentStage++;
+        round = 0;
+        if(currentStage >= stages.length) {
+            // Fin del módulo
+            return;
+        }
+        render();
+    }
+
+    function render() {
+        stageArea.innerHTML = '';
+        feedbackEl.textContent = '';
+        
+        // Limpiar controles antiguos
+        const oldBtn = document.getElementById('nextBtn');
+        if(oldBtn) oldBtn.remove();
+        
+        const nextBtn = createNextBtn();
+        controlsArea.appendChild(nextBtn);
+
+        stages[currentStage](nextBtn);
+    }
+
+    // --- 0. VIDEO INTRODUCTORIO ---
+    function renderVideo(nextBtn) {
+        titleEl.textContent = "Introducción: Mi Cuerpo";
+        stageArea.innerHTML = `
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/RUTAS_PENDIENTES" allowfullscreen></iframe>
+            </div>
+            <p>¡Mira el video para aprender las partes del cuerpo y cómo te sientes!</p>
+        `;
+        nextBtn.style.display = 'block';
+    }
+
+    // --- 1. ACTIVIDAD: PARTES DEL CUERPO (Audio -> Imagen) ---
+    function renderActivity1(nextBtn) {
+        // Usamos solo 5 rondas aleatorias para no hacerlo eterno, o todas si prefieres
+        const totalRounds = 5; 
+        
+        if (round >= totalRounds) {
+            stageArea.innerHTML = `<h2>¡Muy bien! Conoces las partes de tu cuerpo.</h2>`;
+            nextBtn.style.display = 'block';
+            return;
+        }
+
+        // Selección aleatoria para la ronda actual (si es la primera vez, mezclamos el array)
+        if (round === 0) VOCAB_BODY.sort(() => 0.5 - Math.random());
+        
+        const currentItem = VOCAB_BODY[round];
+        titleEl.textContent = `Actividad 1: Escucha y Encuentra (${round + 1}/${totalRounds})`;
+
+        stageArea.innerHTML = `
+            <div class="audio-btn-big" onclick="playAudio('${currentItem.audio}')">🔊</div>
+            <p style="font-size: 1.2rem;">¿Qué parte del cuerpo escuchaste?</p>
+        `;
+
+        const optionsRow = document.createElement('div');
+        optionsRow.className = 'options-row';
+
+        // Generar opciones: Correcta + 2 Distractores
+        let pool = VOCAB_BODY.filter(i => i !== currentItem);
+        pool.sort(() => 0.5 - Math.random());
+        let options = [currentItem, pool[0], pool[1]];
+        options.sort(() => 0.5 - Math.random());
+
+        options.forEach(opt => {
+            const div = document.createElement('div');
+            div.className = 'img-option';
+            div.innerHTML = `<img src="${opt.img}" alt="${opt.es}"><p>${opt.es}</p>`;
+            
+            div.onclick = () => {
+                if(div.classList.contains('disabled')) return;
+                
+                // Bloquear clicks
+                document.querySelectorAll('.img-option').forEach(el => el.classList.add('disabled'));
+
+                if(opt === currentItem) {
+                    div.classList.add('ok');
+                    setFeedback("¡Correcto! Es " + opt.word, 'ok');
+                    setTimeout(() => {
+                        round++;
+                        renderActivity1(nextBtn);
+                    }, 1500);
+                } else {
+                    div.classList.add('bad');
+                    setFeedback("Incorrecto. Intenta de nuevo.", 'bad');
+                    setTimeout(() => {
+                        document.querySelectorAll('.img-option').forEach(el => el.classList.remove('disabled', 'bad'));
+                        setFeedback("", 'neutral');
+                    }, 1000);
+                }
+            };
+            optionsRow.appendChild(div);
+        });
+        stageArea.appendChild(optionsRow);
+    }
+
+    // --- 2. ACTIVIDAD: MATCHING (Adjetivos) ---
+    function renderActivity2(nextBtn) {
+        titleEl.textContent = "Actividad 2: Emociones y Adjetivos";
+        
+        if (matchedCount === 0) { // Render inicial
+            stageArea.innerHTML = `
+                <p>Selecciona la palabra en **Ch'ol** y su significado en **Español**.</p>
+                <div class="matching-container">
+                    <div class="col-stack" id="col-chol">
+                        <div class="stack-title">Ch'ol</div>
+                    </div>
+                    <div class="col-stack" id="col-es">
+                        <div class="stack-title">Español</div>
+                    </div>
+                </div>
+            `;
+            
+            const colChol = document.getElementById('col-chol');
+            const colEs = document.getElementById('col-es');
+            
+            const listCh = [...PAIRS_ADJECTIVES].sort(() => 0.5 - Math.random());
+            const listEs = [...PAIRS_ADJECTIVES].sort(() => 0.5 - Math.random());
+
+            listCh.forEach(item => createCard(item.ch, 'ch', item, colChol, nextBtn));
+            listEs.forEach(item => createCard(item.es, 'es', item, colEs, nextBtn));
+        }
+    }
+
+    function createCard(text, type, dataObj, container, nextBtn) {
+        const card = document.createElement('div');
+        card.className = 'match-card';
+        card.textContent = text;
+        card.onclick = () => handleMatch(card, type, dataObj, nextBtn);
+        container.appendChild(card);
+    }
+
+    function handleMatch(card, type, dataObj, nextBtn) {
+        if(card.classList.contains('matched') || card.classList.contains('selected')) return;
+
+        card.classList.add('selected');
+
+        if(!selectedMatch) {
+            selectedMatch = { card, type, dataObj };
+        } else {
+            const first = selectedMatch;
+            if(first.type !== type && first.dataObj === dataObj) {
+                // Correcto
+                setFeedback("¡Correcto!", 'ok');
+                first.card.classList.remove('selected');
+                card.classList.remove('selected');
+                first.card.classList.add('matched');
+                card.classList.add('matched');
+                matchedCount++;
+                
+                if(matchedCount >= PAIRS_ADJECTIVES.length) {
+                    setFeedback("¡Excelente! Completaste las emociones.", 'ok');
+                    nextBtn.style.display = 'block';
+                }
+            } else {
+                // Incorrecto
+                setFeedback("No coinciden...", 'bad');
+                setTimeout(() => {
+                    first.card.classList.remove('selected');
+                    card.classList.remove('selected');
+                    setFeedback("", 'neutral');
+                }, 800);
+            }
+            selectedMatch = null;
+        }
+    }
+
+    // --- 3. ACTIVIDAD: SENSACIONES (Audio -> Imagen) ---
+    function renderActivity3(nextBtn) {
+        const totalRounds = 5;
+        if(round >= totalRounds) {
+            stageArea.innerHTML = `<h2>¡Terminaste todas las actividades!</h2>`;
+            nextBtn.style.display = 'block';
+            return;
+        }
+
+        if (round === 0) SENSATIONS.sort(() => 0.5 - Math.random());
+        const currentItem = SENSATIONS[round];
+        
+        titleEl.textContent = `Actividad 3: ¿Cómo se siente? (${round + 1}/${totalRounds})`;
+
+        stageArea.innerHTML = `
+            <div class="audio-btn-big" onclick="playAudio('${currentItem.audio}')">🔊</div>
+            <p>Escucha y selecciona la imagen correcta.</p>
+        `;
+
+        const optionsRow = document.createElement('div');
+        optionsRow.className = 'options-row';
+        
+        let pool = SENSATIONS.filter(i => i !== currentItem);
+        let options = [currentItem, pool[0], pool[1]]; // 3 opciones
+        options.sort(() => 0.5 - Math.random());
+
+        options.forEach(opt => {
+            const div = document.createElement('div');
+            div.className = 'img-option';
+            div.innerHTML = `<img src="${opt.img}" alt="${opt.es}"><p>${opt.es}</p>`;
+            div.onclick = () => {
+                if(div.classList.contains('disabled')) return;
+                document.querySelectorAll('.img-option').forEach(el => el.classList.add('disabled'));
+
+                if(opt === currentItem) {
+                    div.classList.add('ok');
+                    setFeedback("¡Así es! " + opt.word, 'ok');
+                    setTimeout(() => {
+                        round++;
+                        renderActivity3(nextBtn);
+                    }, 1500);
+                } else {
+                    div.classList.add('bad');
+                    setFeedback("Incorrecto", 'bad');
+                    setTimeout(() => {
+                        document.querySelectorAll('.img-option').forEach(el => el.classList.remove('disabled', 'bad'));
+                    }, 1000);
+                }
+            };
+            optionsRow.appendChild(div);
+        });
+        stageArea.appendChild(optionsRow);
+    }
+
+    // --- FINAL ---
+    function renderFinal(nextBtn) {
+        titleEl.textContent = "¡Tema Completado!";
+        stageArea.innerHTML = `
+            <div style="padding:40px; border: 3px dashed var(--ok); border-radius: 20px;">
+                <h1 style="font-size: 4rem;">🎉</h1>
+                <h2>¡Felicidades!</h2>
+                <p>Has terminado el Tema 1: Mi Cuerpo.</p>
+                <p>Presiona el botón para volver al menú.</p>
+            </div>
+        `;
+        nextBtn.textContent = "Volver al Menú";
+        nextBtn.style.display = 'block';
+        nextBtn.onclick = goHome;
+    }
+
+    // Iniciar
+    render();
+
+</script>
+</body>
+</html>
