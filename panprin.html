@@ -4,34 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú Principal - Ch'ol App</title>
+
     <style>
-        /* Paleta y Fondo basados en la imagen */
         :root {
             --color-cielo: #ADE4FF;
             --color-pasto: #6AA84F;
-            --color-marco: #E0E0E0;
-            --color-texto: #FFFFFF;
-            --btn-donde-vivo: #FF9933; 
-            --btn-escuela: #8FBC8F;    
-            --btn-cuerpo: #FFD966;     
-            --btn-pasatiempos: #FF5E5E;
-            --btn-familia: #5FA8D3;    
-            --btn-perfil: #FFC0CB;     
-            font-family: 'Varela Round', sans-serif;
+            --btn1: #5FA8D3;  /* Familia */
+            --btn2: #FF9933;  /* Donde vivo */
+            --btn3: #8FBC8F;  /* Escuela */
+            --btn4: #FFD966;  /* Cuerpo */
+            --btn5: #FF5E5E;  /* Pasatiempos */
+            --btn-perfil: #e77eb2;
         }
 
         body {
-            background-color: var(--color-cielo);
             margin: 0;
+            background-color: var(--color-cielo);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
-            overflow: hidden; 
         }
 
-        /* Diseño del terreno */
         .ground {
             position: fixed;
             bottom: 0;
@@ -43,50 +37,38 @@
             z-index: 0;
         }
 
-        /* Contenedor de la interfaz principal */
         .interface-box {
-            background-color: rgba(255, 255, 255, 0.612); 
+            background-color: rgba(255, 255, 255, 0.65);
             border-radius: 25px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             width: 90%;
             max-width: 800px;
             margin-top: 5vh;
             padding: 20px;
-            box-sizing: border-box;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
             position: relative;
             z-index: 10;
         }
 
-        /* Encabezado */
-        header {
-            display: flex;
-            justify-content: center; 
-            align-items: center;
-            padding: 10px 0; 
-            width: 100%;
-        }
-
         header h1 {
-            color: #4A4A4A;
-            font-size: 2.2rem;
-            font-weight: 900;
+            text-align: center;
+            font-size: 2.3rem;
             margin: 0;
+            color: #444;
         }
-        
         /* Botón de perfil flotante fuera del cajón */
         .profile-button {
             position: fixed; 
             top: 20px; 
             right: 20px; 
             background-color: var(--btn-perfil); 
-            color: white;
+            color: rgb(255, 255, 255);
             padding: 15px 30px;
             border: none;
             border-radius: 25px;
             font-weight: bold;
             font-size: 1rem;
             text-decoration: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(199, 79, 79, 0.2);
             transition: all 0.2s ease-in-out;
             z-index: 100; 
         }
@@ -97,182 +79,166 @@
             background-color: #FFB6C1; 
         }
 
-        /* Área de Botones */
         .button-area {
             position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* Aumentamos la altura para acomodar el nuevo espaciado */
-            height: 480px; 
-            padding: 40px;
+            width: 100%;
+            height: 500px;
+            margin-top: 20px;
         }
 
+        /* CENTRO */
         .center-content {
-            /* Hacemos el contenedor más grande */
-            width: 250px; 
-            height: 250px;
-            
-            /* Quitamos el marco, fondo y sombra */
-            background-color: transparent; 
-            border: none;
-            box-shadow: none;
-            border-radius: 0; 
-            
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: absolute;
-            overflow: hidden; 
+            top: 50%;
+            left: 50%;
+            width: 240px;
+            height: 240px;
+            transform: translate(-50%, -50%);
         }
-        
+
         .center-content img {
-            /* La imagen ocupa el nuevo contenedor grande */
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
         }
 
-        /* Estilo para los nuevos enlaces (<a>) de navegación */
+        /* BOTONES EN CÍRCULO */
         .nav-btn {
             position: absolute;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 50px;
-            color: var(--color-texto);
-            font-weight: bold;
-            font-size: 1.1rem;
-            cursor: pointer;
-            box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.2);
-            transition: all 0.1s ease-in-out; 
+            padding: 12px 22px;
+            border-radius: 40px;
+            color: white;
             text-decoration: none;
-            display: flex; 
-            align-items: center;
-            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.25);
+            transition: transform 0.2s;
+            animation: float 3s ease-in-out infinite;
         }
 
-        /* Efecto al pasar el cursor (hover) para todos los enlaces de navegación */
+        /* Animación flotante */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+
         .nav-btn:hover {
-            transform: translateY(-5px); 
-            box-shadow: 0 8px 0 0 rgba(0, 0, 0, 0.2); 
-            filter: brightness(1.1); 
+            filter: brightness(1.1);
+            transform: scale(1.05);
         }
 
-        .nav-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 0 rgba(0, 0, 0, 0.2);
-        }
+        /* POSICIÓN EN CÍRCULO (5 botones) */
+        /* Usamos trigonometría (círculo): top = 50% + sin(), left = 50% + cos() */
+/* ====== POSICIÓN EN CÍRCULO PARA ESCRITORIO ====== */
+#btn1 { background: var(--btn1); top: calc(50% - 200px); left: calc(50% - 55px); } 
+#btn2 { background: var(--btn2); top: calc(50% - 85px);  left: calc(50% + 180px); }
+#btn3 { background: var(--btn3); top: calc(50% + 120px); left: calc(50% + 140px); }
+#btn4 { background: var(--btn4); top: calc(50% + 120px); left: calc(50% - 200px); }
+#btn5 { background: var(--btn5); top: calc(50% - 85px);  left: calc(50% - 250px); }
 
-        /* Posicionamiento específico de los enlaces - DESKTOP */
-        /* Familia: Arriba centrado */
-        #btn-familia { background-color: var(--btn-familia); top: 30px; left: 50%; transform: translateX(-50%); }
+/* ====== RESPONSIVO PARA CELULARES ====== */
+@media (max-width: 600px) {
 
-        /* Fila 2: Donde Vivo y Cuerpo (bajadas 30px) */
-        #btn-donde-vivo { background-color: var(--btn-donde-vivo); top: 100px; left: 50px; } 
-        #btn-cuerpo { background-color: var(--btn-cuerpo); top: 100px; right: 50px; } 
+    /* Reducimos el área */
+    .button-area {
+        height: 340px;
+    }
 
-        /* Fila 3: Escuela y Pasatiempos (bajadas 30px) */
-        #btn-escuela { background-color: var(--btn-escuela); top: 250px; left: 20px; } 
-        #btn-pasatiempos { background-color: var(--btn-pasatiempos); top: 250px; right: 20px; } 
+    /* Reducimos el centro */
+    .center-content {
+        width: 150px;
+        height: 150px;
+    }
 
-        /* ========================================================= */
-        /* MEDIA QUERY: OPTIMIZACIÓN MÓVIL (MAX-WIDTH: 600PX) */
-        /* ========================================================= */
-        @media (max-width: 600px) {
-            .interface-box {
-                margin-top: 10vh; 
-                padding: 10px; 
-                margin-bottom: 20px; 
-            }
-            header {
-                padding: 5px 0;
-            }
-            header h1 {
-                font-size: 1.8rem;
-            }
-            .profile-button {
-                top: 10px;
-                right: 10px;
-                padding: 8px 15px;
-                font-size: 0.85rem;
-            }
-            .button-area {
-                height: 350px; 
-                padding: 20px 0; 
-            }
-            .center-content {
-                width: 140px; 
-                height: 140px;
-                /* El centro se mantiene en la misma posición relativa para móvil */
-                top: 60%; 
-                left: 50%;
-                transform: translate(-50%, -50%);
-            }
-            .nav-btn {
-                padding: 10px 20px;
-                font-size: 0.95rem;
-                white-space: nowrap; 
-            }
+    .nav-btn {
+        font-size: 0.8rem;
+        padding: 10px 18px;
+        border-radius: 30px;
+        animation-duration: 2.5s; /* flotación más rápida para móvil */
+    }
 
-            /* Reajuste de posiciones para móvil: (Mantenemos los valores corregidos) */
-            
-            /* Fila Superior */
-            #btn-familia { 
-                top: 30px; 
-                left: 50%; 
-                transform: translateX(-50%); 
-            }
-            /* Fila 2 (Donde Vivo y Cuerpo) */
-            #btn-donde-vivo { 
-                top: 110px; 
-                left: 50%; 
-                transform: translateX(-100%) translateX(-15px);
-            } 
-            #btn-cuerpo { 
-                top: 110px; 
-                left: 50%; 
-                transform: translateX(0) translateX(15px);
-            }
-            
-            /* Fila 3 (Escuela y Pasatiempos) */
-            #btn-escuela { 
-                top: 240px; 
-                left: 0; 
-                transform: translateX(10px); 
-            } 
-            #btn-pasatiempos { 
-                top: 240px; 
-                right: 0; 
-                transform: translateX(-10px); 
-            } 
-        }
+    /* ===== NUEVAS POSICIONES CIRCULARES MÓVILES ===== */
+    /* Círculo más pequeño y centrado */
+
+    #btn1 { 
+        top: calc(50% - 140px); 
+        left: calc(50% - 45px); 
+    }
+
+    #btn2 { 
+        top: calc(50% - 40px); 
+        left: calc(50% + 115px); 
+    }
+
+    #btn3 { 
+        top: calc(50% + 75px); 
+        left: calc(50% + 80px); 
+    }
+
+    #btn4 { 
+        top: calc(50% + 75px); 
+        left: calc(50% - 155px); 
+    }
+
+    #btn5 { 
+        top: calc(50% - 40px); 
+        left: calc(50% - 185px); 
+    }
+}
+
+/* ====== RESPONSIVO PARA TABLETS (600px - 900px) ====== */
+@media (min-width: 600px) and (max-width: 900px) {
+
+    .button-area {
+        height: 420px;
+    }
+
+    .center-content {
+        width: 200px;
+        height: 200px;
+    }
+
+    .nav-btn {
+        font-size: 1rem;
+        padding: 12px 26px;
+    }
+
+    #btn1 { top: calc(50% - 170px); left: calc(50% - 45px); }
+    #btn2 { top: calc(50% - 60px);  left: calc(50% + 150px); }
+    #btn3 { top: calc(50% + 95px);  left: calc(50% + 125px); }
+    #btn4 { top: calc(50% + 95px);  left: calc(50% - 180px); }
+    #btn5 { top: calc(50% - 60px);  left: calc(50% - 210px); }
+}
+
     </style>
 </head>
 <body>
-    
+
 <a href="user.html" class="profile-button">Mi Perfil</a>
 
-    <div class="interface-box">
-        <header>
-            <h1>MÓDULOS</h1>
-        </header>
+<div class="interface-box">
+    <header>
+        <h1>MÓDULOS</h1>
+    </header>
 
-        <div class="button-area">
-            
-            <div class="center-content">
-                <img src="assets\img\mama.png" alt="Imagen representativa del módulo">
-            </div>
-            
-            <!-- FAMILIA (1) - Arriba Centrado -->
-            <a href="U1/U1FAM.html" class="nav-btn" id="btn-familia">1 FAMILIA</a>
-            
-            <!-- DONDE VIVO (2) y CUERPO (4) - Fila Media Superior -->
-            <a href="U2/U2DOVI.html" class="nav-btn" id="btn-donde-vivo">2 DONDE VIVO</a>
-            <a href="U3/U3ESC.html" class="nav-btn" id="btn-cuerpo">3 ESCUELA</a>
+    <div class="button-area">
+
+        <div class="center-content">
+            <img src="assets/img/mama.png" alt="Imagen representativa">
         </div>
+
+        <!-- 5 BOTONES EN CÍRCULO -->
+        <a href="U1/U1FAM.html" class="nav-btn" id="btn1">FAMILIA</a>
+        <a href="U2/U2DOVI.html" class="nav-btn" id="btn2">DONDE VIVO</a>
+        <a href="U3/U3ESC.html" class="nav-btn" id="btn3">ESCUELA</a>
+        <a href="U4/U4GUPA.html" class="nav-btn" id="btn4">GUSTOS Y PASATIEMPOS</a>
+        <a href="U5/U5MICU.html" class="nav-btn" id="btn5">MI CUERPOR</a>
+
     </div>
-    
-    <div class="ground"></div>
+</div>
+
+<div class="ground"></div>
 
 </body>
 </html>
