@@ -46,3 +46,13 @@ function speakText(text, lang='es-ES'){
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(u);
 }
+
+// Crea el botón "Siguiente"
+function createNextBtn(callback) {
+    const btn = document.createElement('button');
+    btn.className = 'next-btn primary';
+    btn.textContent = "Siguiente";
+    btn.style.display = "none";
+    btn.onclick = callback;
+    return btn;
+}
