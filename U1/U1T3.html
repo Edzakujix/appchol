@@ -4,9 +4,121 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Ch'ol App - Tema 3: Familia</title>
-
         <link rel="stylesheet" href="../assets/css/styles.css">
 
+    <style>
+    .word-to-build-display {
+        font-size: clamp(1.5rem, 4vw, 2.2rem); 
+        font-weight: bold;
+        color: var(--accent);
+        letter-spacing: 5px;
+        margin-bottom: 15px;
+    }
+    .current-word-display {
+        font-size: clamp(2rem, 8vw, 2.5rem); 
+        min-height: 50px;
+        margin-top: 15px;
+        border-bottom: 3px solid var(--ok);
+        padding-bottom: 5px;
+        color: var(--ok);
+        letter-spacing: 8px;
+        font-family: monospace;
+    }
+    .letter-button {
+        padding: 10px 15px;
+        margin: 5px;
+        background-color: #FFECB3;
+        border: 2px solid #FFB300;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 800;
+        font-size: clamp(1.2rem, 5vw, 1.5rem); 
+        transition: transform 0.1s;
+    }
+    .letter-button.disabled { opacity: 0.5; pointer-events: none; }
+.matching-click-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        max-width: 600px;
+        padding: 20px;
+        background-color: var(--matching-bg, #8AC257); 
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .matching-card {
+        background-color: var(--matching-card-bg, #E7F6E1);
+        border-radius: 12px;
+        padding: 15px 20px;
+        font-weight: 700;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
+        border: 2px solid transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .matching-card:hover:not(.matched):not(.selected) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 0 0 rgba(0,0,0,0.15);
+    }
+    .matching-card.selected {
+        border-color: var(--select-highlight, #FF7043);
+        box-shadow: 0 0 0 4px var(--select-highlight, #FF7043);
+        background-color: #F8E3DD;
+    }
+    .matching-card.matched {
+        background-color: var(--ok);
+        color: white;
+        pointer-events: none;
+        cursor: default;
+        box-shadow: none;
+        border-color: var(--ok);
+    }
+    .matching-card.shaking {
+        animation: shake 0.5s;
+        animation-iteration-count: 2;
+        border-color: var(--bad) !important;
+        box-shadow: 0 0 0 4px var(--bad) !important;
+        background-color: #FFEBEE !important;
+        color: var(--bad);
+    }
+    @keyframes shake {
+        0%, 100% {transform: translateX(0);}
+        20%, 60% {transform: translateX(-5px);}
+        40%, 80% {transform: translateX(5px);}
+    }
+    
+    .questions-stack, .answers-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.5);
+    }
+    .stack-title {
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: var(--text-color, #333);
+        margin-bottom: 5px;
+        text-align: left;
+        padding-left: 10px;
+    }
+    
+    @media (min-width: 601px) {
+        .matching-click-container {
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        .questions-stack, .answers-stack {
+            flex-basis: 48%;
+        }
+    }
+    </style>
 </head>
 <body>
     <div class="app" role="application" aria-label="Prototipo actividades para primaria">
@@ -30,17 +142,12 @@
 
 
 <script>
-    // ************************************************************************
-    // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL
-    const MAIN_SCREEN_URL = '../U1/U1FAM.html'; // MANTENEMOS: pantalla1.html
-    // ************************************************************************
+    const MAIN_SCREEN_URL = '../U1/U1FAM.html';
     
-    // Función de redirección para el botón de Inicio
     function goHome() {
         window.location.href = MAIN_SCREEN_URL;
     }
 
-    // VARIABLES CRÍTICAS
     const stages = [renderStage0, renderStage1, renderStage2, renderStage3_word_builder, renderStage4_matching, renderStage5_final]; 
     let currentStage = 0;
     let feedbackEl = null; 
@@ -48,15 +155,12 @@
     const nextBtn = document.getElementById('nextBtn');
     const controlsArea = document.getElementById('controlsArea');
     
-    // Variables de Progreso (Solo se usa la estructura, los valores no son visibles)
     let stageProgress = new Array(stages.length).fill(false); 
     let userScore = 0;
     const TOTAL_ACTIVITY_POINTS = 40; 
 
-    // Funciones de Control de Etapa y Puntuación
     function setStageComplete(isComplete = true) {
         if (isComplete && !stageProgress[currentStage]) {
-            // Se mantiene la lógica de puntuación, aunque no se usa visiblemente.
              if(currentStage >= 1 && currentStage <= 4) { 
                  userScore += 10; 
              }
@@ -79,7 +183,6 @@
 
     function renderControls(html = '') {
         controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>${html}`;
-        // Inicialización de feedbackEl
         feedbackEl = document.getElementById('feedback');
     }
 
@@ -90,7 +193,6 @@
         }
 
         if (currentStage === 5) {
-            // COMENTARIO: Redirección final.
             alert(`Tema Terminado. Volviendo a la pantalla principal...`);
             window.location.href = MAIN_SCREEN_URL; 
             return; 
@@ -111,10 +213,7 @@
         window.speechSynthesis.speak(u);
     }
     
-    // COMENTARIO: FUNCIÓN DE AUDIO MEJORADA (Manejo de Promise para diagnóstico)
     function playAudio(audioFilename, text, lang = 'cho') {
-        // COMENTARIO: Se corrige la ruta a la ruta relativa correcta (../assets/audio)
-        // ASUMIENDO que este archivo está dentro de una carpeta de tema (Ej: U3/T3.html)
         const audioUrl = `../assets/audio/${audioFilename}`; 
         
         const audio = new Audio(audioUrl);
@@ -124,19 +223,16 @@
                 setFeedback(`🔊 Reproduciendo: "${text}"`, 'neutral');
             })
             .catch(e => {
-                // COMENTARIO: Si el archivo no carga (404 o formato), este error aparecerá en la Consola.
                 console.error(`❌ Error al cargar o reproducir "${audioUrl}": ${e.message}`);
                 speakText(text, lang); 
                 setFeedback(`[TTS] No se encontró el audio real. Reproduciendo: "${text}"`, 'neutral');
             });
     }
 
-    // COMENTARIO: createAudioButton se coloca en el ámbito global (aquí) para evitar ReferenceError.
     function createAudioButton(text, audioFilename, lang = 'cho') {
         const btn = document.createElement('button');
         btn.className = 'ghost';
         btn.innerHTML = '🔊 Reproducir Audio';
-        // COMENTARIO: El evento onclick se adjunta al objeto DOM.
         btn.onclick = () => { playAudio(audioFilename, text, lang); };
         return btn;
     }
@@ -164,10 +260,6 @@
         }
     }
 
-
-    // =======================================================================
-    // 0 - MINI-CLASE (VIDEO) - AHORA RESPONSIVO
-    // =======================================================================
     function renderStage0(container){
         const videoHtml = `
             <div class="video-wrapper">
@@ -182,11 +274,7 @@
         renderControls();
     }
 
-    // =======================================================================
-    // 1 - ACTIVIDAD 1: SELECCIONAR MIEMBRO (5 rondas - Audio a Imagen)
-    // =======================================================================
     const stage1Data = [
-        // COMENTARIO: NOMBRES DE AUDIO ESTANDARIZADOS A MINÚSCULAS (ej: "nana.mp3")
         { audio: "Nana' ", filename: "nana.mp3", correct: "mama.png", options: ["mama.png", "hermano.png", "abuelo.png"] },
         { audio: "Tat", filename: "tat.mp3", correct: "papa.png", options: ["papa.png", "tia.png", "primo.png"] },
         { audio: "Wäy", filename: "way.mp3", correct: "hermano.png", options: ["papa.png", "hermano.png", "mama.png"] },
@@ -227,19 +315,14 @@
         const currentData = stage1Data[currentRound1];
         container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha el audio y selecciona la imagen del miembro de la familia.</p>`;
 
-        // 1. Crear el botón como objeto DOM
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho'); 
         
-        // 2. Inicializar el controlsArea (solo con el feedback)
         renderControls();
 
-        // 3. Crear contenedor de centrado para el botón
         const buttonWrapper = document.createElement('div');
         buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
         buttonWrapper.appendChild(audioBtn);
 
-        // COMENTARIO: CORRECCIÓN DE DOM. Se inserta el objeto DOM (buttonWrapper) directamente en controlsArea, 
-        // eliminando el uso de outerHTML para mantener el evento onclick.
         const feedbackEl = document.getElementById('feedback');
         if (controlsArea) {
             controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
@@ -254,8 +337,6 @@
             b.className = 'opt';
             b.dataset.img = opt; 
             
-            // COMENTARIO: Se corrige la ruta de la imagen para usar la ruta relativa (../assets/img)
-            // ASUMIENDO que la carpeta assets está un nivel arriba.
             b.innerHTML = `<img src="../assets/img/${opt}" alt="Opción" style="width: 100px; height: 100px; border-radius: 10px;"/>`;
 
             b.onclick = (e) => {
@@ -277,11 +358,7 @@
         setStageComplete(false); 
     }
 
-    // =======================================================================
-    // 2 - ACTIVIDAD 2: LEE Y SELECCIONA (5 rondas - Frase a Imagen)
-    // =======================================================================
     const stage2Data = [
-        // COMENTARIO: NOMBRES DE IMAGEN ESTANDARIZADOS (si aplica)
         { phrase: "Mi papá es alto.", correct: "papa.png", options: ["papa.png", "mama.png", "nino.png"] },
         { phrase: "Tengo un hermano mayor.", correct: "hermano_mayor.png", options: ["hermano_mayor.png", "hermana_menor.png", "primo_amigo.png"] },
         { phrase: "Mi abuela cocina.", correct: "abuela_cocinando.png", options: ["abuela_cocinando.png", "abuelo_leyendo.png", "nino_jugando.png"] },
@@ -338,7 +415,6 @@
             b.className = 'opt';
             b.dataset.img = opt; 
             
-            // COMENTARIO: Se corrige la ruta de la imagen
             b.innerHTML = `<img src="../assets/img/${opt}" alt="Opción" style="width: 120px; height: 120px; border-radius: 10px;"/>`;
 
             b.onclick = (e) => {
@@ -360,11 +436,7 @@
         setStageComplete(false); 
     }
 
-    // =======================================================================
-    // 3 - ACTIVIDAD 3: FORMAR LA PALABRA (5 rondas - Construcción de Letras)
-    // =======================================================================
     const stage3Data = [
-        // COMENTARIO: NOMBRES DE IMAGEN ESTANDARIZADOS (si aplica)
         { word: "ABUELO", image: "abuelo.png", letters: "KOCLAPBZUNE" },
         { word: "MAMA", image: "mama.png", letters: "OMSMSAEA" }, 
         { word: "HIJO", image: "nino.png", letters: "HIFJGOE" }, 
@@ -399,8 +471,6 @@
         const letterButtons = document.querySelectorAll('.letter-button');
         let clickedButton = null;
         
-        // Encontrar el botón que fue clickeado para deshabilitarlo (solo si no está ya deshabilitado)
-        // Se busca el primer botón con ese contenido que no esté deshabilitado.
         for(const btn of letterButtons) {
             if (btn.textContent === letter && !btn.classList.contains('disabled')) {
                 clickedButton = btn;
@@ -429,7 +499,7 @@
         }
 
         const currentData = stage3Data[currentRound3];
-        currentAttempt3 = ""; // Aseguramos que la palabra se reinicie
+        currentAttempt3 = ""; 
         
         container.innerHTML = `
             <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Forma la palabra **"${currentData.word}"**.</p>
@@ -462,165 +532,111 @@
         setStageComplete(false); 
     }
 
-    // =======================================================================
-    // 4 - ACTIVIDAD 4: UNIR PREGUNTAS/RESPUESTAS (7 pares) - Matching
-    // =======================================================================
-    // El HTML y CSS para esta sección usa el patrón de arrastrar/soltar de Códigos anteriores
-    
-    const stage4Pairs = [
-        ['¿Quién es tu mamá?', 'Mi mamá es Nana\''], 
-        ['¿Dónde vive tu familia?', 'Vive en casa.'],
-        ['¿Es tu papá fuerte?', 'Sí, es muy fuerte.'],
-        ['¿Tienes hermanos?', 'Sí, tengo 3.'],
-        ['¿Qué hace tu abuela?', 'Ella cocina la comida.'],
-        ['¿Qué hace tu hermano?', 'Él juega con la pelota.'],
-        ['¿Cómo se llama tu tío?', 'Se llama Pedro.'],
-    ];
+const stage4Data = [
+    { q: "¿Quién es tu mamá?", a: "Nana’" },
+    { q: "¿Quién es tu papá?", a: "Tat" },
+    { q: "¿Quién es tu hermano?", a: "Wäy" },
+    { q: "¿Quién es tu abuela?", a: "Ch'uch'" },
+    { q: "¿Quién es tu abuelo?", a: "Mam" }
+];
 
-    function checkAllMatches4() {
-        const dropzones = document.querySelectorAll('.answer-dropzone');
-        let allCorrect = true;
-        const questionsList = document.getElementById('questionsList');
+let selectedQuestion = null;
+let selectedAnswer = null;
+let matchedPairs = 0;
 
-        dropzones.forEach(dz => {
-            dz.classList.remove('ok', 'bad'); 
-            const droppedCard = dz.querySelector('.question-card');
-            const answerText = dz.dataset.answer;
+function renderStage4_matching(container) {
+    container.innerHTML = `
+        <p class="stage0-info">Une correctamente cada pregunta con su respuesta.</p>
+
+        <div class="matching-click-container">
             
-            if (droppedCard) {
-                const questionText = droppedCard.dataset.question;
-                const correctPair = stage4Pairs.find(p => p[0] === questionText);
-                
-                if (correctPair && correctPair[1] === answerText) {
-                    dz.classList.add('ok');
-                    droppedCard.classList.add('matched-correct'); 
-                } else {
-                    dz.classList.add('bad');
-                    allCorrect = false;
-                    
-                    // COMENTARIO: Devolver la tarjeta a la columna de preguntas si es incorrecta
-                    droppedCard.classList.remove('matched-correct', 'dragging');
-                    questionsList.appendChild(droppedCard); 
-                    
-                    dz.classList.remove('filled');
-                    const placeholder = dz.querySelector('.placeholder-text');
-                    if (placeholder) placeholder.style.display = 'block';
-                }
-            } else {
-                dz.classList.add('bad'); 
-                allCorrect = false;
-            }
-        });
+            <div class="questions-stack">
+                <div class="stack-title">Preguntas</div>
+                ${stage4Data.map((item, i) => `
+                    <div class="matching-card" data-type="q" data-index="${i}">
+                        ${item.q}
+                    </div>
+                `).join('')}
+            </div>
 
-        if (allCorrect) {
-            setFeedback('¡Felicidades! Todos los pares son correctos.', 'ok');
-            setStageComplete(true);
-            document.querySelectorAll('.question-card').forEach(card => {
-                card.draggable = false;
-                card.classList.add('matched-correct'); 
-            });
-            controlsArea.querySelector('button.ghost').style.pointerEvents = 'none';
+            <div class="answers-stack">
+                <div class="stack-title">Respuestas</div>
+                ${stage4Data.map((item, i) => `
+                    <div class="matching-card" data-type="a" data-index="${i}">
+                        ${item.a}
+                    </div>
+                `).sort(() => Math.random() - 0.5).join('')}
+            </div>
+
+        </div>
+    `;
+
+    renderControls();
+
+    const cards = container.querySelectorAll('.matching-card');
+
+    cards.forEach(card => {
+        card.onclick = () => handleMatchClick(card, container);
+    });
+
+    setStageComplete(false);
+}
+
+function handleMatchClick(card, container) {
+    const type = card.dataset.type;
+    const index = Number(card.dataset.index);
+
+    if (type === 'q') {
+        if (selectedQuestion) selectedQuestion.classList.remove('selected');
+
+        selectedQuestion = card;
+        card.classList.add('selected');
+        return;
+    }
+
+    if (type === 'a') {
+        if (!selectedQuestion) {
+            setFeedback("Primero selecciona una pregunta.", "bad");
+            return;
+        }
+
+        selectedAnswer = card;
+
+        if (selectedQuestion.dataset.index === selectedAnswer.dataset.index) {
+            selectedQuestion.classList.add('matched');
+            selectedAnswer.classList.add('matched');
+
+            selectedQuestion.classList.remove('selected');
+
+            matchedPairs++;
+            setFeedback("¡Muy bien! Coincidencia correcta.", "ok");
+
+            selectedQuestion = null;
+            selectedAnswer = null;
+
+            if (matchedPairs === stage4Data.length) {
+                setTimeout(() => {
+                    container.innerHTML = `<h2 style="color: var(--ok);">¡Completaste la actividad!</h2>`;
+                    setStageComplete(true);
+                }, 500);
+            }
+
         } else {
-            setFeedback('¡Revisa los rojos! Las tarjetas incorrectas regresaron para que intentes de nuevo.', 'bad');
-            // Se elimina la llamada a speakText para no interrumpir el flujo del usuario
+            selectedAnswer.classList.add('shaking');
+            selectedQuestion.classList.add('shaking');
+            setFeedback("Esa no es la respuesta correcta.", "bad");
+
+            setTimeout(() => {
+                selectedAnswer.classList.remove('shaking');
+                selectedQuestion.classList.remove('shaking');
+                selectedQuestion.classList.remove('selected');
+                selectedQuestion = null;
+                selectedAnswer = null;
+            }, 800);
         }
     }
+}
 
-
-    function renderStage4_matching(container){
-        container.innerHTML = `<p class="stage0-info">Arrastra cada **pregunta** (amarillo) a su **respuesta** correcta (azul).</p>`;
-        
-        renderControls(`<button class="ghost" onclick="checkAllMatches4()">Comprobar Mis Respuestas</button>`);
-        
-        const matchingContainer = document.createElement('div');
-        matchingContainer.className = 'matching-container';
-        
-        const questionsCol = document.createElement('div');
-        questionsCol.className = 'matching-column';
-        questionsCol.innerHTML = '<h3>Preguntas</h3><div id="questionsList" class="questions-list"></div>';
-
-        const answersCol = document.createElement('div');
-        answersCol.className = 'matching-column';
-        answersCol.innerHTML = '<h3>Respuestas</h3><div id="answersList"></div>';
-        
-        const shuffledQuestions = [...stage4Pairs].sort(() => Math.random() - 0.5);
-        const shuffledAnswers = [...stage4Pairs].map(p=>p[1]).sort(() => Math.random() - 0.5);
-
-        // Crear tarjetas de preguntas (arrastrables)
-        const questionsList = questionsCol.querySelector('#questionsList');
-        shuffledQuestions.forEach((pair, index) => {
-            const questionCard = document.createElement('div');
-            questionCard.className = 'question-card';
-            questionCard.id = `q-card-${index}`;
-            questionCard.draggable = true;
-            questionCard.dataset.question = pair[0]; 
-            questionCard.textContent = pair[0];
-
-            questionCard.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', e.target.id);
-                e.target.classList.add('dragging');
-            });
-            questionCard.addEventListener('dragend', (e) => {
-                e.target.classList.remove('dragging');
-            });
-            questionsList.appendChild(questionCard);
-        });
-
-        // Crear zonas de respuesta (dropzones)
-        const answersList = answersCol.querySelector('#answersList');
-        shuffledAnswers.forEach((answer, index) => {
-            const dropzone = document.createElement('div');
-            dropzone.className = 'answer-dropzone';
-            dropzone.id = `ans-dropzone-${index}`;
-            dropzone.dataset.answer = answer; 
-
-            const placeholder = document.createElement('span');
-            placeholder.className = 'placeholder-text';
-            placeholder.textContent = answer; 
-            dropzone.appendChild(placeholder);
-
-
-            dropzone.addEventListener('dragover', (e) => {
-                e.preventDefault(); 
-                dropzone.classList.add('hovered');
-            });
-            dropzone.addEventListener('dragleave', () => {
-                dropzone.classList.remove('hovered');
-            });
-            dropzone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropzone.classList.remove('hovered');
-
-                const cardId = e.dataTransfer.getData('text/plain');
-                const draggedCard = document.getElementById(cardId);
-                
-                // Si ya hay una tarjeta en este dropzone, devolverla a la lista original
-                if (dropzone.children.length > 0 && dropzone.children[0].classList.contains('question-card')) {
-                    questionsList.appendChild(dropzone.children[0]);
-                    dropzone.classList.remove('filled');
-                    dropzone.querySelector('.placeholder-text').style.display = 'block'; 
-                }
-                
-                // Mover la nueva tarjeta al dropzone
-                dropzone.appendChild(draggedCard);
-                dropzone.classList.add('filled');
-                dropzone.querySelector('.placeholder-text').style.display = 'none'; 
-
-                dropzone.classList.remove('ok', 'bad');
-                setStageComplete(false); 
-            });
-            answersList.appendChild(dropzone);
-        });
-
-        matchingContainer.appendChild(questionsCol);
-        matchingContainer.appendChild(answersCol);
-        container.appendChild(matchingContainer);
-        setStageComplete(false);
-    }
-    
-    // =======================================================================
-    // 5 - FINAL DE TEMA (Stage 5)
-    // =======================================================================
     function renderStage5_final(container) {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
@@ -633,8 +649,6 @@
         renderControls();
     }
 
-
-    // --- Inicialización ---
     document.addEventListener('DOMContentLoaded', () => {
         render();
     });

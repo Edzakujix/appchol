@@ -7,6 +7,157 @@
 
     <link rel="stylesheet" href="../assets/css/styles.css">
 
+    <style>
+                button.primary, button.ghost{
+            padding:12px 20px;
+            border-radius: 15px;
+            font-weight:700; cursor:pointer;
+            transition: all .1s ease;
+        }
+        button.primary{
+            background:var(--next); color:white; border:none; 
+            box-shadow: 0 5px 0 0 #0288D1;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        button.primary.active{
+            opacity: 1;
+            pointer-events: auto;
+        }
+        button.primary.active:active{
+            transform: translateY(5px);
+            box-shadow: 0 0px 0 0 #0288D1;
+        }
+        button.ghost{
+            background:#e0f7fa;
+            border: 3px solid #00BCD4;
+            color: #00BCD4;
+            font-weight: 600;
+        }
+        
+        .options-row{
+            display:flex; 
+            gap:20px; 
+            flex-wrap:wrap; 
+            justify-content:center
+        }
+        
+        .opt{
+            min-width:140px; 
+            padding:20px; 
+            border-radius: 20px;
+            background:#fff;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:10px; 
+            cursor:pointer;
+            border: 4px solid #E0E0E0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all .2s;
+        }
+        .opt:not(.disabled):hover{
+            transform:translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        .opt.disabled{pointer-events: none; opacity: 0.7;}
+        .opt.ok{border-color:var(--ok); box-shadow:0 8px 20px rgba(76,175,80,0.3); background:#E8F5E9;}
+        .opt.bad{border-color:var(--bad); box-shadow:0 8px 20px rgba(229,57,53,0.3); background:#FFEBEE;}
+        
+        .feedback{ font-weight:800; font-size: 1.4rem; }
+
+        .day-image-option img {
+        width: 100px; 
+        height: 100px;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+    .matching-click-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        max-width: 600px;
+        padding: 20px;
+        background-color: var(--matching-bg, #8AC257); 
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .matching-card {
+        background-color: var(--matching-card-bg, #E7F6E1);
+        border-radius: 12px;
+        padding: 15px 20px;
+        font-weight: 700;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
+        border: 2px solid transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .matching-card:hover:not(.matched):not(.selected) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 0 0 rgba(0,0,0,0.15);
+    }
+    .matching-card.selected {
+        border-color: var(--select-highlight, #FF7043);
+        box-shadow: 0 0 0 4px var(--select-highlight, #FF7043);
+        background-color: #F8E3DD;
+    }
+    .matching-card.matched {
+        background-color: var(--ok);
+        color: white;
+        pointer-events: none;
+        cursor: default;
+        box-shadow: none;
+        border-color: var(--ok);
+    }
+    .matching-card.shaking {
+        animation: shake 0.5s;
+        animation-iteration-count: 2;
+        border-color: var(--bad) !important;
+        box-shadow: 0 0 0 4px var(--bad) !important;
+        background-color: #FFEBEE !important;
+        color: var(--bad);
+    }
+    @keyframes shake {
+        0%, 100% {transform: translateX(0);}
+        20%, 60% {transform: translateX(-5px);}
+        40%, 80% {transform: translateX(5px);}
+    }
+    
+    .questions-stack, .answers-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.5);
+    }
+    .stack-title {
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: var(--text-color, #333);
+        margin-bottom: 5px;
+        text-align: left;
+        padding-left: 10px;
+    }
+    
+    @media (min-width: 601px) {
+        .matching-click-container {
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        .questions-stack, .answers-stack {
+            flex-basis: 48%;
+        }
+    }
+    </style>
 
 </head>
 <body>
@@ -31,19 +182,14 @@
 
 
 <script>
-    // ************************************************************************
-    // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL (UNIFICADO)
-    // ************************************************************************
     const MAIN_SCREEN_URL = '../U1/U1FAM.html'; 
-    const USER_GOOGLE_ID = 'ID_DEL_USUARIO_AUTENTICADO'; // Para simular el guardado
-    const TOTAL_ACTIVITY_POINTS = 30; // 3 actividades * 10 puntos (o el valor que decidas)
+    const USER_GOOGLE_ID = 'ID_DEL_USUARIO_AUTENTICADO'; 
+    const TOTAL_ACTIVITY_POINTS = 30; 
     
-    // Función de redirección para el botón de Inicio
     function goHome() {
         window.location.href = MAIN_SCREEN_URL;
     }
 
-    // VARIABLES CRÍTICAS
     const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4];
     let currentStage = 0;
     let feedbackEl = null; 
@@ -51,14 +197,11 @@
     const nextBtn = document.getElementById('nextBtn');
     const controlsArea = document.getElementById('controlsArea');
     
-    // Variables de Progreso (UNIFICADO)
     let stageProgress = new Array(stages.length).fill(false); 
-    let userScore = 0; // Puntuación simulada
+    let userScore = 0; 
 
-    // Funciones de Control de Etapa 
     function setStageComplete(isComplete = true) {
         if (isComplete && !stageProgress[currentStage]) {
-            // Se suma la puntuación simulada para las actividades 1, 2, y 3 (Stages 1, 2, 3)
             if(currentStage >= 1 && currentStage <= 3) { 
                 userScore += 10; 
             }
@@ -84,8 +227,6 @@
     }
 
     function renderControls(html = '') {
-        // COMENTARIO: renderControls ahora solo renderiza el área de feedback.
-        // Los botones funcionales se insertan después como objetos DOM (ver renderStageX).
         controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>${html}`;
         feedbackEl = document.getElementById('feedback');
     }
@@ -96,14 +237,11 @@
             return;
         }
 
-        // --- PUNTO DE REDIRECCIÓN Y GUARDADO CRÍTICO (Stage 4) ---
         if (currentStage === 4) {
-             // Simulación de guardado en la BD (como en el Cód 5/6)
              alert(`✅ Tema Terminado. Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo a la pantalla principal...`);
              window.location.href = MAIN_SCREEN_URL; 
              return; 
         }
-        // --------------------------------------------------
 
         currentStage++;
         if (currentStage >= stages.length) {
@@ -131,18 +269,12 @@
 
         stages[currentStage](container);
         
-        // El video y la pantalla final se completan inmediatamente
         if (currentStage === 0 || currentStage === 4) {
             setStageComplete(true);
         }
     }
 
 
-    // =======================================================================
-    // FUNCIÓN CRÍTICA DE AUDIO Y CREACIÓN DE BOTONES (ÁMBITO GLOBAL)
-    // =======================================================================
-    // COMENTARIO: Mantenemos esta función de audio aquí, en el ámbito global.
-    // Usamos el manejo de Promise para dar un diagnóstico claro en la consola si el MP3 no carga.
     function playAudio(audioFilename, text, lang = 'cho') {
         const audioUrl = `../assets/audio/${audioFilename}`; 
         
@@ -153,27 +285,20 @@
                 setFeedback(`🔊 Reproduciendo: "${text}"`, 'neutral');
             })
             .catch(e => {
-                // COMENTARIO: Si hay un error 404 o de codec, esto lo mostrará en la Consola.
                 console.error(`❌ Error al cargar o reproducir "${audioUrl}": ${e.message}`);
                 speakText(text, lang); 
                 setFeedback(`[TTS] No se encontró el audio real. Reproduciendo: "${text}"`, 'neutral');
             });
     }
 
-    // COMENTARIO: Esta función estaba antes dentro de renderStage1/2 y causaba 'ReferenceError'.
-    // Ahora está aquí, globalmente accesible.
     function createAudioButton(text, audioFilename, lang = 'cho') {
         const btn = document.createElement('button');
         btn.className = 'ghost';
         btn.innerHTML = '🔊 Reproducir Audio';
-        // COMENTARIO: El evento onclick se mantiene en el OBJETO DOM (el botón).
         btn.onclick = () => { playAudio(audioFilename, text, lang); };
         return btn;
     }
 
-    // =======================================================================
-    // 0 - MINI-CLASE (VIDEO) - RUTA CORREGIDA
-    // =======================================================================
     function renderStage0(container){
         const videoHtml = `
             <div class="video-wrapper">
@@ -188,11 +313,7 @@
         renderControls();
     }
 
-    // =======================================================================
-    // 1 - ACTIVIDAD 1: ESCUCHA Y SELECCIONA (RESTITUIDA A LA VERSIÓN ORIGINAL)
-    // =======================================================================
     const stage1Data = [
-        // COMENTARIO: Nombres de audio estandarizados a minúsculas y _ (sin acentos, espacios)
         { audio: "Adiós", filename: "adios_incolectivo.mp3", correct: "Adiós", options: ["Adiós", "Bueno", "Pasale", "Ven"] },
         { audio: "Bueno", filename: "bueno.mp3", correct: "Bueno", options: ["Bueno", "Voy llegando", "Mañana", "Adiós"] },
         { audio: "Voy llegando", filename: "buenas_hay_vengo_voy_llegando.mp3", correct: "Voy llegando", options: ["Voy llegando", "Tarde", "Noche", "Ven"] },
@@ -234,18 +355,14 @@
         const currentData = stage1Data[currentRound1];
         container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha el audio y selecciona la **traducción** correcta.</p>`;
 
-        // 1. Crear el botón como objeto DOM
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho'); 
         
-        // 2. Inicializar el controlsArea (solo con el feedback)
         renderControls();
         
-        // 3. Crear contenedor de centrado para el botón
         const buttonWrapper = document.createElement('div');
         buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
         buttonWrapper.appendChild(audioBtn);
 
-        // COMENTARIO: Insertamos el objeto DOM (buttonWrapper)
         const feedbackEl = document.getElementById('feedback');
         if (controlsArea) {
             controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
@@ -279,11 +396,7 @@
         setStageComplete(false); 
     }
 
-    // =======================================================================
-    // 2 - ACTIVIDAD 2: ELEGIR FIGURAS SEGÚN EL AUDIO (RESTITUIDA A LA VERSIÓN ORIGINAL)
-    // =======================================================================
     const stage2Questions = [
-        // COMENTARIO: Nombres de audio estandarizados a minúsculas y _
         { audio: "Mañana", filename: "manana.mp3", correct: "escenario_dia.jpg", word: "Día" },
         { audio: "Tarde", filename: "tarde.mp3", correct: "escenario_tarde.jpg", word: "Tarde" }, 
         { audio: "Noche", filename: "noche.mp3", correct: "escenario_noche.jpg", word: "Noche" },
@@ -291,7 +404,6 @@
     let currentRound2 = 0; 
 
     const stage2AllOptions = [
-        // COMENTARIO: Nombres de imágenes estandarizados a minúsculas y _
         { filename: "escenario_dia.jpg", word: "Día" },
         { filename: "escenario_tarde.jpg", word: "Tarde" },
         { filename: "escenario_noche.jpg", word: "Noche" },
@@ -331,18 +443,14 @@
         const currentData = stage2Questions[currentRound2];
         container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de 3. Escucha el saludo y selecciona la figura que representa: **${currentData.word}**.</p>`;
         
-        // 1. Crear el botón como objeto DOM
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho');
         
-        // 2. Inicializar el controlsArea (solo con el feedback)
         renderControls();
 
-        // 3. Crear contenedor de centrado para el botón
         const buttonWrapper = document.createElement('div');
         buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
         buttonWrapper.appendChild(audioBtn);
 
-        // COMENTARIO: Insertamos el objeto DOM
         const feedbackEl = document.getElementById('feedback');
         if (controlsArea) {
             controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
@@ -351,7 +459,6 @@
         const row = document.createElement('div');
         row.className = 'options-row';
         
-        // COMENTARIO: Se estandarizó stage2AllOptions para evitar errores.
         stage2AllOptions.sort(() => Math.random() - 0.5);
 
         stage2AllOptions.forEach(it => {
@@ -359,7 +466,6 @@
             b.className = 'opt day-image-option'; 
             b.dataset.img = it.filename;
             
-            // COMENTARIO: Se usa el nombre de archivo estandarizado para la imagen.
             b.innerHTML = `<img src="../assets/img/${it.filename}" alt="${it.word}"/>`;
             
             b.onclick = ()=>{
@@ -381,9 +487,6 @@
         setStageComplete(false);
     }
     
-    // =======================================================================
-    // 3 - ACTIVIDAD 3: EMPAREJAMIENTO POR CLIC (MODIFICADA SEGÚN LA SOLICITUD)
-    // =======================================================================
     const stage3Data = [
         { ch: 'Bäktye’', es: 'Buenos días' },
         { ch: 'Mältye’', es: 'Buenas tardes' },
@@ -392,11 +495,9 @@
         { ch: 'Täle c’ajk', es: 'Hola' },
     ];
 
-    // Variables para el click matching
     let selectedQuestion = null;
     let matchedPairsCount = 0;
 
-    // Función de ayuda para mezclar un array (Fisher-Yates)
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -405,9 +506,7 @@
         return array;
     }
 
-    // Maneja la selección de una tarjeta de pregunta (Ch'ol)
     function handleQuestionClick(cardEl, question) {
-        // Deseleccionar si ya estaba seleccionado
         if (cardEl.classList.contains('selected')) {
             cardEl.classList.remove('selected');
             selectedQuestion = null;
@@ -415,18 +514,15 @@
             return;
         }
 
-        // Limpiar selección previa
         document.querySelectorAll('.questions-stack .matching-card.selected').forEach(el => {
             el.classList.remove('selected');
         });
 
-        // Seleccionar actual
         cardEl.classList.add('selected');
         selectedQuestion = question;
         setFeedback(`Seleccionaste **${question.ch}**. ¡Ahora elige su traducción!`, 'neutral');
     }
 
-    // Maneja la selección de una tarjeta de respuesta (Español)
     function handleAnswerClick(cardEl, answer) {
         if (!selectedQuestion) {
             setFeedback('Selecciona primero una palabra Ch\'ol de la columna izquierda.', 'bad');
@@ -435,20 +531,16 @@
             return;
         }
 
-        // Buscar la tarjeta de la pregunta seleccionada
         const questionCardEl = document.querySelector(`.questions-stack .matching-card[data-chol="${selectedQuestion.ch}"]`);
 
         if (selectedQuestion.es === answer.es) {
-            // MATCH CORRECTO
             setFeedback('¡Emparejamiento Correcto!', 'ok');
             
-            // Marcar ambos como matched
             cardEl.classList.add('matched');
             questionCardEl.classList.add('matched');
-            cardEl.classList.remove('shaking'); // Limpiar cualquier agitación residual
+            cardEl.classList.remove('shaking'); 
             questionCardEl.classList.remove('shaking', 'selected');
 
-            // Limpiar la selección
             selectedQuestion = null;
             
             matchedPairsCount++;
@@ -459,10 +551,8 @@
             }
 
         } else {
-            // MATCH INCORRECTO
             setFeedback('Incorrecto. Intenta de nuevo.', 'bad');
 
-            // Animación de error en la respuesta y en la pregunta seleccionada
             cardEl.classList.add('shaking');
             questionCardEl.classList.add('shaking');
             
@@ -478,7 +568,6 @@
         matchedPairsCount = 0;
         selectedQuestion = null;
 
-        // Duplicar y mezclar los datos para preguntas y respuestas
         const questions = stage3Data.map(d => ({ ch: d.ch, es: d.es }));
         const answers = stage3Data.map(d => ({ ch: d.ch, es: d.es }));
         
@@ -490,7 +579,6 @@
         const matchingContainer = document.createElement('div');
         matchingContainer.className = 'matching-click-container';
 
-        // Columna de Preguntas (Ch'ol)
         const questionsStack = document.createElement('div');
         questionsStack.className = 'questions-stack';
         questionsStack.innerHTML = `<p class="stack-title">Ch'ol:</p>`;
@@ -499,13 +587,12 @@
             const cardEl = document.createElement('div');
             cardEl.className = 'matching-card';
             cardEl.textContent = q.ch;
-            cardEl.dataset.chol = q.ch; // Usar data attribute para fácil referencia
+            cardEl.dataset.chol = q.ch; 
             cardEl.dataset.es = q.es;
             cardEl.onclick = () => handleQuestionClick(cardEl, q);
             questionsStack.appendChild(cardEl);
         });
 
-        // Columna de Respuestas (Español)
         const answersStack = document.createElement('div');
         answersStack.className = 'answers-stack';
         answersStack.innerHTML = `<p class="stack-title">Español:</p>`;
@@ -527,9 +614,6 @@
         setStageComplete(false);
     }
     
-    // =======================================================================
-    // 4 - FINAL DE TEMA (UNIFICADO)
-    // =======================================================================
     function renderStage4(container) {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
@@ -543,7 +627,6 @@
     }
 
 
-    // --- Inicialización ---
     document.addEventListener('DOMContentLoaded', () => {
         render();
     });

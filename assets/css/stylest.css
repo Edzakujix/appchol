@@ -1,8 +1,6 @@
-
-        /* Nuevos Colores de Fondo y Temas */
         :root {
-            --color-cielo: #ADE4FF; /* Azul claro */
-            --color-pasto: #6AA84F; /* Verde pasto */
+            --color-cielo: #ADE4FF;
+            --color-pasto: #6AA84F;
             --color-principal: #75b4c7;
             --color-acentos: #2A9D8F;
             --color-texto: #333;
@@ -12,16 +10,14 @@
         body {
             font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
             margin: 0;
-            padding: 0; /* Aseguramos que no haya padding global */
-            /* CAMBIO CLAVE: Fondo degradado de cielo y pasto */
+            padding: 0;
             background: linear-gradient(180deg, var(--color-cielo) 65%, #ADD8E6 100%); 
             color: var(--color-texto);
             text-align: center;
             min-height: 100vh;
-            position: relative; /* Base para el pasto y el botón */
+            position: relative;
         }
         
-        /* Simulación del pasto inferior (como elemento decorativo) */
         .ground-sim {
             position: fixed;
             bottom: 0;
@@ -30,18 +26,17 @@
             background-color: var(--color-pasto);
             border-top-left-radius: 60% 30%;
             border-top-right-radius: 60% 30%;
-            z-index: -1; /* Detrás del contenido principal */
+            z-index: -1;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            padding-top: 60px; /* Espacio para el botón de regreso */
+            padding-top: 60px; 
             position: relative;
         }
 
-        /* Botón de Retroceso (Añadido) */
         .back-button {
             position: absolute; 
             top: 15px; 
@@ -61,7 +56,6 @@
             transform: scale(1.1);
         }
 
-        /* Nuevo Título del Módulo */
         h1 {
             color: var(--color-acentos);
             font-size: 2.5rem;
@@ -69,7 +63,6 @@
             text-shadow: 2px 2px #fff;
         }
 
-        /* ------------------ CONTENIDO PRINCIPAL Y LECCIONES ------------------ */
         .main-content {
             display: flex;
             justify-content: center;
@@ -141,9 +134,6 @@
             color: var(--color-texto);
         }
 
-        /* ============================================== */
-        /* === MEDIA QUERIES PARA RESPONSIVIDAD MÓVIL === */
-        /* ============================================== */
         @media (max-width: 768px) {
             
             h1 { font-size: 2rem; }

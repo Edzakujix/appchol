@@ -7,6 +7,81 @@
 
         <link rel="stylesheet" href="../assets/css/styles.css">
 
+    <style>
+    .demo-image-card {
+        width: 150px; 
+        height: 150px;
+        border-radius: 50%;
+        background-color: #E0E0E0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: 5px solid transparent;
+        transition: all 0.3s;
+    }
+    .demo-image-card:hover {
+        transform: scale(1.05);
+        border-color: var(--next);
+    }
+    .demo-image-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .translation-container {
+        width: 100%;
+        max-width: 650px;
+        text-align: center;
+        padding: 20px;
+        background-color: #e3f2fd;
+        border-radius: 20px;
+        border: 3px solid #90caf9;
+        margin-bottom: 20px;
+    }
+    .translation-prompt {
+        font-size: clamp(1.3rem, 4vw, 1.8rem);
+        font-weight: 800;
+        color: var(--accent);
+        margin-bottom: 15px;
+        text-shadow: 1px 1px #fff;
+    }
+    .translation-options-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .translation-option {
+        background-color: #fff;
+        border: 3px solid #FFCA28;
+        border-radius: 15px;
+        padding: 15px 20px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .translation-option:hover:not(.disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    }
+    .translation-option.ok {
+        border-color: var(--ok);
+        background: #E8F5E9;
+    }
+    .translation-option.bad {
+        border-color: var(--bad);
+        background: #FFEBEE;
+    }
+    
+    @media (max-width: 600px){
+        .translation-prompt { font-size: 1.3rem; }
+        .translation-option { font-size: 1rem; }
+    }
+    </style>
 </head>
 <body>
     <div class="app" role="application" aria-label="Prototipo actividades para primaria">
@@ -25,19 +100,16 @@
 
         <footer>Prototipo educativo · Tema 2: Presentación Personal</footer>
     </div>
+        <div class="ground-sim"></div>
+
 
 <script>
-    // ************************************************************************
-    // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL
     const MAIN_SCREEN_URL = '../U1/U1FAM.html'; 
-    // ************************************************************************
     
-    // Función de redirección para el botón de Inicio
     function goHome() {
         window.location.href = MAIN_SCREEN_URL;
     }
 
-    // Seis etapas: 0 (Video) a 5 (Final)
     const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4, renderStage5];
     let currentStage = 0;
     let feedbackEl = null; 
@@ -45,16 +117,13 @@
     const nextBtn = document.getElementById('nextBtn');
     const controlsArea = document.getElementById('controlsArea');
     
-    // Variables de Progreso
     let stageProgress = new Array(stages.length).fill(false); 
     let userScore = 0;
     const TOTAL_ACTIVITY_POINTS = 40; 
 
-    // --- Utilidades del flujo y BD ---
 
     function setStageComplete(isComplete = true) {
         if (isComplete && !stageProgress[currentStage]) {
-            // Se suma la puntuación simulada para las actividades 2, 3 y 4
              if(currentStage >= 2 && currentStage <= 4) { 
                  userScore += 10; 
              }
@@ -85,13 +154,11 @@
             return;
         }
 
-        // --- PUNTO DE REDIRECCIÓN CRÍTICO (Stage 5) ---
         if (currentStage === 5) {
             alert(`✅ Tema Terminado. Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo a la pantalla principal...`);
             window.location.href = MAIN_SCREEN_URL; 
             return; 
         }
-        // --------------------------------------------------
 
         currentStage++;
         if (currentStage >= stages.length) {
@@ -118,13 +185,10 @@
 
         stages[currentStage](container);
         
-        // El video y la pantalla final se completan inmediatamente
         if (currentStage === 0 || currentStage === 5) { 
             setStageComplete(true);
         }
     }
-
-    // --- Utilidades de Audio (CORREGIDAS) ---
 
     function speakText(text, lang='es-ES'){
         if(!window.speechSynthesis) return;
@@ -134,29 +198,23 @@
         window.speechSynthesis.speak(u);
     }
     
-    // MEJORA: playAudio con manejo de Promise para errores de carga o formato
     function playAudio(audioFilename, text, lang = 'cho') {
-        // RUTA DE AUDIO
         const audioUrl = `../assets/audio/${audioFilename}`; 
         
         const audio = new Audio(audioUrl);
         
         audio.play()
             .then(() => {
-                // Éxito en la reproducción
                 setFeedback(`🔊 Reproduciendo: "${text}"`, 'neutral');
             })
             .catch(e => {
-                // Falla la reproducción (archivo no encontrado/bloqueo/formato)
                 console.error(`❌ Error al cargar o reproducir "${audioUrl}": ${e.message}`);
                 
-                // Recurrir a la simulación de voz (TTS)
                 speakText(text, lang); 
                 setFeedback(`[TTS] No se encontró el audio real. Reproduciendo: "${text}"`, 'neutral');
             });
     }
 
-    // ARREGLO DEL REFERENCE ERROR: Movida a un ámbito global
     function createAudioButton(text, audioFilename, lang = 'cho') {
         const btn = document.createElement('button');
         btn.className = 'ghost';
@@ -165,9 +223,6 @@
         return btn;
     }
 
-    // =======================================================================
-    // 0 - MINI-CLASE (VIDEO)
-    // =======================================================================
     function renderStage0(container){
           const videoHtml = `
             <div class="video-wrapper">
@@ -182,14 +237,10 @@
         renderControls();
     }
 
-    // =======================================================================
-    // 1 - ACTIVIDAD 1: DEMOSTRACIÓN (NIÑO/NIÑA) - USANDO ESTRUCTURA CH'OL
-    // =======================================================================
     function renderStage1(container) {
         container.innerHTML = `<p class="stage0-info">Toca una figura para escuchar cómo se presenta un niño o una niña en Ch'ol.</p>`;
 
         const demoData = [
-            // Nombres de archivo estandarizados
             { type: 'niño', chool: "Jk´aba´ aj Octavio", translation: "Mi nombre es Octavio", filename: "mi_nombre_es_octavio.mp3" }, 
             { type: 'niña', chool: "Jk´aba´ aj María", translation: "Mi nombre es María", filename: "mi_nombre_es_maria.mp3" }
         ];
@@ -202,7 +253,6 @@
             b.className = 'demo-image-card';
             b.dataset.type = data.type;
             
-            // RUTA DE IMAGEN CORREGIDA
             const img = document.createElement('img');
             img.setAttribute('src', `../assets/img/${data.type === 'niña' ? 'niña.png' : 'niño.png'}`); 
 
@@ -220,11 +270,7 @@
         renderControls();
     }
 
-    // =======================================================================
-    // 2 - ACTIVIDAD 2: SELECCIONAR FIGURA (6 rondas - Frases de Presentación)
-    // =======================================================================
     const stage2Data = [
-        // NOMBRES DE AUDIO ESTANDARIZADOS A MINÚSCULAS
         { audio: "Jiñi ili kña´", filename: "ella_es_mi_mama.mp3", correct: "mama.png", options: ["mama.png", "abuelo.png", "Abuela.png"], text: "Mi mamá" },
         { audio: "Jiñi ili ktyaty", filename: "Mi papa.mp3", correct: "papa.png", options: ["papa.png", "hermano.png", "Tia.png"], text: "Mi papá" },
         { audio: "Jiñi ili kts´i´ chutyjach", filename: "Mi perro es pequeno.mp3", correct: "perro_pequeño.png", options: ["Tio.png", "Niño.png", "hermano.png"], text: "Mi perro es pequeño" },
@@ -266,21 +312,16 @@
         const currentData = stage2Data[currentRound2];
         container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Data.length}: Escucha la frase en Ch'ol y selecciona la imagen correcta.</p>`;
 
-        // 1. Inicializar el área de controles (solo con el feedback)
         renderControls(); 
         
-        // 2. Crear el botón de audio como un objeto DOM
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho'); 
         
-        // 3. Crear el contenedor del botón para darle el estilo de centrado
         const buttonWrapper = document.createElement('div');
         buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
         buttonWrapper.appendChild(audioBtn);
         
-        // 4. Insertar el objeto botón directamente en controlsArea para que el evento funcione
         const feedbackEl = document.getElementById('feedback');
         if (controlsArea) {
-            // Insertar el botón después del área de feedback si existe
             controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
         }
 
@@ -293,7 +334,6 @@
             b.className = 'opt';
             b.dataset.img = opt; 
             
-            // RUTA DE IMAGEN
             b.innerHTML = `<img src="../assets/img/${opt}" alt="Opción" style="width: 100px; height: 100px; border-radius: 10px;"/>`;
 
             b.onclick = (e) => {
@@ -315,11 +355,7 @@
         setStageComplete(false); 
     }
     
-    // =======================================================================
-    // 3 - ACTIVIDAD 3: CONTEO (4 rondas - Números del 1 al 10)
-    // =======================================================================
     const choolNumbers = [
-        // NOMBRES DE AUDIO ESTANDARIZADOS A num_X.mp3
         { num: 1, word: "Jump´ej", filename: "num_1.mp3" },
         { num: 2, word: "Chap´ej", filename: "num_2.mp3" },
         { num: 3, word: "Uxp´ej", filename: "num_3.mp3" },
@@ -333,7 +369,6 @@
     ];
 
     const stage3Data = [
-        // NOMBRES DE AUDIO ESTANDARIZADOS A conteo_X.mp3
         { count: 3, wordChool: "Uxp´ej", filename: "conteo_3.mp3", image: "imagen_3_elementos.png" },
         { count: 5, wordChool: "Jop´ej", filename: "conteo_5.mp3", image: "imagen_5_elementos.png" },
         { count: 7, wordChool: "Wukp´ej", filename: "conteo_7.mp3", image: "imagen_7_elementos.png" },
@@ -346,11 +381,10 @@
         let options = [correctOpt];
         
         const allOther = choolNumbers.filter(n => n.word !== correctWordChool);
-        // Seleccionar 3 opciones incorrectas al azar (si hay suficientes)
         while (options.length < 4 && allOther.length > 0) {
             const randomIndex = Math.floor(Math.random() * allOther.length);
             options.push(allOther[randomIndex]);
-            allOther.splice(randomIndex, 1); // Quitar para evitar duplicados
+            allOther.splice(randomIndex, 1); 
         }
         return options.sort(() => Math.random() - 0.5);
     }
@@ -396,18 +430,14 @@
             <img src="../assets/img/${currentData.image}" alt="Elementos a contar" style="width: 200px; height: 200px; border-radius: 15px; margin-bottom: 20px; border: 3px solid var(--accent);"/>
         `;
         
-        // Uso de createAudioButton para la Actividad 3
         const audioBtn = createAudioButton(currentData.wordChool, currentData.filename, 'cho'); 
         
-        // 1. Inicializar el área de controles (solo con el feedback)
         renderControls(); 
         
-        // 2. Crear el contenedor del botón para darle el estilo de centrado
         const buttonWrapper = document.createElement('div');
         buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; margin-top: 10px;";
         buttonWrapper.appendChild(audioBtn);
         
-        // 3. Insertar el objeto botón directamente en controlsArea 
         const feedbackEl = document.getElementById('feedback');
         if (controlsArea) {
             controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
@@ -418,15 +448,14 @@
 
         options.forEach(opt => {
             const b = document.createElement('div');
-            b.className = 'word-option translation-option'; // Usamos el mismo estilo visual
+            b.className = 'word-option translation-option'; 
             b.dataset.word = opt.word;
             b.dataset.filename = opt.filename;
-            b.textContent = opt.word + ' (🔊)'; // Muestra la palabra Ch'ol y el ícono de audio
+            b.textContent = opt.word + ' (🔊)'; 
             
             b.onclick = (e) => {
                 const allOptions = document.querySelectorAll('.translation-option');
                 
-                // Opción 1: Reproducir audio para verificar
                 if (!b.classList.contains('clicked-once') && !b.classList.contains('disabled')) {
                     playAudio(opt.filename, opt.word, 'cho'); 
                     b.classList.add('clicked-once');
@@ -435,7 +464,6 @@
                     return;
                 }
                 
-                // Opción 2: Seleccionar y comprobar
                 allOptions.forEach(el => el.classList.add('disabled'));
                 b.classList.remove('clicked-once');
                 
@@ -453,11 +481,7 @@
     }
 
 
-    // =======================================================================
-    // 4 - ACTIVIDAD 4: TRADUCCIÓN DE PREGUNTAS (5 rondas)
-    // =======================================================================
     const stage4Data = [
-        // Pregunta/Traducción de Presentación
         { question: "¿Cómo te llamas?", correct: "¿Bajche´ ak´aba´?", options: ["¿Ba´ki chumulety?", "¿Bajche´ ak´aba´?", "Jiñi ili kpap"] },
         { question: "Mi nombre es Octavio", correct: "Jk´aba´ aj Octavio", options: ["Jk´aba´ aj Octavio", "Joñoñ wukp´ej ka´bilel", "Jiñi ili kña´"] },
         { question: "¿Cuántos años tienes?", correct: "¿Bajche´aja´bilel?", options: ["¿Bajche´aja´bilel?", "¿Ba´ki tyälemety?", "¿Ba´ki ch´oyolety?"] },
@@ -535,10 +559,6 @@
         renderControls();
     }
 
-
-    // =======================================================================
-    // 5 - FINAL DE MÓDULO (Redirección y Guardado de BD)
-    // =======================================================================
     function renderStage5(container) {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
@@ -552,8 +572,6 @@
         renderControls();
     }
 
-
-    // --- Inicialización ---
     document.addEventListener('DOMContentLoaded', () => {
         render();
     });
