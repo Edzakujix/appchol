@@ -7,135 +7,55 @@
 
         <link rel="stylesheet" href="../assets/css/styles.css">
 
-
     <style>
-/* --- ESTILOS GENERALES --- */
-:root {
-    --color-cielo: #ADE4FF; 
-    --color-pasto: #6AA84F; 
-    --color-principal: #75b4c7;
-    --color-acentos: #2A9D8F;
-    --color-texto: #333;
-    --accent: #FF7043; 
-    --card: #ffffff;
-    --next: #29B6F6;
-    --ok: #4CAF50;
-    --bad: #E53935;
-    /* Colores para Actividad 2 */
-    --matching-bg: #8AC257; 
-    --matching-card-bg: #E7F6E1; 
-    --select-highlight: #FF7043; 
-}
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+button.primary {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
-body {
-    font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
-    background: linear-gradient(180deg, var(--color-cielo) 65%, #ADD8E6 100%); 
-    color: var(--color-texto);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    text-align: center;
-    position: relative;
-    box-sizing: border-box;
-    padding: 20px;
+button.primary.active {
+    opacity: 1;
+    pointer-events: auto;
 }
 
-.ground-sim {
-    position: fixed; bottom: 0; width: 100%; height: 20vh; background-color: var(--color-pasto);
-    border-top-left-radius: 60% 30%; border-top-right-radius: 60% 30%; z-index: -1;
+button.primary.active:active {
+    transform: translateY(5px);
+    box-shadow: 0 0px 0 0 #0288D1;
 }
 
-.app {
-    width: 100%; max-width: 900px; background: var(--card); border-radius: 30px;
-    box-shadow: 0 15px 40px rgba(255, 112, 67, 0.2); padding: 30px; border: 5px solid var(--accent);
-    max-height: 95vh; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
+.opt {
+    min-width: 140px; 
+    padding: 20px; 
+    border-radius: 20px; 
+    background: #fff;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 10px; 
+    cursor: pointer;
+    border: 4px solid #E0E0E0; 
+    font-size: 1.1rem; 
+    font-weight: 600; 
+    transition: all .2s;
 }
 
-header{
-    display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom: 20px; flex-shrink: 0; 
-}
-h1{
-    font-size: clamp(1.5rem, 3vw, 2rem); margin:0; color: var(--accent); text-shadow: 2px 2px #fff;
-}
-.stage-area{
-    overflow-y: auto; padding-right: 10px; padding-bottom: 20px; display: flex; 
-    flex-direction: column; justify-content: flex-start; align-items: center; scrollbar-width: thin;
-    flex-grow: 1; /* Para ocupar el espacio disponible */
+.opt:not(.disabled):hover {
+    transform: translateY(-5px) scale(1.05); 
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* --- CONTROLES (FOOTER) --- */
-.controls{
-    display:flex; gap:15px; justify-content:center; align-items:center; margin-top:10px;
-    flex-shrink: 0; padding-top: 10px; border-top: 1px solid #eee; min-height: 50px;
-}
+.opt.disabled { pointer-events: none; opacity: 0.7; }
+.opt.ok { border-color: var(--ok); box-shadow: 0 8px 20px rgba(76,175,80,0.3); background: #E8F5E9; }
+.opt.bad { border-color: var(--bad); box-shadow: 0 8px 20px rgba(229,57,53,0.3); background: #FFEBEE; }
 
-button.primary, button.ghost{
-    padding:12px 20px; border-radius: 15px; font-weight:700; cursor:pointer; transition: all .1s ease;
-}
-/* Botón Siguiente (Solo Header) */
-button.primary{
-    background:var(--next); color:white; border:none; box-shadow: 0 5px 0 0 #0288D1; opacity: 0.5; pointer-events: none;
-}
-button.primary.active{
-    opacity: 1; pointer-events: auto;
-}
-button.primary.active:active{
-    transform: translateY(5px); box-shadow: 0 0px 0 0 #0288D1;
-}
-button.ghost{
-    background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; font-weight: 600;
-}
-
-/* --- ESTILOS DEL VIDEO (Corrección para que se vea) --- */
-.video-wrapper {
-    width: 100%;
-    position: relative;
-    padding-bottom: 56.25%; /* Aspect Ratio 16:9 */
-    height: 0;
-    overflow: hidden;
-    border-radius: 15px;
-    border: 3px solid var(--accent);
-    background: #000;
-    margin-bottom: 20px;
-}
-.video-wrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-/* --- ESTILOS DE BOTONES Y OPCIONES --- */
-.options-row{display:flex; gap:20px; flex-wrap:wrap; justify-content:center}
-
-.opt{
-    min-width:140px; padding:20px; border-radius: 20px; background:#fff;
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); display:flex;flex-direction:column;align-items:center;gap:10px; cursor:pointer;
-    border: 4px solid #E0E0E0; font-size: 1.1rem; font-weight: 600; transition: all .2s;
-}
-.opt:not(.disabled):hover{
-    transform:translateY(-5px) scale(1.05); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-}
-.opt.disabled{pointer-events: none; opacity: 0.7;}
-.opt.ok{border-color:var(--ok); box-shadow:0 8px 20px rgba(76,175,80,0.3); background:#E8F5E9;}
-.opt.bad{border-color:var(--bad); box-shadow:0 8px 20px rgba(229,57,53,0.3); background:#FFEBEE;}
-
-.feedback{ font-weight:800; font-size: 1.4rem; min-height: 1.5em; }
-
-/* --- ACTIVIDAD 1: IMAGEN --- */
 .image-target-wrapper {
     width: 100%;
     display: flex; 
     justify-content: center; 
     margin-bottom: 20px;
 }
+
 .image-target {
     max-width: 350px; 
     height: 220px; 
@@ -144,14 +64,13 @@ button.ghost{
     overflow: hidden;
     background: white;
 }
+
 .image-target img {
     width: 100%;
     height: 100%;
     object-fit: contain; 
 }
 
-
-/* --- ACTIVIDAD 2: MATCHING --- */
 .matching-click-container {
     display: flex;
     flex-direction: column;
@@ -163,6 +82,7 @@ button.ghost{
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
+
 .matching-card {
     background-color: var(--matching-card-bg);
     border-radius: 12px;
@@ -178,15 +98,18 @@ button.ghost{
     align-items: center;
     text-align: center;
 }
+
 .matching-card:hover:not(.matched):not(.selected) {
     transform: translateY(-2px);
     box-shadow: 0 6px 0 0 rgba(0,0,0,0.15);
 }
+
 .matching-card.selected {
     border-color: var(--select-highlight);
     box-shadow: 0 0 0 4px var(--select-highlight);
     background-color: #F8E3DD; 
 }
+
 .matching-card.matched {
     background-color: var(--ok);
     color: white;
@@ -195,6 +118,7 @@ button.ghost{
     box-shadow: none;
     border-color: var(--ok);
 }
+
 .matching-card.shaking {
     animation: shake 0.5s;
     animation-iteration-count: 2;
@@ -203,11 +127,7 @@ button.ghost{
     background-color: #FFEBEE !important;
     color: var(--bad);
 }
-@keyframes shake {
-    0%, 100% {transform: translateX(0);}
-    20%, 60% {transform: translateX(-5px);}
-    40%, 80% {transform: translateX(5px);}
-}
+
 .questions-stack, .answers-stack {
     display: flex;
     flex-direction: column;
@@ -216,6 +136,7 @@ button.ghost{
     border-radius: 15px;
     background: rgba(255, 255, 255, 0.5);
 }
+
 .stack-title {
     font-weight: 800;
     font-size: 1.1rem;
@@ -224,6 +145,7 @@ button.ghost{
     text-align: left;
     padding-left: 10px;
 }
+
 @media (min-width: 601px) {
     .matching-click-container {
         flex-direction: row;
@@ -234,14 +156,21 @@ button.ghost{
     }
 }
 
-/* Media Queries */
 @media (max-width: 600px){
-    .app{ max-height: 100vh; padding: 15px; }
-    .image-target { max-width: 200px; height: 120px; } 
-    .matching-container { flex-direction: column; }
-    .matching-column { min-width: 100%; }
-    .opt { min-width: 80%; font-size: 1rem; }
-    .controls{ flex-direction: column; gap: 10px; align-items: stretch; }
+    .image-target { 
+        max-width: 200px; 
+        height: 120px; 
+    } 
+    .matching-container { 
+        flex-direction: column; 
+    }
+    .matching-column { 
+        min-width: 100%; 
+    }
+    .opt { 
+        min-width: 80%; 
+        font-size: 1rem; 
+    }
 }
     </style>
 
@@ -324,9 +253,7 @@ button.ghost{
     let stageProgress = new Array(stages.length).fill(false);
     let feedbackEl = null; 
     
-    // REFERENCIAS FIJAS
     const titleEl = document.getElementById('title');
-    // Aquí obtenemos el botón de la cabecera y NO lo sobreescribimos
     const nextBtn = document.getElementById('nextBtn'); 
     const controlsArea = document.getElementById('controlsArea');
 
@@ -343,7 +270,6 @@ button.ghost{
     
     function setStageComplete(isComplete = true) {
         stageProgress[currentStage] = isComplete;
-        // Esto activa/desactiva el botón de la cabecera
         nextBtn.classList.toggle('active', isComplete); 
     }
     
@@ -365,8 +291,6 @@ button.ghost{
     }
 
     function renderControls(html = '') {
-        // CORRECCIÓN: YA NO SE CREA EL BOTÓN NEXT AQUÍ
-        // Solo renderiza el área de feedback y contenido extra si es necesario
         controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>${html}`;
         feedbackEl = document.getElementById('feedback');
     }
@@ -376,7 +300,6 @@ button.ghost{
     }
 
     function next() {
-        // Verificación sobre el botón de cabecera
         if (!nextBtn.classList.contains('active')) {
             setFeedback("¡Termina esta parte antes de continuar!", 'bad');
             return;
@@ -421,9 +344,7 @@ button.ghost{
         setStageComplete(true);
     }
 
-    // 0 - MINI-CLASE (VIDEO)
     function renderStage0(container, currentData) {
-        // Ahora el .video-wrapper tiene estilos CSS definidos
         const videoHtml = `
             <div class="video-wrapper">
                 <iframe src="${currentData.videoUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
@@ -433,11 +354,10 @@ button.ghost{
             </p>
         `;
         container.innerHTML = videoHtml;
-        renderControls(); // Renderiza el footer sin botón
-        setStageComplete(true); // Activa el botón de cabecera
+        renderControls(); 
+        setStageComplete(true); 
     }
 
-    // 1 - ACTIVIDAD 1
     function renderStage1_Recog(container, currentData) {
         const roundData = currentData.rounds[currentActivityRound];
         const totalRounds = currentData.rounds.length;
@@ -454,7 +374,7 @@ button.ghost{
             </div>
             <div class="options-row" id="optionsContainer"></div>`;
         
-        renderControls(); // Sin botón inferior
+        renderControls(); 
 
         const optionsContainer = document.getElementById('optionsContainer');
         const allOptions = roundData.options.sort(() => Math.random() - 0.5);
@@ -485,7 +405,6 @@ button.ghost{
         setStageComplete(false);
     }
 
-    // 2 - ACTIVIDAD 2: MATCHING
     function handleQuestionClick(cardEl, question) {
         if (cardEl.classList.contains('matched')) return;
         if (cardEl.classList.contains('selected')) {
@@ -579,7 +498,6 @@ button.ghost{
         setStageComplete(false);
     }
 
-    // 3 - ACTIVIDAD 3: TRADUCCIÓN
     function renderStage3_TranslationFromEs(container, currentData) {
         const roundData = currentData.rounds[currentActivityRound];
         const totalRounds = currentData.rounds.length;
@@ -639,7 +557,6 @@ button.ghost{
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Inicialización inicial
         document.getElementById('controlsArea').innerHTML = `<div id="feedback" class="feedback"></div>`;
         feedbackEl = document.getElementById('feedback');
         render();

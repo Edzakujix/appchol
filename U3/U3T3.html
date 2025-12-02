@@ -8,107 +8,52 @@
         <link rel="stylesheet" href="../assets/css/styles.css">
 
     <style>
-/* (Se mantiene el CSS completo de la plantilla para consistencia) */
-:root {
-    --color-cielo: #ADE4FF; 
-    --color-pasto: #6AA84F; 
-    --color-principal: #75b4c7;
-    --color-acentos: #2A9D8F;
-    --color-texto: #333;
-    --accent: #FF7043; 
-    --card: #ffffff;
-    --next: #29B6F6;
-    --ok: #4CAF50;
-    --bad: #E53935;
-}
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+button.primary {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
-body {
-    font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
-    background: linear-gradient(180deg, var(--color-cielo) 65%, #ADD8E6 100%); 
-    color: var(--color-texto);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    text-align: center;
-    position: relative;
-    box-sizing: border-box;
-    padding: 20px;
+button.primary.active {
+    opacity: 1;
+    pointer-events: auto;
 }
 
-.ground-sim {
-    position: fixed; bottom: 0; width: 100%; height: 20vh; background-color: var(--color-pasto);
-    border-top-left-radius: 60% 30%; border-top-right-radius: 60% 30%; z-index: -1;
+button.primary.active:active {
+    transform: translateY(5px);
+    box-shadow: 0 0px 0 0 #0288D1;
 }
 
-.app {
-    width: 100%; max-width: 900px; background: var(--card); border-radius: 30px;
-    box-shadow: 0 15px 40px rgba(255, 112, 67, 0.2); padding: 30px; border: 5px solid var(--accent);
-    max-height: 95vh; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
+.opt {
+    min-width: 140px; 
+    padding: 20px; 
+    border-radius: 20px; 
+    background: #fff;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 10px; 
+    cursor: pointer;
+    border: 4px solid #E0E0E0; 
+    font-size: 1.1rem; 
+    font-weight: 600; 
+    transition: all .2s;
 }
 
-header{
-    display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom: 20px; flex-shrink: 0; 
-}
-h1{
-    font-size: clamp(1.5rem, 3vw, 2rem); margin:0; color: var(--accent); text-shadow: 2px 2px #fff;
-}
-.stage-area{
-    overflow-y: auto; padding-right: 10px; padding-bottom: 20px; display: flex; 
-    flex-direction: column; justify-content: flex-start; align-items: center; scrollbar-width: thin;
-}
-.controls{
-    display:flex;gap:15px;justify-content:space-between;align-items:center; margin-top:10px;
-    flex-shrink: 0; padding-top: 10px; border-top: 1px solid #eee;
+.opt:not(.disabled):hover {
+    transform: translateY(-5px) scale(1.05); 
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
 
-button.primary, button.ghost{
-    padding:12px 20px; border-radius: 15px; font-weight:700; cursor:pointer; transition: all .1s ease;
-}
-button.primary{
-    background:var(--next); color:white; border:none; box-shadow: 0 5px 0 0 #0288D1; opacity: 0.5; pointer-events: none;
-}
-button.primary.active{
-    opacity: 1; pointer-events: auto;
-}
-button.primary.active:active{
-    transform: translateY(5px); box-shadow: 0 0px 0 0 #0288D1;
-}
-button.ghost{
-    background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; font-weight: 600;
-}
-
-.options-row{display:flex; gap:20px; flex-wrap:wrap; justify-content:center}
-
-.opt{
-    min-width:140px; padding:20px; border-radius: 20px; background:#fff;
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); display:flex;flex-direction:column;align-items:center;gap:10px; cursor:pointer;
-    border: 4px solid #E0E0E0; font-size: 1.1rem; font-weight: 600; transition: all .2s;
-}
-.opt:not(.disabled):hover{
-    transform:translateY(-5px) scale(1.05); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-}
-.opt.disabled{pointer-events: none; opacity: 0.7;}
-.opt.ok{border-color:var(--ok); box-shadow:0 8px 20px rgba(76,175,80,0.3); background:#E8F5E9;}
-.opt.bad{border-color:var(--bad); box-shadow:0 8px 20px rgba(229,57,53,0.3); background:#FFEBEE;}
-
-.feedback{ font-weight:800; font-size: 1.4rem; }
-
-.video-wrapper {
-    position: relative; width: 100%; max-width: 600px; padding-bottom: 56.25%; 
-    height: 0; overflow: hidden; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-.video-wrapper iframe {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
-}
+.opt.disabled { pointer-events: none; opacity: 0.7; }
+.opt.ok { border-color: var(--ok); box-shadow: 0 8px 20px rgba(76,175,80,0.3); background: #E8F5E9; }
+.opt.bad { border-color: var(--bad); box-shadow: 0 8px 20px rgba(229,57,53,0.3); background: #FFEBEE; }
 
 .day-image-option img {
-    width: 100px; height: 100px; border-radius: 10px; object-fit: cover;
+    width: 100px; 
+    height: 100px; 
+    border-radius: 10px; 
+    object-fit: cover;
 }
     </style>
 
@@ -135,16 +80,12 @@ button.ghost{
 
 
 <script>
-    // ************************************************************************
-    // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL (UNIFICADO)
     const MAIN_SCREEN_URL = '../U3/U3ESC.html'; 
     const USER_GOOGLE_ID = 'ID_DEL_USUARIO_AUTENTICADO'; 
     const TOTAL_ACTIVITY_POINTS = 40; 
-    // ************************************************************************
     
     function goHome() { window.location.href = MAIN_SCREEN_URL; }
 
-    // VARIABLES CRÍTICAS
     const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4];
     let currentStage = 0;
     let feedbackEl = null; 
@@ -152,11 +93,9 @@ button.ghost{
     const nextBtn = document.getElementById('nextBtn');
     const controlsArea = document.getElementById('controlsArea');
     
-    // Variables de Progreso
     let stageProgress = new Array(stages.length).fill(false); 
     let userScore = 0; 
 
-    // Funciones de Control de Etapa 
     function setStageComplete(isComplete = true) {
         if (isComplete && !stageProgress[currentStage]) {
             if(currentStage >= 1 && currentStage <= 3) { userScore += 10; }
@@ -215,7 +154,6 @@ button.ghost{
         const container = document.getElementById('stageArea'); 
         container.innerHTML=''; 
 
-        // Títulos para el Tema 3
         const titles = [
             'Mini-Clase: Verbos Ch\'ol', 
             'Actividad 1: Verbo a Figura', 
@@ -230,10 +168,6 @@ button.ghost{
         if (currentStage === 0 || currentStage === 4) { setStageComplete(true); }
     }
 
-
-    // =======================================================================
-    // FUNCIÓN CRÍTICA DE AUDIO Y CREACIÓN DE BOTONES
-    // =======================================================================
     function playAudio(audioFilename, text, lang = 'cho') {
         const audioUrl = `../assets/audio/${audioFilename}`; 
         const audio = new Audio(audioUrl);
@@ -255,9 +189,6 @@ button.ghost{
         return btn;
     }
 
-    // =======================================================================
-    // 0 - MINI-CLASE (VIDEO)
-    // =======================================================================
     function renderStage0(container){
         const videoHtml = `
             <div class="video-wrapper">
@@ -272,9 +203,6 @@ button.ghost{
         renderControls();
     }
 
-    // =======================================================================
-    // 1 - ACTIVIDAD 1: VERBO CH'OL A IMAGEN (LÉXICO) - 6 RONDAS
-    // =======================================================================
     const stage1Questions = [
         { ch_word: "Päty bäñäk´äl", filename: "cocinar.mp3", correct: "cocinar.png", word: "Cocinar" },
         { ch_word: "Pokoñel", filename: "lavar.mp3", correct: "lavar.png", word: "Lavar" }, 
@@ -321,7 +249,6 @@ button.ghost{
         const currentData = stage1Questions[currentRound1];
         container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Questions.length}. Escucha el audio y selecciona la figura que muestra la acción: **${currentData.word}**.</p>`;
         
-        // Botón de Audio
         const audioBtn = createAudioButton(currentData.ch_word, currentData.filename, 'cho');
         audioBtn.innerHTML = '🔊 Reproducir Verbo';
         renderControls();
@@ -363,9 +290,6 @@ button.ghost{
         setStageComplete(false);
     }
 
-    // =======================================================================
-    // 2 - ACTIVIDAD 2: ORACIÓN A IMAGEN (VERBO SINTÁCTICO) - 4 RONDAS
-    // =======================================================================
     const stage2Data = [
         { ch_sentence: "Jiñi kpap muk´ tyi toñel tyi cholel", audio: "papa_trabaja.mp3", correct_img: "papa_trabaja.png", distractor_img: "papa_descansa.png", hint: "Mi papá trabaja en la milpa" },
         { ch_sentence: "Jiñi kermañu´ ilok´el majlel tyi xäñtye´el tyi ik´añ", audio: "hermano_caza.mp3", correct_img: "hermano_caza.png", distractor_img: "hermano_corre.png", hint: "Mi hermano sale a cazar en la noche" },
@@ -405,7 +329,6 @@ button.ghost{
             <p style="font-size: 1.4rem; font-weight: bold; color: var(--accent);">**${currentData.ch_sentence}**</p>
         `;
         
-        // Botón de Audio
         const audioBtn = createAudioButton(currentData.ch_sentence, currentData.audio, 'cho');
         audioBtn.innerHTML = '🔊 Reproducir Oración';
         const buttonWrapper = document.createElement('div');
@@ -442,9 +365,6 @@ button.ghost{
     }
 
 
-    // =======================================================================
-    // 3 - ACTIVIDAD 3: COMPLETAR LA ORACIÓN (OPCIÓN MÚLTIPLE) - 4 RONDAS
-    // =======================================================================
     const stage3Data = [
         { sentence: "Jiñi xchuty alo´ chonko ___ ijuñ", correct: "boñ", options: ["boñ", "ts´ijbuñ", "sety´"], hint_es: "El niño esta pintando" },
         { sentence: "Li alpeñalo´ chonkolo´ tyi ñak tyi yorojlel ___", correct: "uch´el", options: ["uch´el", "ka´y", "tsik"], hint_es: "Los niños están jugando en la hora del recreo" },
@@ -510,9 +430,6 @@ button.ghost{
         setStageComplete(false); 
     }
     
-    // =======================================================================
-    // 4 - FINAL DE TEMA (UNIFICADO)
-    // =======================================================================
     function renderStage4(container) {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
@@ -526,7 +443,6 @@ button.ghost{
     }
 
 
-    // --- Inicialización ---
     document.addEventListener('DOMContentLoaded', () => {
         render();
     });

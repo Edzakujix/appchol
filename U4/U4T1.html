@@ -5,249 +5,149 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Ch'ol App - Tema 1: Gustos</title>
 
-        <link rel="stylesheet" href="../assets/css/styles.css">
-
+    <link rel="stylesheet" href="../assets/css/styles.css">
 
     <style>
-/* --- ESTILOS INICIALES (Sincronizado con U1T1.html) --- */
-:root {
-    --color-cielo: #ADE4FF; 
-    --color-pasto: #6AA84F; 
-    --color-principal: #75b4c7;
-    --color-acentos: #2A9D8F;
-    --color-texto: #333;
-    --accent: #FF7043; 
-    --card: #ffffff;
-    --next: #29B6F6;
-    --ok: #4CAF50;
-    --bad: #E53935;
-    /* Colores para el Matching Móvil */
-    --matching-bg: #8AC257; 
-    --matching-card-bg: #E7F6E1; 
-    --select-highlight: #4CAF50; 
-}
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+button.primary {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
-body {
-    font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
-    background: linear-gradient(180deg, var(--color-cielo) 65%, #ADD8E6 100%); 
-    color: var(--color-texto);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    text-align: center;
-    position: relative;
-    box-sizing: border-box;
-    padding: 20px;
+button.primary.active {
+    opacity: 1;
+    pointer-events: auto;
 }
 
-/* Simulación del pasto inferior (de U1T1) */
-.ground-sim {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 20vh;
-    background-color: var(--color-pasto);
-    border-top-left-radius: 60% 30%;
-    border-top-right-radius: 60% 30%;
-    z-index: -1;
+button.primary.active:active {
+    transform: translateY(5px);
+    box-shadow: 0 0px 0 0 #0288D1;
 }
 
-/* Contenedor principal centrado (de U1T1) */
-.app {
-    width: 100%;
-    max-width: 900px;
-    background: var(--card);
-    border-radius: 30px;
-    box-shadow: 0 15px 40px rgba(255, 112, 67, 0.2);
-    padding: 30px;
-    border: 5px solid var(--accent);
-    max-height: 95vh;
-    display: flex;
-    flex-direction: column; 
-    justify-content: space-between;
-    overflow: hidden;
-}
-
-/* --- Estilos internos de U1T1 --- */
-header{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom: 20px; flex-shrink: 0; }
-h1{ font-size: clamp(1.5rem, 3vw, 2rem); margin:0; color: var(--accent); text-shadow: 2px 2px #fff; }
-.stage-area{
-    overflow-y: auto; padding-right: 10px; padding-bottom: 20px; 
-    display: flex; flex-direction: column; justify-content: flex-start; align-items: center; scrollbar-width: thin;
-}
-.controls{
-    display:flex;gap:15px;justify-content:space-between;align-items:center; margin-top:10px;
-    flex-shrink: 0; padding-top: 10px; border-top: 1px solid #eee;
-}
-
-/* Botones de control (de U1T1) */
-button.primary, button.ghost{ padding:12px 20px; border-radius: 15px; font-weight:700; cursor:pointer; transition: all .1s ease; }
-button.primary{ background:var(--next); color:white; border:none; box-shadow: 0 5px 0 0 #0288D1; opacity: 0.5; pointer-events: none; }
-button.primary.active{ opacity: 1; pointer-events: auto; }
-button.primary.active:active{ transform: translateY(5px); box-shadow: 0 0px 0 0 #0288D1; }
-button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; font-weight: 600; }
-.feedback{ font-weight:800; font-size: 1.4rem; } 
-
-/* Contenedor responsivo para video (DE U1T1, para el diseño solicitado) */
-.video-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 600px;
-    padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
-    height: 0;
-    overflow: hidden;
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-.video-wrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-/* Opciones de imagen para Actividad 2 */
-.options-row{display:flex; gap:20px; flex-wrap:wrap; justify-content:center}
-.img-option, .opt {
+.opt {
     min-width: 140px; 
     padding: 20px; 
-    border-radius: 20px;
+    border-radius: 20px; 
     background: #fff;
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
     gap: 10px; 
     cursor: pointer;
-    border: 4px solid #E0E0E0;
-    font-size: 1.1rem;
-    font-weight: 600;
+    border: 4px solid #E0E0E0; 
+    font-size: 1.1rem; 
+    font-weight: 600; 
     transition: all .2s;
 }
-.img-option img {
-    width: 100px; 
-    height: 100px;
-    border-radius: 10px;
-    object-fit: contain; /* Usamos contain para que se vea toda la imagen */
-}
-.img-option:not(.disabled):hover{
-    transform:translateY(-5px) scale(1.05);
+
+.opt:not(.disabled):hover {
+    transform: translateY(-5px) scale(1.05); 
     box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
-.img-option.ok, .opt.ok{border-color:var(--ok); box-shadow:0 8px 20px rgba(76,175,80,0.3); background:#E8F5E9;}
-.img-option.bad, .opt.bad{border-color:var(--bad); box-shadow:0 8px 20px rgba(229,57,53,0.3); background:#FFEBEE;}
 
-/* Botón de Audio (de U4T1 original, lo mantenemos por funcionalidad) */
-.audio-button {
-    background: var(--next); color: white; border: none; padding: 10px 20px; font-size: 1.5rem; border-radius: 15px; cursor: pointer; box-shadow: 0 5px 0 0 #0288D1; transition: all 0.1s;
-}
-.audio-button:active {
-    transform: translateY(5px); box-shadow: 0 0px 0 0 #0288D1;
-}
+.opt.disabled { pointer-events: none; opacity: 0.7; }
+.opt.ok { border-color: var(--ok); box-shadow: 0 8px 20px rgba(76,175,80,0.3); background: #E8F5E9; }
+.opt.bad { border-color: var(--bad); box-shadow: 0 8px 20px rgba(229,57,53,0.3); background: #FFEBEE; }
 
-/* --- ESTILOS DE MATCHING APILADO (Actividad 1, mantenidos de U4T1) --- */
-
-.matching-container {
+.matching-click-container {
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    width: 100%; 
+    max-width: 700px;
+    padding: 20px; 
     background-color: var(--matching-bg); 
-    width: 100%;
-    max-width: 450px; 
-    padding: 5px; 
     border-radius: 20px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-    gap: 0; 
-    margin-top: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-.question-group, .answer-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; 
-    padding: 10px 5px;
-}
-.answer-group {
-    border-top: 3px solid var(--matching-card-bg); 
-}
-
-/* Tarjeta (Question o Answer) */
 .matching-card {
     background-color: var(--matching-card-bg); 
-    border-radius: 8px; 
-    padding: 15px 20px; 
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: 0 3px 0 0 rgba(0,0,0,0.1); 
+    border-radius: 12px; 
+    padding: 10px 15px;
+    font-weight: 700; 
+    font-size: 1.2rem; 
+    cursor: pointer; 
     transition: all 0.2s;
-    color: var(--color-texto);
-    text-align: left;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 40px; 
-    position: relative;
-    user-select: none;
-}
-.matching-card:not(.matched):hover {
-    box-shadow: 0 5px 0 0 var(--ok); 
-    transform: translateY(-2px);
+    box-shadow: 0 4px 0 0 rgba(0,0,0,0.1); 
+    border: 3px solid transparent;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 60px;
 }
 
-/* Estados de la tarjeta */
-.matching-card.matched {
-    cursor: default;
-    box-shadow: none;
-    background-color: var(--matching-card-bg); 
-    color: var(--color-texto); 
-    transform: none;
-    opacity: 0.7;
+.matching-card:hover:not(.matched):not(.selected) {
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 0 0 rgba(0,0,0,0.15);
 }
 
 .matching-card.selected {
-    border: 3px solid var(--select-highlight);
-    box-shadow: 0 3px 0 0 var(--select-highlight); 
-    transform: translateY(-1px);
-}
-.matching-card.selected.matched {
-    border: 3px solid var(--ok); 
-    box-shadow: 0 3px 0 0 var(--ok); 
+    border-color: var(--select-highlight); 
+    box-shadow: 0 0 0 4px var(--select-highlight);
+    background-color: #F8E3DD;
 }
 
-/* Iconos de la Tarjeta */
-.play-btn-icon {
-    color: var(--next); 
-    font-size: 1.2rem;
-    margin-right: 10px;
-}
-.zoom-icon {
-    color: var(--matching-bg); 
-    font-size: 1.2rem;
+.matching-card.matched {
+    background-color: var(--ok); 
+    color: white; 
+    pointer-events: none; 
+    cursor: default;
+    box-shadow: none; 
+    border-color: var(--ok);
 }
 
-/* Puntos de Conexión (ELIMINADOS según la solicitud) */
-.connect-dot { display: none !important; } 
-
-/* Media Queries */
-@media (max-width: 600px){
-    .app{ max-height: 100vh; padding: 15px; padding-right: 0; }
-    body{ padding: 10px; }
-    h1{font-size: 1.5rem;}
-    
-    .matching-container{ max-width: 100%; padding: 5px; }
-    .matching-card{ font-size: 0.9rem; padding: 10px 15px; }
-    
-    .controls{ flex-direction: column; gap: 10px; align-items: stretch; }
+.matching-card.shaking {
+    animation: shake 0.5s; 
+    animation-iteration-count: 2; 
+    border-color: var(--bad) !important;
+    box-shadow: 0 0 0 4px var(--bad) !important; 
+    background-color: #FFEBEE !important; 
+    color: var(--bad);
 }
 
+.questions-stack, .answers-stack {
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+    padding: 10px;
+    border-radius: 15px; 
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.stack-title {
+    font-weight: 800; 
+    font-size: 1.1rem; 
+    color: var(--text-color);
+    margin-bottom: 5px; 
+    text-align: left; 
+    padding-left: 10px;
+}
+
+@media (min-width: 601px) {
+    .matching-click-container { 
+        flex-direction: row; 
+        justify-content: space-around; 
+    }
+    .questions-stack, .answers-stack { 
+        flex-basis: 48%; 
+    }
+}
+
+@media (max-width: 600px) {
+    .app { 
+        padding-right: 0; 
+    }
+    button.primary, button.ghost { 
+        padding: 8px 15px; 
+        font-size: 0.9rem; 
+    }
+    .controls { 
+        flex-direction: column; 
+        gap: 10px; 
+        align-items: stretch; 
+    }
+}
     </style>
 </head>
 <body>
@@ -255,7 +155,6 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
         <header>
             <h1 id="title">M4 - Tema 1: Gustos</h1>
             <div style="display: flex; gap: 10px;">
-                <!-- Botón de Inicio, usa el estilo 'ghost' de U1T1 -->
                 <button class="ghost" onclick="goHome()" style="font-weight: 500; padding: 10px;">🏠 Inicio</button> 
             </div>
         </header>
@@ -263,9 +162,7 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
         <main class="stage-area" id="stageArea"></main>
 
         <div class="controls" id="controlsArea">
-            <!-- Se mantiene el área de controles, pero se quita la puntuación visible -->
             <div id="feedback" class="feedback"></div>
-            <!-- El botón Siguiente se inserta mediante JS en renderControls() -->
         </div>
         
         <footer>Prototipo educativo · Módulo 4: Gustos</footer>
@@ -275,30 +172,24 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
 
 
     <script>
-        // ************************************************************************
-        // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL (UNIFICADO)
-        // ************************************************************************
         const MAIN_SCREEN_URL = '../U4/U4GUPA.html';
         const TOTAL_ACTIVITY_POINTS = 180; 
         
-        // Función de redirección para el botón de Inicio
-        function goHome() {
-            window.location.href = MAIN_SCREEN_URL;
-        }
+        function goHome() { window.location.href = MAIN_SCREEN_URL; }
 
         const DATA = {
             stages: [
-                { type: 'video', title: 'Mini-Clase: Frutas y Bebidas', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0' }, // URL de ejemplo, usar la real si se tiene
+                { type: 'video', title: 'Mini-Clase: Frutas y Bebidas', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0' },
                 { 
                     type: 'matching_click', 
                     title: 'Actividad 1: ¡Empareja los Sabores!',
                     rounds: [
-                        { ch: 'Alaxax', es: 'Naranja', audio: 'audio_alaxax.mp3' },
-                        { ch: 'Ja’as', es: 'Plátano', audio: 'audio_jaas.mp3' },
-                        { ch: 'Sa’', es: 'Pozol', audio: 'audio_sa.mp3' },
-                        { ch: 'Kajpe', es: 'Café', audio: 'audio_kajpe.mp3' },
-                        { ch: 'Po’om', es: 'Ciruela', audio: 'audio_poom.mp3' },
-                        { ch: 'Bu’ul', es: 'Frijol', audio: 'audio_buul.mp3' },
+                        { ch: 'Alaxax', es: 'Naranja' },
+                        { ch: 'Ja’as', es: 'Plátano' },
+                        { ch: 'Sa’', es: 'Pozol' },
+                        { ch: 'Kajpe', es: 'Café' },
+                        { ch: 'Po’om', es: 'Ciruela' },
+                        { ch: 'Bu’ul', es: 'Frijol' },
                     ]
                 },
                 { 
@@ -311,12 +202,6 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
                             options: [{filename: 'limon.png', word: 'Ilmoñix'}, {filename: 'manko.png', word: 'Mango'}, {filename: 'guayaba.png', word: 'Pätya'}, {filename: 'chi.png', word: 'Nance'}] },
                         { audio: 'audio_atol.mp3', correct: 'ul.png', 
                             options: [{filename: 'cafe.png', word: 'Kajpe'}, {filename: 'xaba.png', word: 'Xä’bä'}, {filename: 'ul.png', word: 'Atol'}, {filename: 'agua.png', word: 'Ja'}] },
-                        { audio: 'audio_limon.mpp3', correct: 'ilmoñix.png', 
-                            options: [{filename: 'ciruela.png', word: 'Po’om'}, {filename: 'ilmoñix.png', word: 'Limón'}, {filename: 'alaxax.png', word: 'Naranja'}, {filename: 'platano.png', word: 'Ja’as'}] },
-                        { audio: 'audio_camote.mp3', correct: 'ajkum.png', 
-                            options: [{filename: 'yuca.png', word: 'Ts’ijñ'}, {filename: 'macal.png', word: 'Juk’'}, {filename: 'ajkum.png', word: 'Camote'}, {filename: 'calabaza.png', word: 'Ch’ujm'}] },
-                        { audio: 'audio_huevo.mp3', correct: 'tyumuty.png', 
-                            options: [{filename: 'buul.png', word: 'Frijol'}, {filename: 'tyumuty.png', word: 'Huevo'}, {filename: 'waj.png', word: 'Tortilla'}, {filename: 'comida.png', word: 'Bäñik’'}] },
                     ]
                 },
                 { 
@@ -325,41 +210,27 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
                     rounds: [
                         { audio: 'audio_preferencia_limon.mp3', ch: 'K-tyi’ tyi’ añet ilmoñix.', q: 'Si te gusta el limón, ¿qué dices en Ch’ol?', correct: 'K-tyi’ tyi’ añet ilmoñix.', 
                             options: ['Ma’ax k-tyi’ tyi’ añet waj.', 'K-tyi’ tyi’ añet ilmoñix.', 'K-tyi’ tyi’ añet ul.', 'Ma’ax k-tyi’ tyi’ añet sa’.'], 
-                            hint: 'Me gusta/no me gusta = K-tyi’ tyi’ añet / Ma’ax k-tyi’ tyi’ añet'},
+                            hint: 'Me gusta = K-tyi’ tyi’ añet'},
                         { audio: 'audio_preferencia_frijol.mp3', ch: 'Ma’ax k-tyi’ tyi’ añet bu’ul.', q: 'No te gusta el frijol. ¿Cuál es la frase correcta?', correct: 'Ma’ax k-tyi’ tyi’ añet bu’ul.', 
                             options: ['K-tyi’ tyi’ añet waj.', 'Ma’ax k-tyi’ tyi’ añet bu’ul.', 'K-tyi’ tyi’ añet tyumuty.', 'Ma’ax k-tyi’ tyi’ añet waj.']},
                         { audio: 'audio_preferencia_pozol.mp3', ch: 'K-tyi’ tyi’ añet sa’.', q: 'Te ofrecen pozol. Responde que sí te gusta.', correct: 'K-tyi’ tyi’ añet sa’.', 
                             options: ['K-tyi’ tyi’ añet sa’.', 'Ma’ax k-tyi’ tyi’ añet sa’.', 'Ma’ax k-tyi’ tyi’ añet kajpe.', 'K-tyi’ tyi’ añet ul.']},
-                        { audio: 'audio_preferencia_fruta.mp3', ch: 'K-tyi’ tyi’ añet wuty tye’.', q: '¿Cuál dirías para indicar que te gusta la fruta (genérico)?', correct: 'K-tyi’ tyi’ añet wuty tye’.', 
-                            options: ['Ma’ax k-tyi’ tyi’ añet waj.', 'K-tyi’ tyi’ añet wuty tye’.', 'Ma’ax k-tyi’ tyi’ añet bäñik’.', 'K-tyi’ tyi’ añet tyumuty.']},
-                        { audio: 'audio_preferencia_huevo_neg.mp3', ch: 'Ma’ax k-tyi’ tyi’ añet tyumuty.', q: 'Si te dan un huevo frito, y no quieres, ¿qué dices?', correct: 'Ma’ax k-tyi’ tyi’ añet tyumuty.', 
-                            options: ['K-tyi’ tyi’ añet tyumuty.', 'Ma’ax k-tyi’ tyi’ añet tyumuty.', 'K-tyi’ tyi’ añet waj.', 'K-tyi’ tyi’ añet bu’ul.']},
-                        { audio: 'audio_preferencia_cafe.mp3', ch: 'K-tyi’ tyi’ añet kajpe.', q: 'Pregunta: "¿Te gusta el café?" Respuesta afirmativa:', correct: 'K-tyi’ tyi’ añet kajpe.', 
-                            options: ['Ma’ax k-tyi’ tyi’ añet kajpe.', 'K-tyi’ tyi’ añet kajpe.', 'K-tyi’ tyi’ añet sa’.', 'Ma’ax k-tyi’ tyi’ añet ul.']},
                     ]
                 },
                 { type: 'final' } 
             ]
         };
-        // Variables de Matching (Click Logic)
-        let selectedQuestion = null; 
-        let matchedPairs = 0;
-        const totalPairs = DATA.stages[1].rounds.length;
 
-        // Variables globales
         const stages = [renderStage0, renderStage1_MatchingClick, renderStage2_SelectImage, renderStage3_MultipleChoice, renderStageFinal];
         let currentStage = 0;
         let currentActivityRound = 0;
-        let userScore = 0; // Se mantiene la puntuación para el guardado interno
-        let stageProgress = new Array(stages.length).fill(false); // Progreso de la etapa
+        let userScore = 0; 
+        let stageProgress = new Array(stages.length).fill(false); 
         let feedbackEl = null; 
         const titleEl = document.getElementById('title');
-        let nextBtn = null; // Se inicializa en renderControls
+        let nextBtn = null; 
         const controlsArea = document.getElementById('controlsArea');
         
-        // =======================================================================
-        // 1 - FUNCIONES DE CONTROL (ADAPTADAS DE U1T1)
-        // =======================================================================
 
         function setStageComplete(isComplete) {
             stageProgress[currentStage] = isComplete;
@@ -381,19 +252,20 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
         
         function disableOptions() {
              document.querySelectorAll('.opt, .img-option, .matching-card').forEach(el => {
-                el.classList.add('disabled', 'prevent-click');
+                el.classList.add('disabled');
                 el.onclick = null;
             });
-            const checkBtn = document.querySelector('.controls .ghost');
-            if(checkBtn) checkBtn.style.pointerEvents = 'none';
         }
 
-        // Función para renderizar el botón Siguiente y el Feedback (tomada de U1T1)
         function renderControls(html = '') {
             controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>
                                       <button class="primary" id="nextBtn" onclick="next()">Siguiente</button>${html}`;
             feedbackEl = document.getElementById('feedback'); 
             nextBtn = document.getElementById('nextBtn');
+            
+            if (stageProgress[currentStage]) {
+                nextBtn.classList.add('active');
+            }
         }
 
         function next() {
@@ -403,7 +275,6 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
             }
 
             if (currentStage === stages.length - 1) {
-                // Mensaje final
                 alert(`✅ Tema Terminado. Puntuación: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo al Módulo 4...`);
                 window.location.href = MAIN_SCREEN_URL; 
                 return; 
@@ -416,7 +287,6 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
         
         function addPoints(points = 10) {
             userScore += points;
-            // No se muestra la puntuación, pero se actualiza internamente
         }
 
         function speakText(text, lang='es-ES'){
@@ -434,13 +304,28 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
             audio.play()
                 .then(() => { setFeedback(`🔊 Reproduciendo: "${text}"`, 'neutral'); })
                 .catch(e => {
-                    console.error(`❌ Error al cargar o reproducir "${audioUrl}": ${e.message}`);
+                    console.error(`❌ Error: ${e.message}`);
                     speakText(text, lang); 
-                    setFeedback(`[TTS] No se encontró el audio real. Reproduciendo: "${text}"`, 'neutral');
+                    setFeedback(`[TTS] No se encontró audio. Reproduciendo: "${text}"`, 'neutral');
                 });
         }
+
+        function createAudioButton(text, audioFilename, lang = 'cho') {
+            const btn = document.createElement('button');
+            btn.className = 'ghost';
+            btn.innerHTML = '🔊 Reproducir Audio';
+            btn.onclick = () => { playAudio(audioFilename, text, lang); };
+            return btn;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
         
-        // --- Pantalla de éxito de actividad (similar a U1T1) ---
         function showActivitySuccessScreen(activityTitle) {
             const container = document.getElementById('stageArea');
             container.innerHTML = `
@@ -450,6 +335,8 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
                     <p style="margin-top: 20px;">Presiona **Siguiente** para continuar.</p>
                 </div>
             `;
+            
+            renderControls(); 
             setStageComplete(true);
         }
 
@@ -459,7 +346,6 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
             const container = document.getElementById('stageArea'); 
             container.innerHTML=''; 
 
-            // Títulos de las etapas para el H1 (similar a U1T1)
             const titles = [
                 DATA.stages[0].title, 
                 DATA.stages[1].title, 
@@ -469,92 +355,72 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
             ];
             titleEl.textContent = titles[currentStage];
 
-            // Renderizar la etapa actual
             stages[currentStage](container);
             
-            // La Mini-Clase y la pantalla final se completan inmediatamente (como en U1T1)
             if (currentStage === 0 || currentStage === stages.length - 1) {
                 setStageComplete(true);
             }
         }
 
-        // =======================================================================
-        // 2 - RENDERIZADO DE ETAPAS
-        // =======================================================================
-        
-        // 0 - MINI-CLASE (VIDEO)
         function renderStage0(container) {
-             // Se usa la estructura de video-wrapper de U1T1
              const currentData = DATA.stages[0];
              container.innerHTML = `
                 <div class="video-wrapper">
                     <iframe src="${currentData.videoUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                 </div>
                 <p style="text-align:center; max-width: 600px; margin-top: 20px;">
-                    ¡Mira el video para aprender sobre ${currentData.title.split(': ')[1]}! Luego, presiona **Siguiente** para comenzar las actividades.
+                    ¡Mira el video para aprender sobre ${currentData.title.split(': ')[1]}! Luego, presiona **Siguiente**.
                 </p>
             `;
-            renderControls(); // Renderiza el botón Siguiente
+            renderControls(); 
         }
 
-        // 1 - ACTIVIDAD 1: MATCHING DE CLICK (Diseño Apilado)
-        function handleQuestionClick(card) {
-            if (card.classList.contains('matched')) return;
+        let selectedQuestion = null;
+        let matchedPairs = 0;
 
-            // Limpiar selección previa de pregunta
-            document.querySelectorAll('.question-card.selected').forEach(q => q.classList.remove('selected'));
-            
-            card.classList.add('selected');
-            selectedQuestion = {
-                element: card,
-                ch: card.dataset.ch,
-                es: card.dataset.es
-            };
-            setFeedback(`Seleccionado: ${selectedQuestion.ch}. Ahora selecciona su traducción.`, 'neutral');
+        function handleQuestionClick(cardEl, itemData) {
+            if (cardEl.classList.contains('selected')) {
+                cardEl.classList.remove('selected');
+                selectedQuestion = null;
+                setFeedback('Selecciona una palabra en Ch\'ol y luego su traducción.', 'neutral');
+                return;
+            }
+            document.querySelectorAll('.questions-stack .matching-card.selected').forEach(el => el.classList.remove('selected'));
+            cardEl.classList.add('selected');
+            selectedQuestion = itemData;
+            setFeedback(`Seleccionaste **${itemData.ch}**. ¡Ahora elige su traducción!`, 'neutral');
         }
 
-        function handleAnswerClick(card) {
-            if (card.classList.contains('matched')) return;
-
+        function handleAnswerClick(cardEl, itemData) {
             if (!selectedQuestion) {
-                setFeedback('¡Primero selecciona un elemento en Ch\'ol (arriba)!', 'bad');
+                setFeedback('Selecciona primero una palabra Ch\'ol de la columna izquierda.', 'bad');
+                cardEl.classList.add('shaking');
+                setTimeout(() => cardEl.classList.remove('shaking'), 500);
                 return;
             }
 
-            const answerEs = card.dataset.es;
-            
-            if (selectedQuestion.es === answerEs) {
-                // Coincidencia correcta
-                selectedQuestion.element.classList.add('matched');
-                selectedQuestion.element.classList.add('selected'); 
-                card.classList.add('matched');
-                card.classList.add('selected'); 
-                
-                matchedPairs++;
-                addPoints(10); 
-                
-                setFeedback(`¡Correcto! ${selectedQuestion.ch} es ${answerEs}. (${matchedPairs}/${totalPairs})`, 'ok');
-                
+            const questionCardEl = document.querySelector(`.questions-stack .matching-card[data-ch="${selectedQuestion.ch}"]`);
+
+            if (selectedQuestion.es === itemData.es) {
+                setFeedback('¡Emparejamiento Correcto!', 'ok');
+                cardEl.classList.add('matched');
+                questionCardEl.classList.add('matched');
+                cardEl.classList.remove('shaking'); 
+                questionCardEl.classList.remove('shaking', 'selected');
                 selectedQuestion = null;
-                
-                if (matchedPairs === totalPairs) {
-                    // Muestra la pantalla de felicitación al terminar
+                matchedPairs++;
+
+                if (matchedPairs === DATA.stages[1].rounds.length) {
                     showActivitySuccessScreen(DATA.stages[1].title); 
                 }
-
             } else {
-                // Coincidencia incorrecta
-                card.classList.add('bad');
-                selectedQuestion.element.classList.add('bad');
-                setFeedback(`Incorrecto. ${selectedQuestion.ch} no es ${answerEs}. Intenta de nuevo.`, 'bad');
-
-                // Quitar clases después de un breve tiempo
+                setFeedback('Incorrecto. Intenta de nuevo.', 'bad');
+                cardEl.classList.add('shaking');
+                questionCardEl.classList.add('shaking');
                 setTimeout(() => {
-                    card.classList.remove('bad');
-                    selectedQuestion.element.classList.remove('bad');
-                    selectedQuestion.element.classList.remove('selected');
-                    selectedQuestion = null;
-                }, 800);
+                    cardEl.classList.remove('shaking');
+                    questionCardEl.classList.remove('shaking');
+                }, 500);
             }
         }
 
@@ -563,76 +429,60 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
             selectedQuestion = null;
             const currentData = DATA.stages[1];
             
-            container.innerHTML = `
-                <p class="stage0-info">Haz clic en el **elemento en Ch'ol (arriba)** y luego en su **traducción en Español (abajo)** para formar el par.</p>
-                <div class="matching-container" id="matchingContainer">
-                    <div id="questionGroup" class="question-group"></div>
-                    <div id="answerGroup" class="answer-group"></div>
-                </div>
-            `;
+            renderControls();
             
-            renderControls(); // Renderiza el botón Siguiente
+            const questions = currentData.rounds.map(d => ({ ch: d.ch, es: d.es }));
+            const answers = currentData.rounds.map(d => ({ ch: d.ch, es: d.es }));
+            shuffleArray(questions);
+            shuffleArray(answers);
+
+            container.innerHTML = `<p class="stage0-info">Haz clic en la palabra en **Ch'ol** (Izquierda) y luego en su **Significado** (Derecha) para unirlas.</p>`;
+
+            const matchingContainer = document.createElement('div');
+            matchingContainer.className = 'matching-click-container';
+
+            const questionsStack = document.createElement('div');
+            questionsStack.className = 'questions-stack';
+            questionsStack.innerHTML = `<p class="stack-title">Ch'ol:</p>`;
             
-            const questionGroup = document.getElementById('questionGroup');
-            const answerGroup = document.getElementById('answerGroup');
-
-            // Asegurar que las listas esten desordenadas para el ejercicio
-            const shuffledQuestions = [...currentData.rounds].sort(() => Math.random() - 0.5);
-            const shuffledAnswers = [...currentData.rounds].sort(() => Math.random() - 0.5);
-
-            // 1. Crear tarjetas de preguntas (Ch'ol)
-            shuffledQuestions.forEach((pair, index) => {
-                const qCard = document.createElement('div');
-                qCard.className = 'matching-card question-card';
-                qCard.dataset.ch = pair.ch;
-                qCard.dataset.es = pair.es;
-                qCard.dataset.audio = pair.audio;
-                
-                qCard.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <span class="play-btn-icon" onclick="event.stopPropagation(); playAudio('${pair.audio}', '${pair.ch}')">▶️</span>
-                        ${pair.ch}
-                    </div>
-                `;
-                qCard.onclick = () => handleQuestionClick(qCard);
-                questionGroup.appendChild(qCard);
+            questions.forEach(q => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'matching-card';
+                cardEl.textContent = q.ch;
+                cardEl.dataset.ch = q.ch;
+                cardEl.onclick = () => handleQuestionClick(cardEl, q);
+                questionsStack.appendChild(cardEl);
             });
 
-            // 2. Crear tarjetas de respuestas (Español)
-            shuffledAnswers.forEach((pair, index) => {
-                const aCard = document.createElement('div');
-                aCard.className = 'matching-card answer-card';
-                aCard.dataset.es = pair.es;
-                
-                aCard.innerHTML = `
-                    <span style="margin-left: 20px;">${pair.es}</span>
-                    <span class="zoom-icon">🔎</span>
-                `;
-                aCard.onclick = () => handleAnswerClick(aCard);
-                answerGroup.appendChild(aCard);
+            const answersStack = document.createElement('div');
+            answersStack.className = 'answers-stack';
+            answersStack.innerHTML = `<p class="stack-title">Español:</p>`;
+
+            answers.forEach(a => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'matching-card';
+                cardEl.textContent = a.es;
+                cardEl.onclick = () => handleAnswerClick(cardEl, a);
+                answersStack.appendChild(cardEl);
             });
-            
+
+            matchingContainer.appendChild(questionsStack);
+            matchingContainer.appendChild(answersStack);
+            container.appendChild(matchingContainer);
+            setFeedback('Selecciona una palabra y su traducción.', 'neutral');
             setStageComplete(false);
         }
 
-        // 2 - ACTIVIDAD 2: SELECCIONAR IMAGEN (Con Audio)
         function renderStage2_SelectImage(container) {
             const currentData = DATA.stages[2];
             const roundData = currentData.rounds[currentActivityRound];
 
-            const audioBtn = document.createElement('button');
-            audioBtn.className = 'audio-button';
-            audioBtn.textContent = '🔊 Reproducir Audio';
-            audioBtn.onclick = () => playAudio(roundData.audio, roundData.correct.replace('.png', ''));
-
+            const audioBtn = createAudioButton(roundData.correct, roundData.audio, 'cho');
+            renderControls(); 
             const buttonWrapper = document.createElement('div');
             buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
             buttonWrapper.appendChild(audioBtn);
             
-            renderControls(); // Renderiza el botón Siguiente
-            const feedbackElTemp = document.getElementById('feedback');
-
-            // Inserta el botón de audio antes del botón Siguiente
             if (controlsArea && nextBtn) {
                  controlsArea.insertBefore(buttonWrapper, nextBtn); 
             }
@@ -655,19 +505,15 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
                 
                 b.onclick = () => {
                     disableOptions(); 
-                    
                     if (item.filename === roundData.correct) { 
                         b.classList.add('ok');
                         addPoints(10);
                     } else { 
                         b.classList.add('bad');
-                        // Muestra la opción correcta
                         const correctEl = document.querySelector(`.img-option[data-img="${roundData.correct}"]`);
                         if(correctEl) correctEl.classList.add('ok');
                     }
-                    
                     currentActivityRound++;
-
                     setTimeout(() => {
                         if (currentActivityRound < currentData.rounds.length) {
                             render();
@@ -681,34 +527,23 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
             setStageComplete(false);
         }
 
-        // 3 - ACTIVIDAD 3: OPCIÓN MÚLTIPLE (Con Audio y Título Modificado)
         function renderStage3_MultipleChoice(container) {
             const currentData = DATA.stages[3];
             const roundData = currentData.rounds[currentActivityRound];
             
-            // Usamos la pregunta específica de la ronda
-            const questionTitle = roundData.q;
-            
-            const audioBtn = document.createElement('button');
-            audioBtn.className = 'audio-button';
-            audioBtn.textContent = '🔊 Reproducir Audio';
-            audioBtn.onclick = () => playAudio(roundData.audio, roundData.ch);
-
+            const audioBtn = createAudioButton(roundData.ch, roundData.audio, 'cho');
+            renderControls(); 
             const buttonWrapper = document.createElement('div');
             buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
             buttonWrapper.appendChild(audioBtn);
             
-            renderControls(); // Renderiza el botón Siguiente
-            const feedbackElTemp = document.getElementById('feedback');
-
-            // Inserta el botón de audio antes del botón Siguiente
             if (controlsArea && nextBtn) {
                  controlsArea.insertBefore(buttonWrapper, nextBtn); 
             }
 
             container.innerHTML = `
                 <p class="stage0-info">Ronda ${currentActivityRound + 1} / ${currentData.rounds.length}</p>
-                <p style="font-size: 1.2rem; font-weight: 700;">${questionTitle}</p>
+                <p style="font-size: 1.2rem; font-weight: 700;">${roundData.q}</p>
                 ${roundData.hint ? `<p style="font-style: italic; color: var(--accent); text-align: center;">Pista: ${roundData.hint}</p>` : ''}
                 <div class="options-row" id="optionsContainer" style="margin-top: 20px;"></div>
             `;
@@ -723,19 +558,15 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
                 
                 b.onclick = () => {
                     disableOptions(); 
-
                     if (opt === roundData.correct) { 
                         b.classList.add('ok');
                         addPoints(10);
                     } else { 
                         b.classList.add('bad'); 
                         document.querySelectorAll('.opt').forEach(btn => {
-                            if (btn.textContent === roundData.correct) {
-                                btn.classList.add('ok');
-                            }
+                            if (btn.textContent === roundData.correct) btn.classList.add('ok');
                         });
                     }
-                    
                     currentActivityRound++;
                     setTimeout(() => {
                         if (currentActivityRound < currentData.rounds.length) {
@@ -750,7 +581,6 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
             setStageComplete(false); 
         }
 
-        // 4 - FINAL DE TEMA (UNIFICADO)
         function renderStageFinal(container) {
             container.innerHTML = `
                 <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
@@ -759,16 +589,12 @@ button.ghost{ background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; fon
                     <p>¡Excelente trabajo! Presiona **Siguiente** para volver a la pantalla de módulos.</p>
                 </div>
             `;
-            // El botón 'Siguiente' ya está renderizado y configurado para ir a MAIN_SCREEN_URL en la función 'next'.
-            // Solo aseguramos que se marque como completo.
             setStageComplete(true);
             renderControls(); 
         }
 
-
-        // --- Inicialización ---
         document.addEventListener('DOMContentLoaded', () => {
-            renderControls(); // Inicializa el área de controles y el botón 'Siguiente'
+            renderControls(); 
             render();
         });
     </script>

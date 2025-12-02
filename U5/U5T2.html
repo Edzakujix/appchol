@@ -5,15 +5,106 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Ch'ol App - Tema 2: Enfermedades</title>
 
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
 
+    <style>
+        button.primary {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        button.primary.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        button.primary.active:active {
+            transform: translateY(5px);
+            box-shadow: 0 0px 0 0 #0288D1;
+        }
+
+        .opt, .img-option {
+            min-width: 140px; 
+            padding: 20px; 
+            border-radius: 20px; 
+            background: #fff;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 10px; 
+            cursor: pointer;
+            border: 4px solid #E0E0E0; 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            transition: all .2s;
+        }
+        .opt:not(.disabled):hover, .img-option:not(.disabled):hover {
+            transform: translateY(-5px) scale(1.05); 
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        .opt.disabled, .img-option.disabled { pointer-events: none; opacity: 0.6; filter: grayscale(0.4); }
+        .opt.ok, .img-option.ok { border-color: var(--ok); box-shadow: 0 8px 20px rgba(76,175,80,0.3); background: #E8F5E9; filter: none; opacity: 1; }
+        .opt.bad, .img-option.bad { border-color: var(--bad); box-shadow: 0 8px 20px rgba(229,57,53,0.3); background: #FFEBEE; }
+
+        .matching-click-container {
+            display: flex; flex-direction: column; gap: 15px; 
+            width: 100%; max-width: 700px; padding: 20px; 
+            background-color: var(--matching-bg); border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .matching-card {
+            background-color: var(--matching-card-bg); border-radius: 12px; 
+            padding: 10px 15px; font-weight: 700; font-size: 1.1rem; 
+            cursor: pointer; transition: all 0.2s; 
+            box-shadow: 0 4px 0 0 rgba(0,0,0,0.1); border: 3px solid transparent;
+            display: flex; justify-content: center; align-items: center; min-height: 50px;
+        }
+        .matching-card.selected { border-color: var(--select-highlight); background-color: #F8E3DD; }
+        .matching-card.matched { background-color: var(--ok); color: white; pointer-events: none; border-color: var(--ok); }
+        .matching-card.shaking { animation: shake 0.5s; animation-iteration-count: 2; border-color: var(--bad) !important; background-color: #FFEBEE !important; }
+        .questions-stack, .answers-stack { display: flex; flex-direction: column; gap: 10px; padding: 10px; border-radius: 15px; background: rgba(255, 255, 255, 0.5); }
+        
+        .sentence-builder-container { width: 100%; max-width: 700px; display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
+        .answer-area {
+            min-height: 80px; background-color: #ffffff; border-bottom: 4px solid var(--accent);
+            border-radius: 15px 15px 0 0; padding: 15px; display: flex; flex-wrap: wrap; 
+            gap: 10px; justify-content: center; align-items: center; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .answer-area:empty::before { content: "Toca las palabras abajo para formar la frase..."; color: #ccc; font-style: italic; }
+        .word-bank {
+            display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; padding: 15px;
+            background-color: #E3F2FD; border-radius: 20px; border: 2px dashed #90CAF9;
+        }
+        .word-chip {
+            background-color: #fff; border: 2px solid #29B6F6; border-radius: 12px;
+            padding: 10px 18px; font-size: 1.1rem; font-weight: 700; color: var(--color-texto); 
+            cursor: pointer; transition: all 0.2s; user-select: none; box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+        .word-chip:hover { transform: translateY(-2px); background-color: #E1F5FE; }
+        .word-chip.in-sentence { background-color: var(--accent); color: white; border-color: #D84315; box-shadow: 0 4px 0 #D84315; }
+        
+        .audio-btn-big {
+            width: 70px; height: 70px; border-radius: 50%; background: var(--accent);
+            color: white; font-size: 2rem; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px #bf360c; cursor: pointer; margin-bottom: 20px; transition: transform 0.1s;
+        }
+        .audio-btn-big:active { transform: translateY(4px); box-shadow: none; }
+
+        @media (min-width: 601px) {
+            .matching-click-container { flex-direction: row; justify-content: space-around; }
+            .questions-stack, .answers-stack { flex-basis: 48%; }
+        }
+        @media (max-width: 600px) {
+            .app { padding-right: 0; }
+            .controls { flex-direction: column; gap: 10px; align-items: stretch; }
+        }
+    </style>
 </head>
 <body>
     <div class="app">
         <header>
             <h1 id="title">U5 - Tema 2: Enfermedades</h1>
             <div style="display: flex; gap: 10px;">
-                <button class="ghost" onclick="goHome()">🏠 Inicio</button>
+                <button class="ghost" onclick="goHome()" style="font-weight: 500; padding: 10px;">🏠 Inicio</button>
             </div>
         </header>
 
@@ -23,320 +114,408 @@
             <div id="feedback" class="feedback"></div>
             </div>
         
-        <footer>Prototipo educativo · Módulo 5</footer>
+        <footer>Prototipo educativo · Unidad 5</footer>
     </div>
     <div class="ground-sim"></div>
 
-<script>
-    // --- CONFIGURACIÓN ---
-    const MAIN_SCREEN_URL = './U5MICU.html'; 
-    
-    function goHome() { window.location.href = MAIN_SCREEN_URL; }
+    <script>
+        const MAIN_SCREEN_URL = './U5MICU.html'; 
+        const TOTAL_ACTIVITY_POINTS = 100;
 
-    // --- DATOS DEL TEMA 2: ENFERMEDADES ---
-    
-    // Actividad 1: Vocabulario (Audio -> Imagen)
-    const VOCAB_SICK = [
-        { word: 'Ojba', es: 'Tos', img: 'RUTAS_PENDIENTES/tos.png', audio: 'RUTAS_PENDIENTES/ojba.mp3' },
-        { word: 'K’ajk', es: 'Fiebre', img: 'RUTAS_PENDIENTES/fiebre.png', audio: 'RUTAS_PENDIENTES/kajk.mp3' },
-        { word: 'Tya’ñi’', es: 'Gripa', img: 'RUTAS_PENDIENTES/gripa.png', audio: 'RUTAS_PENDIENTES/tyani.mp3' },
-        { word: 'Joch’', es: 'Inyección', img: 'RUTAS_PENDIENTES/inyeccion.png', audio: 'RUTAS_PENDIENTES/joch.mp3' },
-        { word: 'Ts’ak', es: 'Medicina', img: 'RUTAS_PENDIENTES/medicina.png', audio: 'RUTAS_PENDIENTES/tsak.mp3' },
-        { word: 'Ja’ñäk’ tya’', es: 'Diarrea', img: 'RUTAS_PENDIENTES/diarrea.png', audio: 'RUTAS_PENDIENTES/diarrea.mp3' },
-        { word: 'Xujlem', es: 'Fractura', img: 'RUTAS_PENDIENTES/fractura.png', audio: 'RUTAS_PENDIENTES/xujlem.mp3' }
-    ];
+        function goHome() { window.location.href = MAIN_SCREEN_URL; }
 
-    // Actividad 2: Dolores (Matching)
-    const PAIRS_PAIN = [
-        { ch: 'K’ux jol', es: 'Dolor de cabeza' },
-        { ch: 'K’ux ej', es: 'Dolor de diente' },
-        { ch: 'K’ux pix', es: 'Dolor de rodillas' },
-        { ch: 'K’ax ñäk’', es: 'Dolor de panza' }, // Según documento original
-        { ch: 'K’am-añ', es: 'Enfermedad' }
-    ];
+        const DATA = {
+            stages: [
+                { 
+                    type: 'video', 
+                    title: 'Introducción: Enfermedades', 
+                    videoUrl: 'https://www.youtube.com/embed/RUTAS_PENDIENTES?rel=0' 
+                },
+                {
+                    type: 'select_image_audio',
+                    title: 'Actividad 1: Vocabulario de Síntomas',
+                    rounds: [
+                        { word: 'Ojba', es: 'Tos', img: 'tos.png', audio: 'ojba.mp3' },
+                        { word: 'K’ajk', es: 'Fiebre', img: 'fiebre.png', audio: 'kajk.mp3' },
+                        { word: 'Tya’ñi’', es: 'Gripa', img: 'gripa.png', audio: 'tyani.mp3' },
+                        { word: 'Joch’', es: 'Inyección', img: 'inyeccion.png', audio: 'joch.mp3' },
+                        { word: 'Ts’ak', es: 'Medicina', img: 'medicina.png', audio: 'tsak.mp3' },
+                        { word: 'Ja’ñäk’ tya’', es: 'Diarrea', img: 'diarrea.png', audio: 'diarrea.mp3' },
+                        { word: 'Xujlem', es: 'Fractura', img: 'fractura.png', audio: 'xujlem.mp3' }
+                    ]
+                },
+                {
+                    type: 'matching_click',
+                    title: 'Actividad 2: Tipos de Dolor',
+                    rounds: [
+                        { ch: 'K’ux jol', es: 'Dolor de cabeza' },
+                        { ch: 'K’ux ej', es: 'Dolor de diente' },
+                        { ch: 'K’ux pix', es: 'Dolor de rodillas' },
+                        { ch: 'K’ax ñäk’', es: 'Dolor de panza' },
+                        { ch: 'K’am-añ', es: 'Enfermedad' }
+                    ]
+                },
+                {
+                    type: 'sentence_builder',
+                    title: 'Actividad 3: Ordena la Frase',
+                    rounds: [
+                        { es: 'Octavio tiene fiebre', ch: 'Aj Octavio k’ajk muk’', words: ['Aj', 'Octavio', 'k’ajk', 'muk’'], audio: 'octavio_fiebre.mp3' },
+                        { es: 'Rosa tiene gripa', ch: 'Xrosa tya’ ñi’ muk’', words: ['Xrosa', 'tya’', 'ñi’', 'muk’'], audio: 'rosa_gripa.mp3' },
+                        { es: 'Me siento mal', ch: 'Mach yom ku’biñ', words: ['Mach', 'yom', 'ku’biñ'], audio: 'me_siento_mal.mp3' },
+                        { es: 'Damián tiene diarrea', ch: 'Aj Damián ja’ñäk’ tya’ muk’', words: ['Aj', 'Damián', 'ja’ñäk’', 'tya’', 'muk’'], audio: 'damian_diarrea.mp3' }
+                    ]
+                },
+                { type: 'final' }
+            ]
+        };
 
-    // Actividad 3: Ordenar Frases (Sintaxis)
-    const SENTENCES = [
-        { es: 'Octavio tiene fiebre', ch: 'Aj Octavio k’ajk muk’', words: ['Aj', 'Octavio', 'k’ajk', 'muk’'], audio: 'RUTAS_PENDIENTES/octavio_fiebre.mp3' },
-        { es: 'Rosa tiene gripa', ch: 'Xrosa tya’ ñi’ muk’', words: ['Xrosa', 'tya’', 'ñi’', 'muk’'], audio: 'RUTAS_PENDIENTES/rosa_gripa.mp3' },
-        { es: 'Me siento mal', ch: 'Mach yom ku’biñ', words: ['Mach', 'yom', 'ku’biñ'], audio: 'RUTAS_PENDIENTES/me_siento_mal.mp3' },
-        { es: 'Damián tiene diarrea', ch: 'Aj Damián ja’ñäk’ tya’ muk’', words: ['Aj', 'Damián', 'ja’ñäk’', 'tya’', 'muk’'], audio: 'RUTAS_PENDIENTES/damian_diarrea.mp3' }
-    ];
-
-    // --- VARIABLES DE ESTADO ---
-    const stages = [renderVideo, renderActivity1, renderActivity2, renderActivity3, renderFinal];
-    let currentStage = 0;
-    let round = 0;
-    let matchedCount = 0;
-    let selectedMatch = null;
-    let currentSentenceBuilder = [];
-
-    const titleEl = document.getElementById('title');
-    const stageArea = document.getElementById('stageArea');
-    const feedbackEl = document.getElementById('feedback');
-    const controlsArea = document.getElementById('controlsArea');
-
-    // --- FUNCIONES UTILITARIAS ---
-    function playAudio(path) {
-        const audio = new Audio(path);
-        audio.play().catch(e => console.log("Audio simulado (falta archivo):", path));
-    }
-
-    function setFeedback(msg, type) {
-        feedbackEl.textContent = msg;
-        feedbackEl.style.color = type === 'ok' ? 'var(--ok)' : (type === 'bad' ? 'var(--bad)' : '#333');
-    }
-
-    function createNextBtn() {
-        const btn = document.createElement('button');
-        btn.className = 'primary';
-        btn.textContent = 'Siguiente ➡';
-        btn.onclick = nextStage;
-        btn.id = 'nextBtn';
-        btn.style.display = 'none'; 
-        return btn;
-    }
-
-    function nextStage() {
-        currentStage++;
-        round = 0;
-        if(currentStage >= stages.length) return; // Fin
-        render();
-    }
-
-    function render() {
-        stageArea.innerHTML = '';
-        feedbackEl.textContent = '';
+        const stages = [renderStage0, renderStage1_Vocab, renderStage2_Matching, renderStage3_Sentence, renderStageFinal];
+        let currentStage = 0;
+        let currentActivityRound = 0;
+        let userScore = 0;
+        let stageProgress = new Array(stages.length).fill(false);
         
-        const oldBtn = document.getElementById('nextBtn');
-        if(oldBtn) oldBtn.remove();
-        
-        const nextBtn = createNextBtn();
-        controlsArea.appendChild(nextBtn);
+        let feedbackEl = null;
+        const titleEl = document.getElementById('title');
+        let nextBtn = null;
+        const controlsArea = document.getElementById('controlsArea');
+        const stageArea = document.getElementById('stageArea');
 
-        stages[currentStage](nextBtn);
-    }
+        let selectedQuestion = null;
+        let matchedPairsCount = 0;
 
-    // --- 0. VIDEO ---
-    function renderVideo(nextBtn) {
-        titleEl.textContent = "Introducción: Enfermedades";
-        stageArea.innerHTML = `
-            <div class="video-wrapper">
-                <iframe src="https://www.youtube.com/embed/RUTAS_PENDIENTES" allowfullscreen></iframe>
-            </div>
-            <p>Aprende cómo decir cuando te sientes mal en Ch'ol.</p>
-        `;
-        nextBtn.style.display = 'block';
-    }
-
-    // --- 1. ACTIVIDAD: VOCABULARIO ENFERMEDADES ---
-    function renderActivity1(nextBtn) {
-        const totalRounds = 5; // Muestra 5 aleatorios
-        if(round >= totalRounds) {
-            stageArea.innerHTML = `<h2>¡Bien hecho! Conoces los síntomas.</h2>`;
-            nextBtn.style.display = 'block';
-            return;
+        function setStageComplete(isComplete = true) {
+            stageProgress[currentStage] = isComplete;
+            if(nextBtn) nextBtn.classList.toggle('active', isComplete);
         }
 
-        if(round === 0) VOCAB_SICK.sort(() => 0.5 - Math.random());
-        const currentItem = VOCAB_SICK[round];
-        
-        titleEl.textContent = `Actividad 1: Escucha el síntoma (${round + 1}/${totalRounds})`;
+        function clearFeedback(){ if(feedbackEl) feedbackEl.textContent = ""; }
 
-        stageArea.innerHTML = `
-            <div class="audio-btn-big" onclick="playAudio('${currentItem.audio}')">🔊</div>
-            <p style="font-size: 1.2rem;">¿Qué palabra escuchaste?</p>
-        `;
+        function setFeedback(text, kind){
+            if(!feedbackEl) return;
+            feedbackEl.textContent = text;
+            if(kind === 'ok'){ feedbackEl.style.color = 'var(--ok)' }
+            else if(kind === 'bad'){ feedbackEl.style.color = 'var(--bad)' }
+            else { feedbackEl.style.color = 'var(--color-texto)' }
+        }
 
-        const optionsRow = document.createElement('div');
-        optionsRow.className = 'options-row';
+        function disableAllOptions() {
+            document.querySelectorAll('.opt, .img-option, .matching-card, .word-chip').forEach(el => {
+                el.classList.add('disabled');
+                el.onclick = null;
+            });
+            const checkBtn = document.getElementById('checkBtn');
+            if(checkBtn) checkBtn.disabled = true;
+        }
 
-        let pool = VOCAB_SICK.filter(i => i !== currentItem);
-        pool.sort(() => 0.5 - Math.random());
-        let options = [currentItem, pool[0], pool[1]];
-        options.sort(() => 0.5 - Math.random());
-
-        options.forEach(opt => {
-            const div = document.createElement('div');
-            div.className = 'img-option';
-            div.innerHTML = `<img src="${opt.img}" alt="${opt.es}"><p>${opt.es}</p>`;
+        function renderControls(html = '') {
+            controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>
+                                      <button class="primary" id="nextBtn" onclick="next()">Siguiente ➡</button>${html}`;
+            feedbackEl = document.getElementById('feedback');
+            nextBtn = document.getElementById('nextBtn');
             
-            div.onclick = () => {
-                if(div.classList.contains('disabled')) return;
-                document.querySelectorAll('.img-option').forEach(el => el.classList.add('disabled'));
+            if (stageProgress[currentStage]) nextBtn.classList.add('active');
+        }
 
-                if(opt === currentItem) {
-                    div.classList.add('ok');
-                    setFeedback("¡Correcto! " + opt.word, 'ok');
-                    setTimeout(() => { round++; renderActivity1(nextBtn); }, 1500);
-                } else {
-                    div.classList.add('bad');
-                    setFeedback("Incorrecto", 'bad');
-                    setTimeout(() => {
-                        document.querySelectorAll('.img-option').forEach(el => el.classList.remove('disabled', 'bad'));
-                        setFeedback("", 'neutral');
-                    }, 1000);
-                }
-            };
-            optionsRow.appendChild(div);
-        });
-        stageArea.appendChild(optionsRow);
-    }
+        function addPoints(points = 10) { userScore += points; }
 
-    // --- 2. ACTIVIDAD: MATCHING DOLORES ---
-    function renderActivity2(nextBtn) {
-        titleEl.textContent = "Actividad 2: Tipos de Dolor";
-        
-        if (matchedCount === 0) {
+        function speakText(text, lang='es-ES'){
+            if(!window.speechSynthesis) return;
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = lang;
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(u);
+        }
+
+        function playAudio(audioFilename, text = 'Audio', lang = 'cho') {
+            const audioUrl = `../assets/audio/${audioFilename}`; 
+            const audio = new Audio(audioUrl);
+            audio.play()
+                .then(() => { setFeedback(`🔊 Escuchando...`, 'neutral'); })
+                .catch(e => {
+                    console.error(`Error audio: ${e.message}`);
+                    speakText(text, lang); 
+                    setFeedback(`🔊 "${text}"`, 'neutral');
+                });
+        }
+
+        function shuffleArray(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function next() {
+            if (!nextBtn.classList.contains('active')) {
+                setFeedback("¡Completa la actividad para avanzar!", 'bad');
+                return;
+            }
+            if (currentStage === stages.length - 1) {
+                alert(`✅ Tema Completado. Puntos: ${userScore}.`);
+                goHome();
+                return; 
+            }
+            currentStage++;
+            currentActivityRound = 0;
+            render();
+        }
+
+        function render() {
+            clearFeedback();
+            setStageComplete(false);
+            stageArea.innerHTML = '';
+            const currentData = DATA.stages[currentStage];
+            
+            if(currentData.title) titleEl.textContent = currentData.title;
+            else if(currentStage === stages.length -1) titleEl.textContent = "¡Módulo Completado!";
+
+            stages[currentStage](stageArea, currentData);
+
+            if (currentData.type === 'video' || currentData.type === 'final') {
+                setStageComplete(true);
+            }
+        }
+
+        function showActivitySuccessScreen(activityTitle) {
             stageArea.innerHTML = `
-                <p>Une el dolor en **Ch'ol** con su parte del cuerpo en **Español**.</p>
-                <div class="matching-container">
-                    <div class="col-stack" id="col-chol"><div class="stack-title">Ch'ol</div></div>
-                    <div class="col-stack" id="col-es"><div class="stack-title">Español</div></div>
+                <div style="text-align: center; padding: 40px; background-color: var(--card); border-radius: 20px; border: 3px solid var(--ok); max-width: 400px; margin: 50px auto;">
+                    <h2 style="color: var(--ok); font-size: 2rem;">¡Bien hecho!</h2>
+                    <p style="font-size: 1.1rem;">Has completado: <br><strong>${activityTitle}</strong>.</p>
+                    <p style="margin-top: 20px;">Presiona <strong>Siguiente</strong> para continuar.</p>
                 </div>
             `;
-            
-            const listCh = [...PAIRS_PAIN].sort(() => 0.5 - Math.random());
-            const listEs = [...PAIRS_PAIN].sort(() => 0.5 - Math.random());
-
-            listCh.forEach(item => createCard(item.ch, 'ch', item, 'col-chol', nextBtn));
-            listEs.forEach(item => createCard(item.es, 'es', item, 'col-es', nextBtn));
+            renderControls();
+            setStageComplete(true);
         }
-    }
 
-    function createCard(text, type, dataObj, containerId, nextBtn) {
-        const card = document.createElement('div');
-        card.className = 'match-card';
-        card.textContent = text;
-        card.onclick = () => handleMatch(card, type, dataObj, nextBtn);
-        document.getElementById(containerId).appendChild(card);
-    }
+        function renderStage0(container, currentData) {
+            renderControls();
+            container.innerHTML = `
+                <div class="video-wrapper">
+                    <iframe src="${currentData.videoUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+                <p style="text-align:center; max-width: 600px; margin-top: 20px;">
+                    ¡Mira el video para aprender sobre las enfermedades!
+                </p>
+            `;
+        }
 
-    function handleMatch(card, type, dataObj, nextBtn) {
-        if(card.classList.contains('matched') || card.classList.contains('selected')) return;
-        card.classList.add('selected');
+        function renderStage1_Vocab(container, currentData) {
+            if(currentActivityRound === 0) currentData._shuffledRounds = shuffleArray([...currentData.rounds]);
 
-        if(!selectedMatch) {
-            selectedMatch = { card, type, dataObj };
-        } else {
-            const first = selectedMatch;
-            if(first.type !== type && first.dataObj === dataObj) {
-                setFeedback("¡Correcto!", 'ok');
-                first.card.classList.remove('selected'); card.classList.remove('selected');
-                first.card.classList.add('matched'); card.classList.add('matched');
-                matchedCount++;
-                if(matchedCount >= PAIRS_PAIN.length) {
-                    setFeedback("¡Excelente! Completaste los dolores.", 'ok');
-                    nextBtn.style.display = 'block';
+            const totalRounds = 5; 
+            if (currentActivityRound >= totalRounds) {
+                showActivitySuccessScreen(currentData.title);
+                return;
+            }
+
+            const roundItem = currentData._shuffledRounds[currentActivityRound];
+            renderControls();
+
+            container.innerHTML = `
+                <p class="question-stage-info" style="color: #777;">Ronda ${currentActivityRound + 1} / ${totalRounds}</p>
+                <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:20px;">
+                    <div class="audio-btn-big" onclick="playAudio('${roundItem.audio}', '${roundItem.word}')">🔊</div>
+                    <p style="font-size: 1.2rem;">¿Qué palabra escuchaste?</p>
+                </div>
+                <div class="options-row" id="imageOptionsRow"></div>
+            `;
+
+            const row = document.getElementById('imageOptionsRow');
+            let pool = currentData.rounds.filter(i => i.word !== roundItem.word);
+            pool = shuffleArray(pool).slice(0, 2);
+            let options = shuffleArray([roundItem, ...pool]);
+
+            options.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = 'img-option';
+                div.innerHTML = `<img src="../assets/img/${opt.img}" alt="${opt.es}"><p>${opt.es}</p>`;
+                
+                div.onclick = () => {
+                    if(div.classList.contains('disabled')) return;
+                    if(opt.word === roundItem.word) {
+                        div.classList.add('ok');
+                        setFeedback(`¡Correcto! Es ${opt.word}`, 'ok');
+                        addPoints(10);
+                        disableAllOptions();
+                        setTimeout(() => {
+                            currentActivityRound++;
+                            renderStage1_Vocab(container, currentData);
+                        }, 1500);
+                    } else {
+                        div.classList.add('bad', 'disabled');
+                        setFeedback(`Esa no es. Intenta de nuevo.`, 'bad');
+                    }
+                };
+                row.appendChild(div);
+            });
+            setStageComplete(false);
+        }
+
+        function renderStage2_Matching(container, currentData) {
+            matchedPairsCount = 0;
+            selectedQuestion = null;
+            renderControls();
+            
+            container.innerHTML = `
+                <p style="margin-bottom: 20px;">Une el dolor en Ch'ol con su significado.</p>
+                <div class="matching-click-container">
+                    <div id="colChol" class="questions-stack"><p class="stack-title">Ch'ol</p></div>
+                    <div id="colEs" class="answers-stack"><p class="stack-title">Español</p></div>
+                </div>
+            `;
+
+            const colChol = document.getElementById('colChol');
+            const colEs = document.getElementById('colEs');
+            const listChol = shuffleArray([...currentData.rounds]);
+            const listEs = shuffleArray([...currentData.rounds]);
+
+            listChol.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'matching-card';
+                card.textContent = item.ch;
+                card.onclick = () => handleMatchingClick(card, item, 'question');
+                colChol.appendChild(card);
+            });
+
+            listEs.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'matching-card';
+                card.textContent = item.es;
+                card.onclick = () => handleMatchingClick(card, item, 'answer');
+                colEs.appendChild(card);
+            });
+            setStageComplete(false);
+        }
+
+        function handleMatchingClick(cardEl, itemData, type) {
+            if (cardEl.classList.contains('matched') || cardEl.classList.contains('disabled')) return;
+
+            if (type === 'question') {
+                document.querySelectorAll('.matching-card.selected').forEach(c => c.classList.remove('selected'));
+                cardEl.classList.add('selected');
+                selectedQuestion = itemData;
+            } else {
+                if (!selectedQuestion) {
+                    setFeedback('Selecciona primero la palabra en Ch\'ol.', 'bad');
+                    return;
                 }
-            } else {
-                setFeedback("No coinciden...", 'bad');
-                setTimeout(() => {
-                    first.card.classList.remove('selected');
-                    card.classList.remove('selected');
-                    setFeedback("", 'neutral');
-                }, 800);
+                if (selectedQuestion.ch === itemData.ch) {
+                    setFeedback('¡Correcto!', 'ok');
+                    cardEl.classList.add('matched');
+                    const qCards = document.querySelectorAll('#colChol .matching-card');
+                    qCards.forEach(c => { if(c.textContent === selectedQuestion.ch) c.classList.add('matched'); });
+                    
+                    matchedPairsCount++;
+                    addPoints(10);
+                    selectedQuestion = null;
+
+                    if (matchedPairsCount >= DATA.stages[2].rounds.length) {
+                        showActivitySuccessScreen(DATA.stages[2].title);
+                    }
+                } else {
+                    setFeedback('Incorrecto.', 'bad');
+                    cardEl.classList.add('shaking');
+                    setTimeout(() => cardEl.classList.remove('shaking'), 500);
+                }
             }
-            selectedMatch = null;
-        }
-    }
-
-    // --- 3. ACTIVIDAD: ORDENAR FRASE (Click builder) ---
-    function renderActivity3(nextBtn) {
-        const totalRounds = SENTENCES.length;
-        if(round >= totalRounds) {
-            stageArea.innerHTML = `<h2>¡Terminaste todas las frases!</h2>`;
-            nextBtn.style.display = 'block';
-            return;
         }
 
-        const currentItem = SENTENCES[round];
-        currentSentenceBuilder = []; // Reiniciar respuesta actual
-        
-        titleEl.textContent = `Actividad 3: Ordena la frase (${round + 1}/${totalRounds})`;
+        function renderStage3_Sentence(container, currentData) {
+            const roundData = currentData.rounds[currentActivityRound];
+            const totalRounds = currentData.rounds.length;
 
-        stageArea.innerHTML = `
-            <div style="margin-bottom:15px; font-style:italic;">"${currentItem.es}"</div>
-            <div class="audio-btn-big" style="width:50px; height:50px; font-size:1.5rem;" onclick="playAudio('${currentItem.audio}')">🔊</div>
+            renderControls(`<button class="ghost" id="checkBtn" onclick="checkSentence()" style="margin-left:10px;">Comprobar</button>`);
             
-            <div class="sentence-area" id="dropZone"></div>
-            <div class="word-bank" id="wordBank"></div>
-            <button class="ghost" style="margin-top:15px;" onclick="resetSentence()">Borrar / Reintentar</button>
-        `;
+            const nextBtn = document.getElementById('nextBtn');
+            if(nextBtn) nextBtn.style.display = 'none';
 
-        const bank = document.getElementById('wordBank');
-        // Mezclar palabras
-        const shuffledWords = [...currentItem.words].sort(() => 0.5 - Math.random());
+            container.innerHTML = `
+                <p class="question-stage-info">Ronda ${currentActivityRound + 1} / ${totalRounds}</p>
+                <div style="text-align:center;">
+                    <p style="font-size:1.1rem; margin-bottom:10px;">Forma la frase en Ch'ol para:</p>
+                    <h3 style="color:var(--accent); margin-top:0;">"${roundData.es}"</h3>
+                    <div class="audio-btn-big" style="width:50px; height:50px; font-size:1.5rem; margin:0 auto 20px;" 
+                         onclick="playAudio('${roundData.audio}', '${roundData.ch}')">🔊</div>
+                </div>
 
-        shuffledWords.forEach(word => {
-            const tile = document.createElement('div');
-            tile.className = 'word-tile';
-            tile.textContent = word;
-            tile.onclick = () => addWord(tile, word, currentItem, nextBtn);
-            bank.appendChild(tile);
-        });
-    }
+                <div class="sentence-builder-container">
+                    <div class="answer-area" id="answerArea"></div>
+                    <div class="word-bank" id="wordBank"></div>
+                </div>
+            `;
 
-    function addWord(tileEl, word, targetItem, nextBtn) {
-        if(tileEl.classList.contains('used')) return;
-        
-        // Mover visualmente o clonar
-        const dropZone = document.getElementById('dropZone');
-        const newTile = document.createElement('div');
-        newTile.className = 'word-tile';
-        newTile.textContent = word;
-        newTile.style.cursor = 'default';
-        dropZone.appendChild(newTile);
+            const answerArea = document.getElementById('answerArea');
+            const wordBank = document.getElementById('wordBank');
+            const shuffledWords = shuffleArray([...roundData.words]);
 
-        tileEl.classList.add('used');
-        currentSentenceBuilder.push(word);
+            shuffledWords.forEach(word => {
+                const chip = document.createElement('div');
+                chip.className = 'word-chip';
+                chip.textContent = word;
+                chip.onclick = () => moveWord(chip, answerArea, wordBank);
+                wordBank.appendChild(chip);
+            });
 
-        // Verificar si completó la longitud
-        if(currentSentenceBuilder.length === targetItem.words.length) {
-            const attempt = currentSentenceBuilder.join(' ');
-            // Comparación simple (limpiando espacios)
-            if(attempt === targetItem.ch) {
-                setFeedback("¡Perfecto!", 'ok');
-                setTimeout(() => {
-                    round++;
-                    renderActivity3(nextBtn);
-                }, 1500);
-            } else {
-                setFeedback("Incorrecto. Intenta de nuevo.", 'bad');
-                // Auto-reset en 1.5s
-                setTimeout(() => resetSentence(), 1500);
+            window.moveWord = function(chip, target, source) {
+                if(chip.classList.contains('disabled')) return;
+                
+                if (chip.parentElement === source) {
+                    target.appendChild(chip);
+                    chip.classList.add('in-sentence');
+                } else {
+                    source.appendChild(chip);
+                    chip.classList.remove('in-sentence');
+                }
+            };
+
+            window.checkSentence = function() {
+                const currentSentence = Array.from(answerArea.children).map(c => c.textContent).join(' ');
+                
+                if (currentSentence.trim() === "") {
+                    setFeedback("Arrastra las palabras arriba primero.", 'bad');
+                    return;
+                }
+
+                if (currentSentence === roundData.ch) {
+                    setFeedback('¡Excelente! Frase correcta.', 'ok');
+                    addPoints(10);
+                    disableAllOptions();
+                    
+                    setTimeout(() => {
+                        currentActivityRound++;
+                        if (currentActivityRound < totalRounds) {
+                            renderStage3_Sentence(container, currentData);
+                        } else {
+                            showActivitySuccessScreen(currentData.title);
+                        }
+                    }, 1500);
+                } else {
+                    setFeedback('Orden incorrecto. Revisa e intenta de nuevo.', 'bad');
+                }
+            };
+            
+            setStageComplete(false);
+        }
+
+        function renderStageFinal(container) {
+            renderControls();
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
+                    <h1 style="font-size: 4rem;">🎉</h1>
+                    <h2 style="color: var(--ok); font-size: 2.5rem;">¡Tema Completado!</h2>
+                    <p style="font-size: 1.2rem;">Puntuación total: <strong>${userScore}</strong></p>
+                    <p>Presiona el botón para volver al menú de la unidad.</p>
+                </div>
+            `;
+            if(nextBtn) {
+                nextBtn.textContent = "Volver al Menú";
+                nextBtn.classList.add('active');
             }
         }
-    }
 
-    function resetSentence() {
-        const dropZone = document.getElementById('dropZone');
-        dropZone.innerHTML = '';
-        currentSentenceBuilder = [];
-        setFeedback("", 'neutral');
-        // Reactivar tiles
-        document.querySelectorAll('.word-tile.used').forEach(el => el.classList.remove('used'));
-    }
+        document.addEventListener('DOMContentLoaded', () => {
+            render();
+        });
 
-    // --- FINAL ---
-    function renderFinal(nextBtn) {
-        titleEl.textContent = "¡Tema Completado!";
-        stageArea.innerHTML = `
-            <div style="padding:40px; border: 3px dashed var(--ok); border-radius: 20px;">
-                <h1 style="font-size: 4rem;">🎉</h1>
-                <h2>¡Felicidades!</h2>
-                <p>Has completado el Tema 2: Enfermedades.</p>
-                <p>Ya sabes cómo decir qué te duele.</p>
-            </div>
-        `;
-        nextBtn.textContent = "Volver al Menú";
-        nextBtn.style.display = 'block';
-        nextBtn.onclick = goHome;
-    }
-
-    // Inicio
-    render();
-
-</script>
+    </script>
 </body>
 </html>

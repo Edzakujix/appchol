@@ -5,297 +5,147 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Ch'ol App - Tema 1: Profesiones y Oficios</title>
 
-        <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
 
     <style>
 :root {
-    --color-cielo: #ADE4FF; /* Azul claro */
-    --color-pasto: #6AA84F; /* Verde pasto */
-    --color-principal: #75b4c7;
-    --color-acentos: #2A9D8F;
-    --color-texto: #333;
-    --accent: #FF7043; /* Naranja para títulos */
-    --card: #ffffff;
-    --next: #29B6F6;
-    --ok: #4CAF50;
-    --bad: #E53935;
-}
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+    --matching-bg: #8AC257;
+    --matching-card-bg: #E7F6E1;
+    --select-highlight: #FF7043;
 }
 
-body {
-    font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
-    background: linear-gradient(180deg, var(--color-cielo) 65%, #ADD8E6 100%); 
-    color: var(--color-texto);
+button.primary {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+button.primary.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+button.primary.active:active {
+    transform: translateY(5px);
+    box-shadow: 0 0px 0 0 #0288D1;
+}
+
+.opt {
+    min-width: 140px; 
+    padding: 20px; 
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    text-align: center;
-    position: relative;
-    box-sizing: border-box;
-    padding: 20px;
+    gap: 10px; 
+    cursor: pointer;
+    border: 4px solid #E0E0E0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all .2s;
 }
 
-/* Simulación del pasto inferior */
-.ground-sim {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 20vh;
-    background-color: var(--color-pasto);
-    border-top-left-radius: 60% 30%;
-    border-top-right-radius: 60% 30%;
-    z-index: -1;
+.opt:not(.disabled):hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* Contenedor principal centrado */
-.app {
-    width: 100%;
-    max-width: 900px;
-    background: var(--card);
-    border-radius: 30px;
-    box-shadow: 0 15px 40px rgba(255, 112, 67, 0.2);
-    padding: 30px;
-    border: 5px solid var(--accent);
-    max-height: 95vh; 
+.opt.disabled { pointer-events: none; opacity: 0.7; }
+.opt.ok { border-color: var(--ok); box-shadow: 0 8px 20px rgba(76,175,80,0.3); background: #E8F5E9; }
+.opt.bad { border-color: var(--bad); box-shadow: 0 8px 20px rgba(229,57,53,0.3); background: #FFEBEE; }
+
+.day-image-option img {
+    width: 100px; 
+    height: 100px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.matching-click-container {
     display: flex;
-    flex-direction: column; 
-    justify-content: space-between;
-    overflow: hidden;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 700px;
+    padding: 20px;
+    background-color: var(--matching-bg); 
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* Mantén tus otros estilos aquí (header, h1, .stage-area, .controls, etc.) */
+.matching-card {
+    background-color: var(--matching-card-bg);
+    border-radius: 12px;
+    padding: 10px 15px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
+    border: 3px solid transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60px;
+}
 
-        header{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            gap:10px;
-            margin-bottom: 20px;
-            flex-shrink: 0; 
-        }
-        h1{
-            /* FLUIDEZ RESPONSIVA */
-            font-size: clamp(1.5rem, 3vw, 2rem); 
-            margin:0;
-            color: var(--accent);
-            text-shadow: 2px 2px #fff;
-        }
-        .stage-area{
-            overflow-y: auto; 
-            padding-right: 10px;
-            padding-bottom: 20px;
-            display: flex; 
-            flex-direction: column; 
-            justify-content: flex-start;
-            align-items: center;
-            scrollbar-width: thin;
-        }
-        .controls{
-            display:flex;gap:15px;justify-content:space-between;align-items:center; margin-top:10px;
-            flex-shrink: 0; 
-            padding-top: 10px;
-            border-top: 1px solid #eee;
-        }
-        
-        /* Botones de control */
-        button.primary, button.ghost{
-            padding:12px 20px;
-            border-radius: 15px;
-            font-weight:700; cursor:pointer;
-            transition: all .1s ease;
-        }
-        button.primary{
-            background:var(--next); color:white; border:none; 
-            box-shadow: 0 5px 0 0 #0288D1;
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        button.primary.active{
-            opacity: 1;
-            pointer-events: auto;
-        }
-        button.primary.active:active{
-            transform: translateY(5px);
-            box-shadow: 0 0px 0 0 #0288D1;
-        }
-        button.ghost{
-            background:#e0f7fa;
-            border: 3px solid #00BCD4;
-            color: #00BCD4;
-            font-weight: 600;
-        }
-        
-        .options-row{display:flex; gap:20px; flex-wrap:wrap; justify-content:center}
-        
-        .opt{
-            min-width:140px; padding:20px; border-radius: 20px;
-            background:#fff;
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
-            display:flex;flex-direction:column;align-items:center;gap:10px; cursor:pointer;
-            border: 4px solid #E0E0E0;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all .2s;
-        }
-        .opt:not(.disabled):hover{
-            transform:translateY(-5px) scale(1.05);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-        }
-        .opt.disabled{pointer-events: none; opacity: 0.7;}
-        .opt.ok{border-color:var(--ok); box-shadow:0 8px 20px rgba(76,175,80,0.3); background:#E8F5E9;}
-        .opt.bad{border-color:var(--bad); box-shadow:0 8px 20px rgba(229,57,53,0.3); background:#FFEBEE;}
-        
-        .feedback{ font-weight:800; font-size: 1.4rem; }
+.matching-card:hover:not(.matched):not(.selected) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 0 rgba(0,0,0,0.15);
+}
 
-        /* Contenedor responsivo para video */
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
-            height: 0;
-            overflow: hidden;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        
-        /* Estilos de Imagen para Actividad 2 */
-        .day-image-option img {
-            width: 100px; 
-            height: 100px;
-            border-radius: 10px;
-            object-fit: cover;
-        }
-        
-        /* ESTILOS PARA LA ACTIVIDAD 3 (Matching Original) */
-        .matching-container {
-            display: flex;
-            flex-wrap: wrap; 
-            gap: 25px;
-            width: 100%;
-            justify-content: center;
-            padding: 20px;
-            background-color: #e8f5e9; 
-            border-radius: 25px;
-            box-shadow: inset 0 0 15px rgba(0,150,136,0.1);
-        }
+.matching-card.selected {
+    border-color: var(--select-highlight);
+    box-shadow: 0 0 0 4px var(--select-highlight);
+    background-color: #F8E3DD;
+}
 
-        .matching-column {
-            flex: 1; 
-            min-width: 280px; 
-            background-color: #ffffff;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            text-align: center;
-            min-height: 300px;
-            display: flex;
-            flex-direction: column;
-        }
-        .matching-column h3 {
-            color: var(--accent);
-            margin-top: 0;
-            font-size: 1.4rem;
-            border-bottom: 2px solid #FFD180;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
+.matching-card.matched {
+    background-color: var(--ok);
+    color: white;
+    pointer-events: none;
+    cursor: default;
+    box-shadow: none;
+    border-color: var(--ok);
+}
 
-        .questions-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            flex-grow: 1; 
-        }
+.matching-card.shaking {
+    animation: shake 0.5s;
+    animation-iteration-count: 2;
+    border-color: var(--bad) !important;
+    box-shadow: 0 0 0 4px var(--bad) !important;
+    background-color: #FFEBEE !important;
+    color: var(--bad);
+}
 
-        .question-card {
-            background-color: #FFF9C4; 
-            border: 3px solid #FFCA28; 
-            border-radius: 15px;
-            padding: 15px 20px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: grab;
-            box-shadow: 0 5px 0 0 #FFB300; 
-            transition: transform 0.2s, box-shadow 0.2s;
-            color: var(--text-color);
-            text-align: center;
-        }
-        .question-card.matched-correct {
-            opacity: 1; 
-            cursor: default;
-            pointer-events: none;
-            box-shadow: none;
-            transform: none;
-            background-color: #f3e5f5; /* Color de match */
-            border-color: #AB47BC;
-        }
+.questions-stack, .answers-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.5);
+}
 
-        .answer-dropzone {
-            background-color: #E3F2FD; 
-            border: 4px dashed #64B5F6; 
-            border-radius: 15px;
-            padding: 15px;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            font-style: italic;
-            color: #42A5F5;
-            font-weight: 500;
-            position: relative;
-            transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
-            flex-direction: column;
-        }
-        
-        /* Media Queries revisadas para la Actividad 3 */
-        @media (max-width: 600px){
-            .app{
-                max-height: 100vh;
-                padding: 15px;
-                padding-right: 0; 
-            }
-            body{
-                padding: 10px;
-            }
-            h1{font-size: 1.5rem;}
-            
-            /* Ajustes de Botones en Móvil */
-            button.primary, button.ghost{
-                padding: 8px 15px;
-                font-size: 0.9rem;
-            }
-            .controls{
-                flex-direction: column;
-                gap: 10px;
-                align-items: stretch;
-            }
-            
-            /* Apilamiento de columnas de Matching */
-            .matching-container{
-                flex-direction: column;
-                gap: 15px;
-            }
-            .matching-column{
-                min-width:100%;
-                flex-basis: 100%;
-                padding: 15px;
-            }
-        }
+.stack-title {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin-bottom: 5px;
+    text-align: left;
+    padding-left: 10px;
+}
+
+@media (min-width: 601px) {
+    .matching-click-container {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+    .questions-stack, .answers-stack {
+        flex-basis: 48%;
+    }
+}
     </style>
 
 </head>
@@ -321,20 +171,14 @@ body {
 
 
 <script>
-    // ************************************************************************
-    // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL (UNIFICADO)
-    // Se cambia la URL de regreso al nuevo módulo 3
     const MAIN_SCREEN_URL = '../U3/U3ESC.html'; 
     const USER_GOOGLE_ID = 'ID_DEL_USUARIO_AUTENTICADO'; 
-    const TOTAL_ACTIVITY_POINTS = 40; // 4 actividades * 10 puntos 
-    // ************************************************************************
+    const TOTAL_ACTIVITY_POINTS = 40; 
     
-    // Función de redirección para el botón de Inicio
     function goHome() {
         window.location.href = MAIN_SCREEN_URL;
     }
 
-    // VARIABLES CRÍTICAS
     const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4];
     let currentStage = 0;
     let feedbackEl = null; 
@@ -342,14 +186,11 @@ body {
     const nextBtn = document.getElementById('nextBtn');
     const controlsArea = document.getElementById('controlsArea');
     
-    // Variables de Progreso (UNIFICADO)
     let stageProgress = new Array(stages.length).fill(false); 
-    let userScore = 0; // Puntuación simulada
+    let userScore = 0; 
 
-    // Funciones de Control de Etapa 
     function setStageComplete(isComplete = true) {
         if (isComplete && !stageProgress[currentStage]) {
-            // Se suma la puntuación simulada para las actividades 1, 2, 3, y 4 (Stages 1, 2, 3)
             if(currentStage >= 1 && currentStage <= 3) { 
                 userScore += 10; 
             }
@@ -364,7 +205,7 @@ body {
     
     function setFeedback(text, kind){
         if(!feedbackEl) return;
-        feedbackEl.innerHTML = text; // Usamos innerHTML para permitir negritas
+        feedbackEl.innerHTML = text; 
         if(kind === 'ok'){ feedbackEl.style.color = 'var(--ok)' }
         else if(kind === 'bad'){ feedbackEl.style.color = 'var(--bad)' }
         else { feedbackEl.style.color = 'var(--text-color)' }
@@ -384,16 +225,11 @@ body {
             setFeedback("¡Termina esta parte antes de continuar!", 'bad');
             return;
         }
-
-        // --- PUNTO DE REDIRECCIÓN Y GUARDADO CRÍTICO (Stage 4) ---
         if (currentStage === 4) {
-             // Simulación de guardado en la BD 
              alert(`✅ Tema Terminado. Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo a la pantalla principal...`);
              window.location.href = MAIN_SCREEN_URL; 
              return; 
         }
-        // --------------------------------------------------
-
         currentStage++;
         if (currentStage >= stages.length) {
             currentStage = stages.length - 1; 
@@ -415,7 +251,6 @@ body {
         const container = document.getElementById('stageArea'); 
         container.innerHTML=''; 
 
-        // Se actualizan los títulos para el Tema 1 (Profesiones)
         const titles = [
             'Mini-Clase: Profesiones Ch\'ol', 
             'Actividad 1: Observa y Escribe', 
@@ -427,16 +262,11 @@ body {
 
         stages[currentStage](container);
         
-        // El video y la pantalla final se completan inmediatamente
         if (currentStage === 0 || currentStage === 4) {
             setStageComplete(true);
         }
     }
 
-
-    // =======================================================================
-    // FUNCIÓN CRÍTICA DE AUDIO Y CREACIÓN DE BOTONES (ÁMBITO GLOBAL)
-    // =======================================================================
     function playAudio(audioFilename, text, lang = 'cho') {
         const audioUrl = `../assets/audio/${audioFilename}`; 
         
@@ -460,10 +290,15 @@ body {
         btn.onclick = () => { playAudio(audioFilename, text, lang); };
         return btn;
     }
+    
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
 
-    // =======================================================================
-    // 0 - MINI-CLASE (VIDEO) - RUTA PENDIENTE
-    // =======================================================================
     function renderStage0(container){
         const videoHtml = `
             <div class="video-wrapper">
@@ -478,11 +313,7 @@ body {
         renderControls();
     }
 
-    // =======================================================================
-    // 1 - ACTIVIDAD 1: OBSERVA IMAGEN, LEE CH'OL, ESCRIBE ESPAÑOL (NUEVA)
-    // =======================================================================
     const stage1Data = [
-        // 6 RONDAS
         { ch_word: "Aj lukbäl", es_word: "PESCADOR", img: "pescador.png" },
         { ch_word: "Xts´ak", es_word: "CURANDERO", img: "curandero.png" },
         { ch_word: "Xpäsjuñ", es_word: "MAESTRO", img: "maestro.png" },
@@ -524,7 +355,7 @@ body {
         }
 
         const currentData = stage1Data[currentRound1];
-        renderControls(); // Limpiar controles
+        renderControls(); 
 
         container.innerHTML = `
             <p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Mira la imagen, lee la palabra en Ch'ol y **escribe su significado en Español**.</p>
@@ -557,12 +388,8 @@ body {
 
         setStageComplete(false);
     }
-    
-    // =======================================================================
-    // 2 - ACTIVIDAD 2: ESCUCHA AUDIO Y SELECCIONA FIGURA (SUSTITUCIÓN)
-    // =======================================================================
+
     const stage2Questions = [
-        // 4 RONDAS
         { audio: "Xpäsjuñ", filename: "maestro.mp3", correct: "maestro.png", word: "Maestro" },
         { audio: "Aj cholejel", filename: "campesino.mp3", correct: "campesino.png", word: "Campesino" }, 
         { audio: "Aj lukbäl", filename: "pescador.mp3", correct: "pescador.png", word: "Pescador" },
@@ -570,14 +397,13 @@ body {
     ];
     let currentRound2 = 0; 
 
-    // Opciones para la actividad 2: Se usa el nombre de archivo estandarizado
     const stage2AllOptions = [
         { filename: "maestro.png", word: "Maestro" },
         { filename: "campesino.png", word: "Campesino" },
         { filename: "pescador.png", word: "Pescador" },
         { filename: "curandero.png", word: "Curandero" },
         { filename: "albañil.png", word: "Albañil" }, 
-        { filename: "florista.png", word: "Florista" } // Distracción
+        { filename: "florista.png", word: "Florista" } 
     ];
 
     function checkAnswer2(selectedImage, currentData, allOptionsElements) {
@@ -612,10 +438,8 @@ body {
         const currentData = stage2Questions[currentRound2];
         container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Questions.length}. Escucha el audio y selecciona la figura: **${currentData.word}**.</p>`;
         
-        // 1. Crear el botón de audio
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho');
         
-        // 2. Inicializar el controlsArea y centrar el botón de audio
         renderControls();
         const buttonWrapper = document.createElement('div');
         buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
@@ -628,11 +452,9 @@ body {
         const row = document.createElement('div');
         row.className = 'options-row';
         
-        // Crear opciones: 4 o 5 opciones por ronda (la correcta + 3/4 aleatorias)
         let optionsToDisplay = stage2AllOptions.filter(opt => opt.filename === currentData.correct);
         let distractionOptions = stage2AllOptions.filter(opt => opt.filename !== currentData.correct);
         
-        // Seleccionar 3 a 5 opciones en total
         while(optionsToDisplay.length < 4 && distractionOptions.length > 0) {
             const randomIndex = Math.floor(Math.random() * distractionOptions.length);
             optionsToDisplay.push(distractionOptions.splice(randomIndex, 1)[0]);
@@ -666,162 +488,113 @@ body {
     }
 
 
-    // =======================================================================
-    // 3 - ACTIVIDAD 3: UNIR PALABRAS (MATCHING) - 6 PARES
-    // =======================================================================
     const stage3Pairs = [
-        // 6 RONDAS
-        ['Xpäsjuñ', 'Maestro'],
-        ['Aj cholejel', 'Campesino'],
-        ['Xts´ak', 'Curandero'],
-        ['Aj lukbäl', 'Pescador'],
-        ['Xpäty otyoty', 'Albañil'],
-        ['Toñel', 'Trabajar'],
+        { chol: 'Xpäsjuñ', es: 'Maestro' },
+        { chol: 'Aj cholejel', es: 'Campesino' },
+        { chol: 'Xts´ak', es: 'Curandero' },
+        { chol: 'Aj lukbäl', es: 'Pescador' },
+        { chol: 'Xpäty otyoty', es: 'Albañil' },
+        { chol: 'Toñel', es: 'Trabajar' }
     ];
 
-    function checkAllMatches3() {
-        const dropzones = document.querySelectorAll('.answer-dropzone');
-        let allCorrect = true;
-        const questionsList = document.getElementById('questionsList'); 
+    let selectedQuestionStage3 = null;
+    let matchedPairsCountStage3 = 0;
 
-        dropzones.forEach(dz => {
-            dz.classList.remove('ok', 'bad'); 
-            const droppedCard = dz.querySelector('.question-card');
-            const answerText = dz.dataset.answer;
-            
-            if (droppedCard) {
-                const questionText = droppedCard.dataset.question;
-                const correctPair = stage3Pairs.find(p => p[0] === questionText);
-                
-                if (correctPair && correctPair[1] === answerText) {
-                    dz.classList.add('ok');
-                    droppedCard.classList.add('matched-correct'); 
-                } else {
-                    dz.classList.add('bad');
-                    allCorrect = false;
-                    
-                    // Devolver la tarjeta si es incorrecta.
-                    droppedCard.classList.remove('matched-correct', 'dragging');
-                    questionsList.appendChild(droppedCard); 
-                    
-                    dz.classList.remove('filled');
-                    const placeholder = dz.querySelector('.placeholder-text');
-                    if (placeholder) placeholder.style.display = 'block';
-                }
-            } else {
-                dz.classList.add('bad'); 
-                allCorrect = false;
+    function handleStage3QuestionClick(cardEl, itemData) {
+        if (cardEl.classList.contains('selected')) {
+            cardEl.classList.remove('selected');
+            selectedQuestionStage3 = null;
+            setFeedback('Selecciona una palabra en Ch\'ol y luego su significado.', 'neutral');
+            return;
+        }
+        document.querySelectorAll('.questions-stack .matching-card.selected').forEach(el => el.classList.remove('selected'));
+        cardEl.classList.add('selected');
+        selectedQuestionStage3 = itemData;
+        setFeedback(`Seleccionaste **${itemData.chol}**. ¡Ahora elige su traducción!`, 'neutral');
+    }
+
+    function handleStage3AnswerClick(cardEl, itemData) {
+        if (!selectedQuestionStage3) {
+            setFeedback('Selecciona primero una palabra Ch\'ol de la columna izquierda.', 'bad');
+            cardEl.classList.add('shaking');
+            setTimeout(() => cardEl.classList.remove('shaking'), 500);
+            return;
+        }
+
+        const questionCardEl = document.querySelector(`.questions-stack .matching-card[data-chol="${selectedQuestionStage3.chol}"]`);
+
+        if (selectedQuestionStage3.es === itemData.es) {
+            setFeedback('¡Emparejamiento Correcto!', 'ok');
+            cardEl.classList.add('matched');
+            questionCardEl.classList.add('matched');
+            cardEl.classList.remove('shaking'); 
+            questionCardEl.classList.remove('shaking', 'selected');
+            selectedQuestionStage3 = null;
+            matchedPairsCountStage3++;
+
+            if (matchedPairsCountStage3 === stage3Pairs.length) {
+                setFeedback('¡Felicidades! Todos los pares son correctos.', 'ok');
+                setStageComplete(true);
             }
-        });
-
-        if (allCorrect) {
-            setFeedback('¡Felicidades! Todos los pares son correctos.', 'ok');
-            setStageComplete(true);
-            document.querySelectorAll('.question-card').forEach(card => {
-                card.draggable = false;
-                card.classList.add('matched-correct'); 
-            });
-            nextBtn.classList.add('active'); 
-            controlsArea.querySelector('button.ghost').style.pointerEvents = 'none';
         } else {
-            setFeedback('¡Revisa los rojos! Las tarjetas incorrectas regresaron para que intentes de nuevo.', 'bad');
+            setFeedback('Incorrecto. Intenta de nuevo.', 'bad');
+            cardEl.classList.add('shaking');
+            questionCardEl.classList.add('shaking');
+            setTimeout(() => {
+                cardEl.classList.remove('shaking');
+                questionCardEl.classList.remove('shaking');
+            }, 500);
         }
     }
 
-
     function renderStage3(container){
-        container.innerHTML = `<p class="stage0-info">Arrastra el **Nombre/Acción en Ch'ol** (Amarillo) a su **Traducción en Español** (Azul).</p>`;
+        renderControls();
+        matchedPairsCountStage3 = 0;
+        selectedQuestionStage3 = null;
+
+        const questions = stage3Pairs.map(d => ({ chol: d.chol, es: d.es }));
+        const answers = stage3Pairs.map(d => ({ chol: d.chol, es: d.es }));
         
-        renderControls(`<button class="ghost" onclick="checkAllMatches3()">Comprobar</button>`);
-        
+        shuffleArray(questions);
+        shuffleArray(answers);
+
+        container.innerHTML = `<p class="stage0-info">Haz clic en la palabra en **Ch'ol** (Izquierda) y luego en su **Significado** (Derecha) para unirlas.</p>`;
+
         const matchingContainer = document.createElement('div');
-        matchingContainer.className = 'matching-container';
+        matchingContainer.className = 'matching-click-container';
+
+        const questionsStack = document.createElement('div');
+        questionsStack.className = 'questions-stack';
+        questionsStack.innerHTML = `<p class="stack-title">Ch'ol:</p>`;
         
-        const questionsCol = document.createElement('div');
-        questionsCol.className = 'matching-column';
-        questionsCol.innerHTML = '<h3>Ch\'ol (Arrastra)</h3><div id="questionsList" class="questions-list"></div>';
-
-        const answersCol = document.createElement('div');
-        answersCol.className = 'matching-column';
-        answersCol.innerHTML = '<h3>Español (Suelta Aquí)</h3><div id="answersList"></div>';
-        
-        const shuffledQuestions = [...stage3Pairs].sort(() => Math.random() - 0.5); 
-        const shuffledAnswers = [...stage3Pairs].map(p=>p[1]).sort(() => Math.random() - 0.5);
-
-        // Crear tarjetas de preguntas (Arrastrables - Ch'ol)
-        const questionsList = questionsCol.querySelector('#questionsList');
-        shuffledQuestions.forEach((pair, index) => {
-            const questionCard = document.createElement('div');
-            questionCard.className = 'question-card';
-            questionCard.id = `q-card-${index}`;
-            questionCard.draggable = true;
-            questionCard.dataset.question = pair[0];
-            questionCard.textContent = pair[0];
-
-            questionCard.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', e.target.id);
-                e.target.classList.add('dragging');
-            });
-            questionCard.addEventListener('dragend', (e) => {
-                e.target.classList.remove('dragging');
-            });
-            questionsList.appendChild(questionCard);
+        questions.forEach(q => {
+            const cardEl = document.createElement('div');
+            cardEl.className = 'matching-card';
+            cardEl.textContent = q.chol;
+            cardEl.dataset.chol = q.chol;
+            cardEl.onclick = () => handleStage3QuestionClick(cardEl, q);
+            questionsStack.appendChild(cardEl);
         });
 
-        // Crear zonas de respuesta (Dropzones - Español)
-        const answersList = answersCol.querySelector('#answersList');
-        shuffledAnswers.forEach((answer, index) => {
-            const dropzone = document.createElement('div');
-            dropzone.className = 'answer-dropzone';
-            dropzone.id = `ans-dropzone-${index}`;
-            dropzone.dataset.answer = answer;
+        const answersStack = document.createElement('div');
+        answersStack.className = 'answers-stack';
+        answersStack.innerHTML = `<p class="stack-title">Español:</p>`;
 
-            const placeholder = document.createElement('span');
-            placeholder.className = 'placeholder-text';
-            placeholder.textContent = answer;
-            dropzone.appendChild(placeholder);
-
-            dropzone.addEventListener('dragover', (e) => {
-                e.preventDefault(); 
-                dropzone.classList.add('hovered');
-            });
-            dropzone.addEventListener('dragleave', () => {
-                dropzone.classList.remove('hovered');
-            });
-            dropzone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropzone.classList.remove('hovered');
-
-                const cardId = e.dataTransfer.getData('text/plain');
-                const draggedCard = document.getElementById(cardId);
-                
-                // Devolver tarjeta previa
-                if (dropzone.children.length > 0 && dropzone.children[0].classList.contains('question-card')) {
-                    questionsList.appendChild(dropzone.children[0]);
-                    dropzone.classList.remove('filled');
-                    dropzone.querySelector('.placeholder-text').style.display = 'block'; 
-                }
-                
-                // Mover la nueva tarjeta
-                dropzone.appendChild(draggedCard);
-                dropzone.classList.add('filled');
-                dropzone.querySelector('.placeholder-text').style.display = 'none'; 
-
-                setStageComplete(false); 
-                dropzone.classList.remove('ok', 'bad');
-            });
-            answersList.appendChild(dropzone);
+        answers.forEach(a => {
+            const cardEl = document.createElement('div');
+            cardEl.className = 'matching-card';
+            cardEl.textContent = a.es;
+            cardEl.onclick = () => handleStage3AnswerClick(cardEl, a);
+            answersStack.appendChild(cardEl);
         });
 
-        matchingContainer.appendChild(questionsCol);
-        matchingContainer.appendChild(answersCol);
+        matchingContainer.appendChild(questionsStack);
+        matchingContainer.appendChild(answersStack);
         container.appendChild(matchingContainer);
+        setFeedback('Selecciona una palabra y su traducción.', 'neutral');
         setStageComplete(false);
     }
     
-    // =======================================================================
-    // 4 - FINAL DE TEMA (UNIFICADO)
-    // =======================================================================
     function renderStage4(container) {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
@@ -835,7 +608,6 @@ body {
     }
 
 
-    // --- Inicialización ---
     document.addEventListener('DOMContentLoaded', () => {
         render();
     });

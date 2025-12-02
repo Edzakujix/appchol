@@ -7,117 +7,125 @@
         <link rel="stylesheet" href="../assets/css/styles.css">
 
     <style>
-    .word-to-build-display {
-        font-size: clamp(1.5rem, 4vw, 2.2rem); 
-        font-weight: bold;
-        color: var(--accent);
-        letter-spacing: 5px;
-        margin-bottom: 15px;
-    }
-    .current-word-display {
-        font-size: clamp(2rem, 8vw, 2.5rem); 
-        min-height: 50px;
-        margin-top: 15px;
-        border-bottom: 3px solid var(--ok);
-        padding-bottom: 5px;
-        color: var(--ok);
-        letter-spacing: 8px;
-        font-family: monospace;
-    }
-    .letter-button {
-        padding: 10px 15px;
-        margin: 5px;
-        background-color: #FFECB3;
-        border: 2px solid #FFB300;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 800;
-        font-size: clamp(1.2rem, 5vw, 1.5rem); 
-        transition: transform 0.1s;
-    }
-    .letter-button.disabled { opacity: 0.5; pointer-events: none; }
+.word-to-build-display {
+    font-size: clamp(1.5rem, 4vw, 2.2rem); 
+    font-weight: bold;
+    color: var(--accent);
+    letter-spacing: 5px;
+    margin-bottom: 15px;
+}
+
+.current-word-display {
+    font-size: clamp(2rem, 8vw, 2.5rem); 
+    min-height: 50px;
+    margin-top: 15px;
+    border-bottom: 3px solid var(--ok);
+    padding-bottom: 5px;
+    color: var(--ok);
+    letter-spacing: 8px;
+    font-family: monospace;
+}
+
+.letter-button {
+    padding: 10px 15px;
+    margin: 5px;
+    background-color: #FFECB3;
+    border: 2px solid #FFB300;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: clamp(1.2rem, 5vw, 1.5rem); 
+    transition: transform 0.1s;
+}
+
+.letter-button.disabled { 
+    opacity: 0.5; 
+    pointer-events: none; 
+}
+
 .matching-click-container {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-        max-width: 600px;
-        padding: 20px;
-        background-color: var(--matching-bg, #8AC257); 
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: var(--matching-bg, #8AC257); 
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.matching-card {
+    background-color: var(--matching-card-bg, #E7F6E1);
+    border-radius: 12px;
+    padding: 15px 20px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
+    border: 2px solid transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.matching-card:hover:not(.matched):not(.selected) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 0 rgba(0,0,0,0.15);
+}
+
+.matching-card.selected {
+    border-color: var(--select-highlight, #FF7043);
+    box-shadow: 0 0 0 4px var(--select-highlight, #FF7043);
+    background-color: #F8E3DD;
+}
+
+.matching-card.matched {
+    background-color: var(--ok);
+    color: white;
+    pointer-events: none;
+    cursor: default;
+    box-shadow: none;
+    border-color: var(--ok);
+}
+
+.matching-card.shaking {
+    animation: shake 0.5s;
+    animation-iteration-count: 2;
+    border-color: var(--bad) !important;
+    box-shadow: 0 0 0 4px var(--bad) !important;
+    background-color: #FFEBEE !important;
+    color: var(--bad);
+}
+
+.questions-stack, .answers-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.stack-title {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text-color, #333);
+    margin-bottom: 5px;
+    text-align: left;
+    padding-left: 10px;
+}
+
+@media (min-width: 601px) {
+    .matching-click-container {
+        flex-direction: row;
+        justify-content: space-around;
     }
-    .matching-card {
-        background-color: var(--matching-card-bg, #E7F6E1);
-        border-radius: 12px;
-        padding: 15px 20px;
-        font-weight: 700;
-        font-size: 1.2rem;
-        cursor: pointer;
-        transition: all 0.2s;
-        box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
-        border: 2px solid transparent;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .matching-card:hover:not(.matched):not(.selected) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 0 0 rgba(0,0,0,0.15);
-    }
-    .matching-card.selected {
-        border-color: var(--select-highlight, #FF7043);
-        box-shadow: 0 0 0 4px var(--select-highlight, #FF7043);
-        background-color: #F8E3DD;
-    }
-    .matching-card.matched {
-        background-color: var(--ok);
-        color: white;
-        pointer-events: none;
-        cursor: default;
-        box-shadow: none;
-        border-color: var(--ok);
-    }
-    .matching-card.shaking {
-        animation: shake 0.5s;
-        animation-iteration-count: 2;
-        border-color: var(--bad) !important;
-        box-shadow: 0 0 0 4px var(--bad) !important;
-        background-color: #FFEBEE !important;
-        color: var(--bad);
-    }
-    @keyframes shake {
-        0%, 100% {transform: translateX(0);}
-        20%, 60% {transform: translateX(-5px);}
-        40%, 80% {transform: translateX(5px);}
-    }
-    
     .questions-stack, .answers-stack {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 10px;
-        border-radius: 15px;
-        background: rgba(255, 255, 255, 0.5);
+        flex-basis: 48%;
     }
-    .stack-title {
-        font-weight: 800;
-        font-size: 1.1rem;
-        color: var(--text-color, #333);
-        margin-bottom: 5px;
-        text-align: left;
-        padding-left: 10px;
-    }
-    
-    @media (min-width: 601px) {
-        .matching-click-container {
-            flex-direction: row;
-            justify-content: space-around;
-        }
-        .questions-stack, .answers-stack {
-            flex-basis: 48%;
-        }
-    }
+}
     </style>
 </head>
 <body>

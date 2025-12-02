@@ -5,161 +5,146 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Ch'ol App - Tema 2: Lugares y Objetos</title>
 
-        <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
 
     <style>
-/* (Se mantiene el CSS completo de la plantilla, no repetido aquí por brevedad) */
 :root {
-    --color-cielo: #ADE4FF; 
-    --color-pasto: #6AA84F; 
-    --color-principal: #75b4c7;
-    --color-acentos: #2A9D8F;
-    --color-texto: #333;
-    --accent: #FF7043; 
-    --card: #ffffff;
-    --next: #29B6F6;
-    --ok: #4CAF50;
-    --bad: #E53935;
-}
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+    --matching-bg: #8AC257;
+    --matching-card-bg: #E7F6E1;
+    --select-highlight: #FF7043;
 }
 
-body {
-    font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
-    background: linear-gradient(180deg, var(--color-cielo) 65%, #ADD8E6 100%); 
-    color: var(--color-texto);
+button.primary {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+button.primary.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+button.primary.active:active {
+    transform: translateY(5px);
+    box-shadow: 0 0px 0 0 #0288D1;
+}
+
+.opt {
+    min-width: 140px; 
+    padding: 20px; 
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    text-align: center;
-    position: relative;
-    box-sizing: border-box;
+    gap: 10px; 
+    cursor: pointer;
+    border: 4px solid #E0E0E0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all .2s;
+}
+
+.opt:not(.disabled):hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.opt.disabled { pointer-events: none; opacity: 0.7; }
+.opt.ok { border-color: var(--ok); box-shadow: 0 8px 20px rgba(76,175,80,0.3); background: #E8F5E9; }
+.opt.bad { border-color: var(--bad); box-shadow: 0 8px 20px rgba(229,57,53,0.3); background: #FFEBEE; }
+
+.img-option img {
+    width: 150px; 
+    height: 150px; 
+    border-radius: 10px; 
+    object-fit: cover;
+}
+
+.matching-click-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 700px;
     padding: 20px;
+    background-color: var(--matching-bg); 
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-.ground-sim {
-    position: fixed; bottom: 0; width: 100%; height: 20vh; background-color: var(--color-pasto);
-    border-top-left-radius: 60% 30%; border-top-right-radius: 60% 30%; z-index: -1;
+.matching-card {
+    background-color: var(--matching-card-bg);
+    border-radius: 12px;
+    padding: 10px 15px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
+    border: 3px solid transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60px;
 }
 
-.app {
-    width: 100%; max-width: 900px; background: var(--card); border-radius: 30px;
-    box-shadow: 0 15px 40px rgba(255, 112, 67, 0.2); padding: 30px; border: 5px solid var(--accent);
-    max-height: 95vh; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
+.matching-card:hover:not(.matched):not(.selected) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 0 rgba(0,0,0,0.15);
 }
 
-header{
-    display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom: 20px; flex-shrink: 0; 
-}
-h1{
-    font-size: clamp(1.5rem, 3vw, 2rem); margin:0; color: var(--accent); text-shadow: 2px 2px #fff;
-}
-.stage-area{
-    overflow-y: auto; padding-right: 10px; padding-bottom: 20px; display: flex; 
-    flex-direction: column; justify-content: flex-start; align-items: center; scrollbar-width: thin;
-}
-.controls{
-    display:flex;gap:15px;justify-content:space-between;align-items:center; margin-top:10px;
-    flex-shrink: 0; padding-top: 10px; border-top: 1px solid #eee;
+.matching-card.selected {
+    border-color: var(--select-highlight);
+    box-shadow: 0 0 0 4px var(--select-highlight);
+    background-color: #F8E3DD;
 }
 
-button.primary, button.ghost{
-    padding:12px 20px; border-radius: 15px; font-weight:700; cursor:pointer; transition: all .1s ease;
-}
-button.primary{
-    background:var(--next); color:white; border:none; box-shadow: 0 5px 0 0 #0288D1; opacity: 0.5; pointer-events: none;
-}
-button.primary.active{
-    opacity: 1; pointer-events: auto;
-}
-button.primary.active:active{
-    transform: translateY(5px); box-shadow: 0 0px 0 0 #0288D1;
-}
-button.ghost{
-    background:#e0f7fa; border: 3px solid #00BCD4; color: #00BCD4; font-weight: 600;
+.matching-card.matched {
+    background-color: var(--ok);
+    color: white;
+    pointer-events: none;
+    cursor: default;
+    box-shadow: none;
+    border-color: var(--ok);
 }
 
-.options-row{display:flex; gap:20px; flex-wrap:wrap; justify-content:center}
-
-.opt{
-    min-width:140px; padding:20px; border-radius: 20px; background:#fff;
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); display:flex;flex-direction:column;align-items:center;gap:10px; cursor:pointer;
-    border: 4px solid #E0E0E0; font-size: 1.1rem; font-weight: 600; transition: all .2s;
-}
-.opt:not(.disabled):hover{
-    transform:translateY(-5px) scale(1.05); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-}
-.opt.disabled{pointer-events: none; opacity: 0.7;}
-.opt.ok{border-color:var(--ok); box-shadow:0 8px 20px rgba(76,175,80,0.3); background:#E8F5E9;}
-.opt.bad{border-color:var(--bad); box-shadow:0 8px 20px rgba(229,57,53,0.3); background:#FFEBEE;}
-
-.feedback{ font-weight:800; font-size: 1.4rem; }
-
-.video-wrapper {
-    position: relative; width: 100%; max-width: 600px; padding-bottom: 56.25%; 
-    height: 0; overflow: hidden; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-.video-wrapper iframe {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
+.matching-card.shaking {
+    animation: shake 0.5s;
+    animation-iteration-count: 2;
+    border-color: var(--bad) !important;
+    box-shadow: 0 0 0 4px var(--bad) !important;
+    background-color: #FFEBEE !important;
+    color: var(--bad);
 }
 
-.day-image-option img {
-    width: 100px; height: 100px; border-radius: 10px; object-fit: cover;
+.questions-stack, .answers-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.5);
 }
 
-.matching-container {
-    display: flex; flex-wrap: wrap; gap: 25px; width: 100%; justify-content: center;
-    padding: 20px; background-color: #e8f5e9; border-radius: 25px;
-    box-shadow: inset 0 0 15px rgba(0,150,136,0.1);
+.stack-title {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin-bottom: 5px;
+    text-align: left;
+    padding-left: 10px;
 }
 
-.matching-column {
-    flex: 1; min-width: 280px; background-color: #ffffff; border-radius: 20px;
-    padding: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align: center;
-    min-height: 300px; display: flex; flex-direction: column;
-}
-.matching-column h3 {
-    color: var(--accent); margin-top: 0; font-size: 1.4rem; border-bottom: 2px solid #FFD180;
-    padding-bottom: 10px; margin-bottom: 20px;
-}
-
-.questions-list {
-    display: flex; flex-direction: column; gap: 15px; flex-grow: 1; 
-}
-
-.question-card {
-    background-color: #FFF9C4; border: 3px solid #FFCA28; border-radius: 15px;
-    padding: 15px 20px; font-weight: 700; font-size: 1.1rem; cursor: grab;
-    box-shadow: 0 5px 0 0 #FFB300; transition: transform 0.2s, box-shadow 0.2s;
-    color: var(--text-color); text-align: center;
-}
-.question-card.matched-correct {
-    opacity: 1; cursor: default; pointer-events: none; box-shadow: none; transform: none;
-    background-color: #f3e5f5; border-color: #AB47BC;
-}
-
-.answer-dropzone {
-    background-color: #E3F2FD; border: 4px dashed #64B5F6; border-radius: 15px;
-    padding: 15px; min-height: 80px; display: flex; align-items: center;
-    justify-content: center; margin-bottom: 15px; font-style: italic;
-    color: #42A5F5; font-weight: 500; position: relative;
-    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s; flex-direction: column;
-}
-
-@media (max-width: 600px){
-    .app{ max-height: 100vh; padding: 15px; padding-right: 0; }
-    body{ padding: 10px; }
-    h1{font-size: 1.5rem;}
-    
-    button.primary, button.ghost{ padding: 8px 15px; font-size: 0.9rem; }
-    .controls{ flex-direction: column; gap: 10px; align-items: stretch; }
-    
-    .matching-container{ flex-direction: column; gap: 15px; }
-    .matching-column{ min-width:100%; flex-basis: 100%; padding: 15px; }
+@media (min-width: 601px) {
+    .matching-click-container {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+    .questions-stack, .answers-stack {
+        flex-basis: 48%;
+    }
 }
     </style>
 
@@ -186,16 +171,12 @@ button.ghost{
 
 
 <script>
-    // ************************************************************************
-    // CONFIGURACIÓN DE LA PANTALLA PRINCIPAL (UNIFICADO)
     const MAIN_SCREEN_URL = '../U3/U3ESC.html'; 
     const USER_GOOGLE_ID = 'ID_DEL_USUARIO_AUTENTICADO'; 
     const TOTAL_ACTIVITY_POINTS = 40; 
-    // ************************************************************************
     
     function goHome() { window.location.href = MAIN_SCREEN_URL; }
 
-    // VARIABLES CRÍTICAS
     const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4];
     let currentStage = 0;
     let feedbackEl = null; 
@@ -203,11 +184,9 @@ button.ghost{
     const nextBtn = document.getElementById('nextBtn');
     const controlsArea = document.getElementById('controlsArea');
     
-    // Variables de Progreso
     let stageProgress = new Array(stages.length).fill(false); 
     let userScore = 0; 
 
-    // Funciones de Control de Etapa 
     function setStageComplete(isComplete = true) {
         if (isComplete && !stageProgress[currentStage]) {
             if(currentStage >= 1 && currentStage <= 3) { userScore += 10; }
@@ -266,7 +245,6 @@ button.ghost{
         const container = document.getElementById('stageArea'); 
         container.innerHTML=''; 
 
-        // Títulos para el Tema 2
         const titles = [
             'Mini-Clase: Lugares y Objetos Ch\'ol', 
             'Actividad 1: Oración a Figura', 
@@ -281,10 +259,6 @@ button.ghost{
         if (currentStage === 0 || currentStage === 4) { setStageComplete(true); }
     }
 
-
-    // =======================================================================
-    // FUNCIÓN CRÍTICA DE AUDIO Y CREACIÓN DE BOTONES
-    // =======================================================================
     function playAudio(audioFilename, text, lang = 'cho') {
         const audioUrl = `../assets/audio/${audioFilename}`; 
         const audio = new Audio(audioUrl);
@@ -301,14 +275,19 @@ button.ghost{
     function createAudioButton(text, audioFilename, lang = 'cho') {
         const btn = document.createElement('button');
         btn.className = 'ghost';
-        btn.innerHTML = '🔊 Reproducir Oración';
+        btn.innerHTML = '🔊 Reproducir Audio';
         btn.onclick = () => { playAudio(audioFilename, text, lang); };
         return btn;
     }
+    
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
 
-    // =======================================================================
-    // 0 - MINI-CLASE (VIDEO)
-    // =======================================================================
     function renderStage0(container){
         const videoHtml = `
             <div class="video-wrapper">
@@ -323,16 +302,13 @@ button.ghost{
         renderControls();
     }
 
-    // =======================================================================
-    // 1 - ACTIVIDAD 1: ORACIÓN A IMAGEN (NIVEL SINTÁCTICO) - 6 RONDAS
-    // =======================================================================
     const stage1Data = [
-        { ch_sentence: "ka´bä añ buchli´bäl", audio: "muchas_sillas.mp3", correct_img: "sillas_muchas.png", distractor_img: "sillas_pocas.png", hint: "Hay muchas sillas" }, // 
-        { ch_sentence: "K´änk´äñ li buchli´bäl", audio: "sillas_amarillas.mp3", correct_img: "sillas_amarillas.png", distractor_img: "sillas_rojas.png", hint: "Las sillas son amarillas" }, // 
-        { ch_sentence: "Ili ts´i´ ichuke´ jalaw", audio: "perro_caza.mp3", correct_img: "perro_caza.png", distractor_img: "perro_come.png", hint: "El perro caza tepezcuintle" }, // 
-        { ch_sentence: "Li dibru ya´añ tyi iye´bal li buchli´bäl", audio: "libro_debajo.mp3", correct_img: "libro_debajo.png", distractor_img: "libro_encima.png", hint: "El Libro está debajo de la silla" }, // 
-        { ch_sentence: "Jiñi juñ ya´añ tyi ity´ej tyi tyexelex", audio: "cuaderno_al_lado.mp3", correct_img: "cuaderno_al_lado.png", distractor_img: "cuaderno_lejos.png", hint: "El cuaderno está al lado de las tijeras" }, // 
-        { ch_sentence: "Jiñi juñ xchächäko´", audio: "cuadernos_rojos.mp3", correct_img: "cuadernos_rojos.png", distractor_img: "cuadernos_azules.png", hint: "Los cuadernos son rojos" }, // 
+        { ch_sentence: "ka´bä añ buchli´bäl", audio: "muchas_sillas.mp3", correct_img: "sillas_muchas.png", distractor_img: "sillas_pocas.png", hint: "Hay muchas sillas" }, 
+        { ch_sentence: "K´änk´äñ li buchli´bäl", audio: "sillas_amarillas.mp3", correct_img: "sillas_amarillas.png", distractor_img: "sillas_rojas.png", hint: "Las sillas son amarillas" }, 
+        { ch_sentence: "Ili ts´i´ ichuke´ jalaw", audio: "perro_caza.mp3", correct_img: "perro_caza.png", distractor_img: "perro_come.png", hint: "El perro caza tepezcuintle" }, 
+        { ch_sentence: "Li dibru ya´añ tyi iye´bal li buchli´bäl", audio: "libro_debajo.mp3", correct_img: "libro_debajo.png", distractor_img: "libro_encima.png", hint: "El Libro está debajo de la silla" }, 
+        { ch_sentence: "Jiñi juñ ya´añ tyi ity´ej tyi tyexelex", audio: "cuaderno_al_lado.mp3", correct_img: "cuaderno_al_lado.png", distractor_img: "cuaderno_lejos.png", hint: "El cuaderno está al lado de las tijeras" }, 
+        { ch_sentence: "Jiñi juñ xchächäko´", audio: "cuadernos_rojos.mp3", correct_img: "cuadernos_rojos.png", distractor_img: "cuadernos_azules.png", hint: "Los cuadernos son rojos" }, 
     ];
     let currentRound1 = 0;
 
@@ -367,14 +343,13 @@ button.ghost{
             <p style="font-size: 1.4rem; font-weight: bold; color: var(--accent);">**${currentData.ch_sentence}**</p>
         `;
         
-        // Botón de Audio
         const audioBtn = createAudioButton(currentData.ch_sentence, currentData.audio, 'cho');
         const buttonWrapper = document.createElement('div');
         buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
         buttonWrapper.appendChild(audioBtn);
         controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
 
-        const options = [currentData.correct_img, currentData.distractor_img, "distractor_3.png", "distractor_4.png"]; // 4 opciones
+        const options = [currentData.correct_img, currentData.distractor_img, "distractor_3.png", "distractor_4.png"]; 
         options.sort(() => Math.random() - 0.5); 
 
         const row = document.createElement('div');
@@ -382,10 +357,10 @@ button.ghost{
         
         options.forEach(imgName => {
             const b = document.createElement('div');
-            b.className = 'opt day-image-option'; 
+            b.className = 'opt img-option'; 
             b.dataset.img = imgName;
             
-            b.innerHTML = `<img src="../assets/img/${imgName}" alt="Opción de imagen" style="width: 150px; height: 150px;"/>`;
+            b.innerHTML = `<img src="../assets/img/${imgName}" alt="Opción de imagen"/>`;
             
             b.onclick = ()=>{
                 const allOptions = document.querySelectorAll('.opt');
@@ -402,16 +377,13 @@ button.ghost{
         setStageComplete(false);
     }
     
-    // =======================================================================
-    // 2 - ACTIVIDAD 2: IDENTIFICA OBJETOS/LUGARES POR AUDIO (LÉXICO) - 6 RONDAS
-    // =======================================================================
     const stage2Questions = [
-        { ch_word: "Yotyle aj k´ejuño´", filename: "escuela.mp3", correct: "escuela.png", word: "Escuela" }, // 
-        { ch_word: "Juñ", filename: "cuaderno.mp3", correct: "cuaderno.png", word: "Cuaderno" }, // 
-        { ch_word: "Tyexelex", filename: "tijera.mp3", correct: "tijera.png", word: "Tijera" }, // 
-        { ch_word: "Dubru", filename: "libro.mp3", correct: "libro.png", word: "Libro" }, // 
-        { ch_word: "Buchli´bäl", filename: "silla.mp3", correct: "silla.png", word: "Silla" }, // 
-        { ch_word: "Tyi´otyoty", filename: "puerta.mp3", correct: "puerta.png", word: "Puerta" }, // 
+        { ch_word: "Yotyle aj k´ejuño´", filename: "escuela.mp3", correct: "escuela.png", word: "Escuela" }, 
+        { ch_word: "Juñ", filename: "cuaderno.mp3", correct: "cuaderno.png", word: "Cuaderno" }, 
+        { ch_word: "Tyexelex", filename: "tijera.mp3", correct: "tijera.png", word: "Tijera" }, 
+        { ch_word: "Dubru", filename: "libro.mp3", correct: "libro.png", word: "Libro" }, 
+        { ch_word: "Buchli´bäl", filename: "silla.mp3", correct: "silla.png", word: "Silla" }, 
+        { ch_word: "Tyi´otyoty", filename: "puerta.mp3", correct: "puerta.png", word: "Puerta" }, 
     ];
     let currentRound2 = 0; 
 
@@ -451,7 +423,6 @@ button.ghost{
         const currentData = stage2Questions[currentRound2];
         container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Questions.length}. Escucha el audio y selecciona la figura: **${currentData.word}**.</p>`;
         
-        // Botón de Audio
         const audioBtn = createAudioButton(currentData.ch_word, currentData.filename, 'cho');
         renderControls();
         const buttonWrapper = document.createElement('div');
@@ -474,7 +445,7 @@ button.ghost{
 
         optionsToDisplay.forEach(it => {
             const b = document.createElement('div');
-            b.className = 'opt day-image-option'; 
+            b.className = 'opt img-option'; 
             b.dataset.img = it.filename;
             
             b.innerHTML = `<img src="../assets/img/${it.filename}" alt="${it.word}"/> <span style="margin-top: 5px; font-size: 0.9rem;">${it.word}</span>`;
@@ -492,162 +463,112 @@ button.ghost{
         setStageComplete(false);
     }
 
-    // =======================================================================
-    // 3 - ACTIVIDAD 3: UNIR PALABRAS (MATCHING OBJETO - COLOR) - 5 PARES
-    // =======================================================================
     const stage3Pairs = [
-        ['Xäjxäx', 'Verde'], // 
-        ['Chächäk', 'Rojo'], // 
-        ['I´ik´', 'Negro'], // 
-        ['Säsäk', 'Blanco'], // 
-        ['K´änk´än', 'Amarillo'], // 
+        { chol: 'Xäjxäx', es: 'Verde' }, 
+        { chol: 'Chächäk', es: 'Rojo' }, 
+        { chol: 'I´ik´', es: 'Negro' }, 
+        { chol: 'Säsäk', es: 'Blanco' }, 
+        { chol: 'K´änk´än', es: 'Amarillo' }, 
     ];
 
-    // Funciones de Matching (DRAG AND DROP) - Se re-incluyen aquí para la integridad del archivo
-    
-    function checkAllMatches3() {
-        const dropzones = document.querySelectorAll('.answer-dropzone');
-        let allCorrect = true;
-        const questionsList = document.getElementById('questionsList'); 
+    let selectedQuestionStage3 = null;
+    let matchedPairsCountStage3 = 0;
 
-        dropzones.forEach(dz => {
-            dz.classList.remove('ok', 'bad'); 
-            const droppedCard = dz.querySelector('.question-card');
-            const answerText = dz.dataset.answer;
-            
-            if (droppedCard) {
-                const questionText = droppedCard.dataset.question;
-                const correctPair = stage3Pairs.find(p => p[0] === questionText);
-                
-                if (correctPair && correctPair[1] === answerText) {
-                    dz.classList.add('ok');
-                    droppedCard.classList.add('matched-correct'); 
-                } else {
-                    dz.classList.add('bad');
-                    allCorrect = false;
-                    
-                    droppedCard.classList.remove('matched-correct', 'dragging');
-                    questionsList.appendChild(droppedCard); 
-                    
-                    dz.classList.remove('filled');
-                    const placeholder = dz.querySelector('.placeholder-text');
-                    if (placeholder) placeholder.style.display = 'block';
-                }
-            } else {
-                dz.classList.add('bad'); 
-                allCorrect = false;
+    function handleStage3QuestionClick(cardEl, itemData) {
+        if (cardEl.classList.contains('selected')) {
+            cardEl.classList.remove('selected');
+            selectedQuestionStage3 = null;
+            setFeedback('Selecciona una palabra en Ch\'ol y luego su traducción.', 'neutral');
+            return;
+        }
+        document.querySelectorAll('.questions-stack .matching-card.selected').forEach(el => el.classList.remove('selected'));
+        cardEl.classList.add('selected');
+        selectedQuestionStage3 = itemData;
+        setFeedback(`Seleccionaste **${itemData.chol}**. ¡Ahora elige el color en Español!`, 'neutral');
+    }
+
+    function handleStage3AnswerClick(cardEl, itemData) {
+        if (!selectedQuestionStage3) {
+            setFeedback('Selecciona primero un color en Ch\'ol de la columna izquierda.', 'bad');
+            cardEl.classList.add('shaking');
+            setTimeout(() => cardEl.classList.remove('shaking'), 500);
+            return;
+        }
+
+        const questionCardEl = document.querySelector(`.questions-stack .matching-card[data-chol="${selectedQuestionStage3.chol}"]`);
+
+        if (selectedQuestionStage3.es === itemData.es) {
+            setFeedback('¡Emparejamiento Correcto!', 'ok');
+            cardEl.classList.add('matched');
+            questionCardEl.classList.add('matched');
+            cardEl.classList.remove('shaking'); 
+            questionCardEl.classList.remove('shaking', 'selected');
+            selectedQuestionStage3 = null;
+            matchedPairsCountStage3++;
+
+            if (matchedPairsCountStage3 === stage3Pairs.length) {
+                setFeedback('¡Felicidades! Todos los colores son correctos.', 'ok');
+                setStageComplete(true);
             }
-        });
-
-        if (allCorrect) {
-            setFeedback('¡Felicidades! Todos los pares son correctos.', 'ok');
-            setStageComplete(true);
-            document.querySelectorAll('.question-card').forEach(card => {
-                card.draggable = false;
-                card.classList.add('matched-correct'); 
-            });
-            nextBtn.classList.add('active'); 
-            controlsArea.querySelector('button.ghost').style.pointerEvents = 'none';
         } else {
-            setFeedback('¡Revisa los rojos! Las tarjetas incorrectas regresaron para que intentes de nuevo.', 'bad');
+            setFeedback('Incorrecto. Intenta de nuevo.', 'bad');
+            cardEl.classList.add('shaking');
+            questionCardEl.classList.add('shaking');
+            setTimeout(() => {
+                cardEl.classList.remove('shaking');
+                questionCardEl.classList.remove('shaking');
+            }, 500);
         }
     }
 
-
     function renderStage3(container){
-        container.innerHTML = `<p class="stage0-info">Arrastra el **Color en Ch'ol** (Amarillo) a su **Traducción en Español** (Azul).</p>`;
+        renderControls();
+        matchedPairsCountStage3 = 0;
+        selectedQuestionStage3 = null;
+
+        const questions = stage3Pairs.map(d => ({ chol: d.chol, es: d.es }));
+        const answers = stage3Pairs.map(d => ({ chol: d.chol, es: d.es }));
         
-        renderControls(`<button class="ghost" onclick="checkAllMatches3()">Comprobar</button>`);
-        
+        shuffleArray(questions);
+        shuffleArray(answers);
+
+        container.innerHTML = `<p class="stage0-info">Haz clic en el **Color en Ch'ol** (Izquierda) y luego en su **Traducción en Español** (Derecha) para unirlos.</p>`;
+
         const matchingContainer = document.createElement('div');
-        matchingContainer.className = 'matching-container';
+        matchingContainer.className = 'matching-click-container';
+
+        const questionsStack = document.createElement('div');
+        questionsStack.className = 'questions-stack';
+        questionsStack.innerHTML = `<p class="stack-title">Ch'ol:</p>`;
         
-        const questionsCol = document.createElement('div');
-        questionsCol.className = 'matching-column';
-        questionsCol.innerHTML = '<h3>Ch\'ol (Arrastra)</h3><div id="questionsList" class="questions-list"></div>';
-
-        const answersCol = document.createElement('div');
-        answersCol.className = 'matching-column';
-        answersCol.innerHTML = '<h3>Español (Suelta Aquí)</h3><div id="answersList"></div>';
-        
-        const shuffledQuestions = [...stage3Pairs].sort(() => Math.random() - 0.5); 
-        const shuffledAnswers = [...stage3Pairs].map(p=>p[1]).sort(() => Math.random() - 0.5);
-
-        // Crear tarjetas de preguntas (Arrastrables - Ch'ol)
-        const questionsList = questionsCol.querySelector('#questionsList');
-        shuffledQuestions.forEach((pair, index) => {
-            const questionCard = document.createElement('div');
-            questionCard.className = 'question-card';
-            questionCard.id = `q-card-${index}`;
-            questionCard.draggable = true;
-            questionCard.dataset.question = pair[0];
-            questionCard.textContent = pair[0];
-
-            questionCard.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', e.target.id);
-                e.target.classList.add('dragging');
-            });
-            questionCard.addEventListener('dragend', (e) => {
-                e.target.classList.remove('dragging');
-            });
-            questionsList.appendChild(questionCard);
+        questions.forEach(q => {
+            const cardEl = document.createElement('div');
+            cardEl.className = 'matching-card';
+            cardEl.textContent = q.chol;
+            cardEl.dataset.chol = q.chol;
+            cardEl.onclick = () => handleStage3QuestionClick(cardEl, q);
+            questionsStack.appendChild(cardEl);
         });
 
-        // Crear zonas de respuesta (Dropzones - Español)
-        const answersList = answersCol.querySelector('#answersList');
-        shuffledAnswers.forEach((answer, index) => {
-            const dropzone = document.createElement('div');
-            dropzone.className = 'answer-dropzone';
-            dropzone.id = `ans-dropzone-${index}`;
-            dropzone.dataset.answer = answer;
+        const answersStack = document.createElement('div');
+        answersStack.className = 'answers-stack';
+        answersStack.innerHTML = `<p class="stack-title">Español:</p>`;
 
-            const placeholder = document.createElement('span');
-            placeholder.className = 'placeholder-text';
-            placeholder.textContent = answer;
-            dropzone.appendChild(placeholder);
-
-            dropzone.addEventListener('dragover', (e) => {
-                e.preventDefault(); 
-                dropzone.classList.add('hovered');
-            });
-            dropzone.addEventListener('dragleave', () => {
-                dropzone.classList.remove('hovered');
-            });
-            dropzone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropzone.classList.remove('hovered');
-
-                const cardId = e.dataTransfer.getData('text/plain');
-                const draggedCard = document.getElementById(cardId);
-                
-                // Devolver tarjeta previa
-                if (dropzone.children.length > 0 && dropzone.children[0].classList.contains('question-card')) {
-                    questionsList.appendChild(dropzone.children[0]);
-                    dropzone.classList.remove('filled');
-                    dropzone.querySelector('.placeholder-text').style.display = 'block'; 
-                }
-                
-                // Mover la nueva tarjeta
-                dropzone.appendChild(draggedCard);
-                dropzone.classList.add('filled');
-                dropzone.querySelector('.placeholder-text').style.display = 'none'; 
-
-                setStageComplete(false); 
-                dropzone.classList.remove('ok', 'bad');
-            });
-            answersList.appendChild(dropzone);
+        answers.forEach(a => {
+            const cardEl = document.createElement('div');
+            cardEl.className = 'matching-card';
+            cardEl.textContent = a.es;
+            cardEl.onclick = () => handleStage3AnswerClick(cardEl, a);
+            answersStack.appendChild(cardEl);
         });
 
-        matchingContainer.appendChild(questionsCol);
-        matchingContainer.appendChild(answersCol);
+        matchingContainer.appendChild(questionsStack);
+        matchingContainer.appendChild(answersStack);
         container.appendChild(matchingContainer);
+        setFeedback('Selecciona una palabra y su traducción.', 'neutral');
         setStageComplete(false);
     }
-
     
-    // =======================================================================
-    // 4 - FINAL DE TEMA (UNIFICADO)
-    // =======================================================================
     function renderStage4(container) {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
@@ -661,7 +582,6 @@ button.ghost{
     }
 
 
-    // --- Inicialización ---
     document.addEventListener('DOMContentLoaded', () => {
         render();
     });
