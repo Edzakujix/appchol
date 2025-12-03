@@ -303,12 +303,11 @@ button.primary.active:active {
     }
 
     const stage1Data = [
-        { ch_sentence: "ka´bä añ buchli´bäl", audio: "muchas_sillas.mp3", correct_img: "sillas_muchas.png", distractor_img: "sillas_pocas.png", hint: "Hay muchas sillas" }, 
-        { ch_sentence: "K´änk´äñ li buchli´bäl", audio: "sillas_amarillas.mp3", correct_img: "sillas_amarillas.png", distractor_img: "sillas_rojas.png", hint: "Las sillas son amarillas" }, 
-        { ch_sentence: "Ili ts´i´ ichuke´ jalaw", audio: "perro_caza.mp3", correct_img: "perro_caza.png", distractor_img: "perro_come.png", hint: "El perro caza tepezcuintle" }, 
-        { ch_sentence: "Li dibru ya´añ tyi iye´bal li buchli´bäl", audio: "libro_debajo.mp3", correct_img: "libro_debajo.png", distractor_img: "libro_encima.png", hint: "El Libro está debajo de la silla" }, 
-        { ch_sentence: "Jiñi juñ ya´añ tyi ity´ej tyi tyexelex", audio: "cuaderno_al_lado.mp3", correct_img: "cuaderno_al_lado.png", distractor_img: "cuaderno_lejos.png", hint: "El cuaderno está al lado de las tijeras" }, 
-        { ch_sentence: "Jiñi juñ xchächäko´", audio: "cuadernos_rojos.mp3", correct_img: "cuadernos_rojos.png", distractor_img: "cuadernos_azules.png", hint: "Los cuadernos son rojos" }, 
+        { ch_sentence: "ka´bä añ buchli´bäl", audio: "muchas_sillas.mp3", correct_img: "sillas.png", distractor_img: "silla.png", hint: "Hay muchas sillas" }, 
+        { ch_sentence: "Säsäk li buchli´bäl", audio: "silla_negra.mp3", correct_img: "silla_negra.png", distractor_img: "cr.png", hint: "La silla es negra" }, 
+        { ch_sentence: "Li dibru ya´añ tyi iye´bal li buchli´bäl", audio: "libro_debajo.mp3", correct_img: "libro_silla.png", distractor_img: "tarde.png", hint: "El Libro está debajo de la silla" }, 
+        { ch_sentence: "Jiñi juñ ya´añ tyi ity´ej tyi tyexelex", audio: "cuaderno_al_lado.mp3", correct_img: "ct.png", distractor_img: "noche.png", hint: "El cuaderno está al lado de las tijeras" }, 
+        { ch_sentence: "Jiñi juñ xchächäko´", audio: "cuadernos_rojos.mp3", correct_img: "cr.png", distractor_img: "ct.png", hint: "Los cuadernos son rojos" }, 
     ];
     let currentRound1 = 0;
 
@@ -318,7 +317,7 @@ button.primary.active:active {
             currentRound1++;
             setTimeout(() => { renderStage1(document.getElementById('stageArea')); }, 1500);
         } else {
-            setFeedback(`Incorrecto. ¡La oración significa: **${currentData.hint}**!`, 'bad');
+            setFeedback(`Incorrecto. ¡La oración significa: ${currentData.hint}!`, 'bad');
             allOptionsElements.forEach(el => {
                 if (el.dataset.img === currentData.correct_img) { el.classList.add('ok'); }
             });
@@ -339,8 +338,8 @@ button.primary.active:active {
         renderControls();
         
         container.innerHTML = `
-            <p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha la oración y selecciona la **figura correcta**.</p>
-            <p style="font-size: 1.4rem; font-weight: bold; color: var(--accent);">**${currentData.ch_sentence}**</p>
+            <p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha la oración y selecciona la figura correcta.</p>
+            <p style="font-size: 1.4rem; font-weight: bold; color: var(--accent);">${currentData.ch_sentence}</p>
         `;
         
         const audioBtn = createAudioButton(currentData.ch_sentence, currentData.audio, 'cho');
@@ -349,7 +348,7 @@ button.primary.active:active {
         buttonWrapper.appendChild(audioBtn);
         controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); 
 
-        const options = [currentData.correct_img, currentData.distractor_img, "distractor_3.png", "distractor_4.png"]; 
+        const options = [currentData.correct_img, currentData.distractor_img, "perro.png", "patio.png"]; 
         options.sort(() => Math.random() - 0.5); 
 
         const row = document.createElement('div');
@@ -394,12 +393,12 @@ button.primary.active:active {
         { filename: "libro.png", word: "Libro" },
         { filename: "silla.png", word: "Silla" }, 
         { filename: "puerta.png", word: "Puerta" },
-        { filename: "distractor_5.png", word: "distractor" } 
+        { filename: "casa.png", word: "casa" } 
     ];
 
     function checkAnswer2(selectedImage, currentData, allOptionsElements) {
         if (selectedImage === currentData.correct) {
-            setFeedback(`¡Correcto! Es **${currentData.word}**.`, 'ok');
+            setFeedback(`¡Correcto! Es ${currentData.word}.`, 'ok');
             currentRound2++;
             setTimeout(() => { renderStage2(document.getElementById('stageArea')); }, 1200);
         } else {
@@ -421,7 +420,7 @@ button.primary.active:active {
         }
 
         const currentData = stage2Questions[currentRound2];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Questions.length}. Escucha el audio y selecciona la figura: **${currentData.word}**.</p>`;
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Questions.length}. Escucha el audio y selecciona la figura: ${currentData.word}.</p>`;
         
         const audioBtn = createAudioButton(currentData.ch_word, currentData.filename, 'cho');
         renderControls();
@@ -484,7 +483,7 @@ button.primary.active:active {
         document.querySelectorAll('.questions-stack .matching-card.selected').forEach(el => el.classList.remove('selected'));
         cardEl.classList.add('selected');
         selectedQuestionStage3 = itemData;
-        setFeedback(`Seleccionaste **${itemData.chol}**. ¡Ahora elige el color en Español!`, 'neutral');
+        setFeedback(`Seleccionaste ${itemData.chol}. ¡Ahora elige el color en Español!`, 'neutral');
     }
 
     function handleStage3AnswerClick(cardEl, itemData) {
@@ -532,7 +531,7 @@ button.primary.active:active {
         shuffleArray(questions);
         shuffleArray(answers);
 
-        container.innerHTML = `<p class="stage0-info">Haz clic en el **Color en Ch'ol** (Izquierda) y luego en su **Traducción en Español** (Derecha) para unirlos.</p>`;
+        container.innerHTML = `<p class="stage0-info">Haz clic en el Color en Ch'ol (Izquierda) y luego en su Traducción en Español (Derecha) para unirlos.</p>`;
 
         const matchingContainer = document.createElement('div');
         matchingContainer.className = 'matching-click-container';
@@ -573,8 +572,8 @@ button.primary.active:active {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 2 Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Puntuación simulada: **${userScore}/${TOTAL_ACTIVITY_POINTS}**</p>
-                <p>Presiona **Siguiente** para volver a la pantalla principal.</p>
+                <p style="font-size: 1.2rem;">Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
+                <p>Presiona Siguiente para volver a la pantalla principal.</p>
             </div>
         `;
         setStageComplete(true);
