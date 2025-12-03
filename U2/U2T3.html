@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Ch'ol App - Tema 3: Naturaleza</title>
+    <title>Tema 3: Naturaleza</title>
 
     <link rel="stylesheet" href="../assets/css/styles.css">
 
@@ -132,6 +132,19 @@ button.primary.active:active {
     .questions-stack, .answers-stack {
         flex-basis: 48%;
     }
+}
+.opt.img-option {
+    padding: 10px; 
+    width: 100%;      
+    max-width: 350px; 
+}
+
+.opt.img-option img {
+    width: 100%;    
+    height: auto;    
+    border-radius: 12px;
+    display: block;
+    object-fit: cover; 
 }
 </style>
 
@@ -445,9 +458,9 @@ button.primary.active:active {
     }
 
     const stage3Questions = [
-        { audio: "Yum wits", filename: "yumwits.mp3", correct: "dueño_cerro.png", word: "Dueño del cerro" },
-        { audio: "Yum ch´eñ", filename: "yumcheñ.mp3", correct: "dueño_cueva.png", word: "Dueño de la cueva" }, 
-        { audio: "Yum ja´", filename: "yumja.mp3", correct: "dueño_rio.png", word: "Dueño del río" },
+        { audio: "Yum wits", filename: "yumwits.mp3", correct: "gcerro.png", word: "Dueño del cerro" },
+        { audio: "Yum ch´eñ", filename: "yumcheñ.mp3", correct: "gcueva.png", word: "Dueño de la cueva" }, 
+        { audio: "Yum ja´", filename: "yumja.mp3", correct: "grio.png", word: "Dueño del río" },
     ];
     let currentRound3 = 0; 
 
@@ -471,7 +484,7 @@ button.primary.active:active {
         }
 
         const currentData = stage3Questions[currentRound3];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound3 + 1} de 3. Escucha quién es el **Guardián en Ch'ol** y selecciona su imagen.</p>`;
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound3 + 1} de 3. Escucha quién es el Guardián en Ch'ol y selecciona su imagen.</p>`;
         
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho');
         renderControls();
@@ -486,8 +499,8 @@ button.primary.active:active {
         
         const allOptions = [
              { filename: currentData.correct, word: currentData.word },
-             { filename: 'dueño_distractor_1.png', word: 'Otro Guardián' },
-             { filename: 'dueño_distractor_2.png', word: 'Otro Guardián' }
+             { filename: 'ganimales.png', word: 'Otro Guardián' },
+             { filename: 'gcosecha.png', word: 'Otro Guardián' }
         ];
 
         const row = document.createElement('div');
@@ -517,8 +530,8 @@ button.primary.active:active {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 3 Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Puntuación simulada: **${userScore}/${TOTAL_ACTIVITY_POINTS}**</p>
-                <p>Presiona **Siguiente** para volver al Módulo 2: Donde Vivo.</p>
+                <p style="font-size: 1.2rem;">Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
+                <p>Presiona Siguiente para volver al Módulo 2: Donde Vivo.</p>
             </div>
         `;
         setStageComplete(true);

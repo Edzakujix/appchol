@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Ch'ol App - Tema 2: Presentación Personal</title>
+    <title>Tema 2: Presentación Personal</title>
 
         <link rel="stylesheet" href="../assets/css/styles.css">
 
@@ -237,7 +237,7 @@
                 <iframe src="https://www.youtube.com/embed/z4fR0S2T-R0?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
             <p style="text-align:center; max-width: 600px; margin-top: 20px;">
-                ¡Mira el video para aprender las frases de presentación! Presiona **Siguiente** para la demostración.
+                ¡Mira el video para aprender las frases de presentación! Presiona "Siguiente" para la demostración.
             </p>
         `;
         container.innerHTML = videoHtml;
@@ -266,7 +266,7 @@
 
             b.onclick = () => {
                 playAudio(data.filename, data.chool, 'cho');
-                setFeedback(`Ch'ol: **${data.chool}** (Español: ${data.translation})`, 'neutral');
+                setFeedback(`Ch'ol: "${data.chool}" (Español: ${data.translation})`, 'neutral');
             };
             
             b.appendChild(img);
@@ -279,12 +279,12 @@
     }
 
     const stage2Data = [
-        { audio: "Jiñi ili kña´", filename: "ella_es_mi_mama.mp3", correct: "mama.png", options: ["mama.png", "abuelo.png", "Abuela.png"], text: "Mi mamá" },
-        { audio: "Jiñi ili ktyaty", filename: "Mi papa.mp3", correct: "papa.png", options: ["papa.png", "hermano.png", "Tia.png"], text: "Mi papá" },
-        { audio: "Jiñi ili kts´i´ chutyjach", filename: "Mi perro es pequeno.mp3", correct: "perro_pequeño.png", options: ["Tio.png", "Niño.png", "hermano.png"], text: "Mi perro es pequeño" },
-        { audio: "Jiñi kotyoty xk´änk´äñ", filename: "Mi casa es amarilla.mp3", correct: "casa_amarilla.png", options: ["escenario_dia.png", "escenario_tarde.png", "escenario_noche.png"], text: "Mi casa es amarilla" },
-        { audio: "Jiñi ili kyum", filename: "El es mi abuelo.mp3", correct: "abuelo.png", options: ["abuelo.png", "tio.png", "hermano.png"], text: "Mi abuelo" },
-        { audio: "Joñoñ chuty wiñikoñ", filename: "Yo soy un niño.mp3", correct: "nino_pequeño.png", options: ["Niño.png", "Papa.png", "niña.png"], text: "Yo soy un niño" },
+        { audio: "Jiñi ili kmam", filename: "ella_es_mi_mama.mp3", correct: "mama.png", options: ["mama.png", "abuelo.png", "abuela.png"], text: "Mi mamá" },
+        { audio: "Jiñi ili ktyaty", filename: "el_es_mi_papa.mp3", correct: "papa.png", options: ["papa.png", "hermano.png", "tia.png"], text: "Mi papá" },
+        { audio: "Jiñi kts´i´ chutyjach", filename: "mi_perro_es_pequeno.mp3", correct: "chihuahua.png", options: ["chihuahua.png", "vaca.png", "gallo.png"], text: "Mi perro es pequeño" },
+        { audio: "Jiñi kotyoty xk´änk´äñ", filename: "mi_casa_es_amarilla.mp3", correct: "casa_amarilla.png", options: ["casa_amarilla.png", "tarde.png", "noche.png"], text: "Mi casa es amarilla" },
+        { audio: "Jiñi ili kyum", filename: "el_es_mi_abuelo.mp3", correct: "abuelo.png", options: ["abuelo.png", "tio.png", "hermano.png"], text: "Mi abuelo" },
+        { audio: "Joñoñ chuty wiñikoñ", filename: "yo_soy_un_niño.mp3", correct: "niño.png", options: ["niño.png", "papa.png", "niña.png"], text: "Yo soy un niño" },
     ];
     let currentRound2 = 0; 
 
@@ -377,10 +377,10 @@
     ];
 
     const stage3Data = [
-        { count: 3, wordChool: "Uxp´ej", filename: "conteo_3.mp3", image: "imagen_3_elementos.png" },
-        { count: 5, wordChool: "Jop´ej", filename: "conteo_5.mp3", image: "imagen_5_elementos.png" },
-        { count: 7, wordChool: "Wukp´ej", filename: "conteo_7.mp3", image: "imagen_7_elementos.png" },
-        { count: 10, wordChool: "Lujump´ej", filename: "conteo_10.mp3", image: "imagen_10_elementos.png" },
+        { count: 3, wordChool: "Uxp´ej", filename: "conteo_3.mp3", image: "tres.png" },
+        { count: 5, wordChool: "Jop´ej", filename: "conteo_5.mp3", image: "cinco.png" },
+        { count: 7, wordChool: "Wukp´ej", filename: "conteo_7.mp3", image: "siete.png" },
+        { count: 10, wordChool: "Lujump´ej", filename: "conteo_10.mp3", image: "diez.png" },
     ];
     let currentRound3 = 0;
 
@@ -434,7 +434,7 @@
         const options = getAudioOptions(currentData.wordChool);
 
         container.innerHTML = `
-            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Mira la imagen y selecciona el número en **Ch'ol** que corresponde al conteo.</p>
+            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Mira la imagen y selecciona el número en Ch'ol que corresponde al conteo.</p>
             <img src="../assets/img/${currentData.image}" alt="Elementos a contar" style="width: 200px; height: 200px; border-radius: 15px; margin-bottom: 20px; border: 3px solid var(--accent);"/>
         `;
         
@@ -531,7 +531,7 @@
         }
 
         const currentData = stage4Data[currentRound4];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound4 + 1} de ${stage4Data.length}: Selecciona la traducción correcta a **Ch'ol** para la siguiente frase en Español:</p>`;
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound4 + 1} de ${stage4Data.length}: Selecciona la traducción correcta a Ch'ol para la siguiente frase en Español:</p>`;
         
         const translationContainer = document.createElement('div');
         translationContainer.className = 'translation-container';
@@ -571,9 +571,9 @@
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 2 Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Puntuación simulada: **${userScore}/${TOTAL_ACTIVITY_POINTS}**</p>
+                <p style="font-size: 1.2rem;">Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
                 <p>Has terminado todas las actividades de Presentación Personal.</p>
-                <p>Presiona **Siguiente** para volver a la pantalla principal.</p>
+                <p>Presiona Siguiente para volver a la pantalla principal.</p>
             </div>
         `;
         setStageComplete(true);

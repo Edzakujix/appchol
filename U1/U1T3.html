@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Ch'ol App - Tema 3: Familia</title>
+    <title>Tema 3: Familia</title>
         <link rel="stylesheet" href="../assets/css/styles.css">
 
     <style>
@@ -274,7 +274,7 @@
                 <iframe src="https://www.youtube.com/embed/g3d1K4z5q6c?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
             <p style="text-align:center; max-width: 600px; margin-top: 20px;">
-                ¡Mira el video para aprender sobre la familia en Ch'ol! Presiona **Siguiente** para empezar.
+                ¡Mira el video para aprender sobre la familia en Ch'ol! Presiona "Siguiente" para empezar.
             </p>
         `;
         container.innerHTML = videoHtml;
@@ -283,11 +283,11 @@
     }
 
     const stage1Data = [
-        { audio: "Nana' ", filename: "nana.mp3", correct: "mama.png", options: ["mama.png", "hermano.png", "abuelo.png"] },
-        { audio: "Tat", filename: "tat.mp3", correct: "papa.png", options: ["papa.png", "tia.png", "primo.png"] },
-        { audio: "Wäy", filename: "way.mp3", correct: "hermano.png", options: ["papa.png", "hermano.png", "mama.png"] },
-        { audio: "Ch'uch'", filename: "chuch.mp3", correct: "abuela.png", options: ["abuela.png", "abuelo.png", "tio.png"] },
-        { audio: "Mam", filename: "mam.mp3", correct: "abuelo.png", options: ["hermano.png", "abuelo.png", "tia.png"] },
+        { audio: "Ña' ", filename: "ña.mp3", correct: "mama.png", options: ["mama.png", "hermano.png", "abuelo.png"] },
+        { audio: "Tyaty", filename: "tyaty.mp3", correct: "papa.png", options: ["papa.png", "tia.png", "tio.png"] },
+        { audio: "K´ermañu", filename: "K´ermañu.mp3", correct: "hermano.png", options: ["papa.png", "hermano.png", "mama.png"] },
+        { audio: "Ko'", filename: "ko.mp3", correct: "abuela.png", options: ["abuela.png", "abuelo.png", "tio.png"] },
+        { audio: "Yum", filename: "yum.mp3", correct: "abuelo.png", options: ["hermano.png", "abuelo.png", "tia.png"] },
     ];
     let currentRound1 = 0; 
 
@@ -367,11 +367,11 @@
     }
 
     const stage2Data = [
-        { phrase: "Mi papá es alto.", correct: "papa.png", options: ["papa.png", "mama.png", "nino.png"] },
-        { phrase: "Tengo un hermano mayor.", correct: "hermano_mayor.png", options: ["hermano_mayor.png", "hermana_menor.png", "primo_amigo.png"] },
-        { phrase: "Mi abuela cocina.", correct: "abuela_cocinando.png", options: ["abuela_cocinando.png", "abuelo_leyendo.png", "nino_jugando.png"] },
-        { phrase: "Mi familia vive aquí.", correct: "familia_casa.png", options: ["familia_casa.png", "amigos_parque.png", "animales_granja.png"] },
-        { phrase: "Mi mamá me quiere.", correct: "mama_abrazando.png", options: ["mama_abrazando.png", "papa_leyendo.png", "abuela_dormida.png"] },
+        { phrase: "Mi papá es alto.<p> Jiñi chañ li tyaty", correct: "papa.png", options: ["papa.png", "mama.png", "niño.png"] },
+        { phrase: "El es mi hermano.<p>Jiñi ili kermañu", correct: "hermano_mayor.png", options: ["hermano_mayor.png", "niña.png", "tio.png"] },
+        { phrase: "Ella es mi abuela.<p>Jiñi ili jko´", correct: "abuela_cocinando.png", options: ["abuela_cocinando.png", "abuelo.png", "niño.png"] },
+        { phrase: "El es mi tio.<p>Jiñi ili kichañ", correct: "casa_amarilla.png", options: ["casa_amarilla.png", "abuela.png", "tia.png"] },
+        { phrase: "Ella es mi mamá.<p>Jiñi ili kmam ", correct: "mama_abrazando.png", options: ["mama_abrazando.png", "papa.png", "niña.png"] },
     ];
     let currentRound2 = 0;
 
@@ -445,11 +445,11 @@
     }
 
     const stage3Data = [
-        { word: "ABUELO", image: "abuelo.png", letters: "KOCLAPBZUNE" },
-        { word: "MAMA", image: "mama.png", letters: "OMSMSAEA" }, 
-        { word: "HIJO", image: "nino.png", letters: "HIFJGOE" }, 
-        { word: "PRIMA", image: "nina.png", letters: "PRXIMAY" }, 
-        { word: "TIA", image: "tia.png", letters: "TPITAZO" },
+        { word: "YUM", image: "abuelo.png", letters: "KOYLAPMZUNE" },
+        { word: "KMAM", image: "mama.png", letters: "KMSMSAEA" }, 
+        { word: "ALO", image: "niño.png", letters: "LIFAGOE" }, 
+        { word: "IXIK", image: "niña.png", letters: "IRXIMAK" }, 
+        { word: "KICHAÑ", image: "tiO.png", letters: "KIPCHRSAÑT" },
     ];
     let currentRound3 = 0;
     let currentAttempt3 = ""; 
@@ -510,7 +510,7 @@
         currentAttempt3 = ""; 
         
         container.innerHTML = `
-            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Forma la palabra **"${currentData.word}"**.</p>
+            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Forma la palabra "${currentData.word}".</p>
             <img src="../assets/img/${currentData.image}" alt="Palabra a formar" style="width: 150px; height: 150px; border-radius: 10px; margin-bottom: 20px; border: 3px solid var(--accent);"/>
             
             <div style="text-align: center; width: 100%;">
@@ -541,11 +541,11 @@
     }
 
 const stage4Data = [
-    { q: "¿Quién es tu mamá?", a: "Nana’" },
-    { q: "¿Quién es tu papá?", a: "Tat" },
-    { q: "¿Quién es tu hermano?", a: "Wäy" },
-    { q: "¿Quién es tu abuela?", a: "Ch'uch'" },
-    { q: "¿Quién es tu abuelo?", a: "Mam" }
+    { q: "¿Quién es tu mamá?", a: "Ña'’" },
+    { q: "¿Quién es tu papá?", a: "Tyaty" },
+    { q: "¿Quién es tu hermano?", a: "K´ermañu" },
+    { q: "¿Quién es tu abuela?", a: "Ko'" },
+    { q: "¿Quién es tu abuelo?", a: "Yum" }
 ];
 
 let selectedQuestion = null;
@@ -650,7 +650,7 @@ function handleMatchClick(card, container) {
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 3 Completado! 🎉</h2>
                 <p style="font-size: 1.2rem;">¡Has terminado todas las actividades de Familia! ¡Excelente trabajo!</p>
-                <p>Presiona **Siguiente** para volver a la pantalla principal.</p>
+                <p>Presiona "Siguiente" para volver a la pantalla principal.</p>
             </div>
         `;
         setStageComplete(true);

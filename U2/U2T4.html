@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Ch'ol App - Tema 4: Animales</title>
+    <title>Tema 4: Animales</title>
 
     <link rel="stylesheet" href="../assets/css/styles.css">
 
@@ -278,9 +278,9 @@ button.primary.active:active {
     }
 
     const stage1Data = [
-        { audio_file: "sonido_perro.mp3", correct: "tsi.png", options: ["tsi.png", "wakax.png", "pech.png"], word: "Perro (Ts´i´)" },
-        { audio_file: "sonido_vaca.mp3", correct: "wakax.png", options: ["wakax.png", "kawayu.png", "chay.png"], word: "Vaca (Wakax)" },
-        { audio_file: "sonido_gallo.mp3", correct: "tyaty_muty.png", options: ["tyaty_muty.png", "ña_muty.png", "ajtso.png"], word: "Gallo (Tyaty muty)" },
+        { audio_file: "sonido_perro.mp3", correct: "perro.png", options: ["perro.png", "vaca.png", "pato.png"], word: "Perro (Ts´i´)" },
+        { audio_file: "sonido_vaca.mp3", correct: "vaca.png", options: ["vaca.png", "caballo.png", "pez.png"], word: "Vaca (Wakax)" },
+        { audio_file: "sonido_gallo.mp3", correct: "gallo.png", options: ["gallo.png", "gallina.png", "cerdo.png"], word: "Gallo (Tyaty muty)" },
     ];
     let currentRound1 = 0; 
 
@@ -423,7 +423,7 @@ button.primary.active:active {
         shuffleArray(questions);
         shuffleArray(answers);
 
-        container.innerHTML = `<p class="stage0-info">Haz clic en el **Animal en Ch'ol** (Izquierda) y luego en su **Significado** (Derecha) para unirlos.</p>`;
+        container.innerHTML = `<p class="stage0-info">Haz clic en el Animal en Ch'ol (Izquierda) y luego en su Significado (Derecha) para unirlos.</p>`;
 
         const matchingContainer = document.createElement('div');
         matchingContainer.className = 'matching-click-container';
@@ -524,8 +524,8 @@ button.primary.active:active {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Módulo 2: Donde Vivo, COMPLETADO! 🎉</h2>
-                <p style="font-size: 1.2rem;">¡Has terminado la unidad! Presiona **Siguiente** para volver a la pantalla de módulos.</p>
-                <p>Puntuación simulada: **${userScore}/${TOTAL_ACTIVITY_POINTS}**</p>
+                <p style="font-size: 1.2rem;">¡Has terminado la unidad! Presiona Siguiente para volver a la pantalla de módulos.</p>
+                <p>Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
             </div>
         `;
         setStageComplete(true);

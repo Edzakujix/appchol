@@ -86,22 +86,31 @@
             margin-top: 20px;
         }
 
+.center-content {
+    /* 1. POSICIONAMIENTO (El truco del centrado) */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Esto corrige el desvío y lo centra exacto */
+    
+    /* 2. ESTILO VISUAL (Círculo) */
+    width: 240px; 
+    height: 240px;
+    border-radius: 50%;       /* Hace que sea un círculo perfecto */
+    border: 6px solid white;  /* Borde blanco */
+    box-shadow: 0 0 20px rgba(173, 228, 255, 0.6); /* Un brillo suave alrededor */
+    overflow: hidden;         /* Recorta la foto para que no se salga del círculo */
+    background-color: #fff;   
+    
+    /* 3. CAPAS (Importante) */
+    z-index: 0; /* Envía la imagen detrás de los botones */
+}
 
-        .center-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 240px;
-            height: 240px;
-            transform: translate(-50%, -50%);
-        }
-
-        .center-content img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
+.center-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Asegura que la foto llene todo el círculo sin deformarse */
+}
 
         .nav-btn {
             position: absolute;
@@ -141,8 +150,9 @@
     }
 
     .center-content {
-        width: 150px;
-        height: 150px;
+        width: 190px;
+        height: 200px;
+        border-width: 4px;
     }
 
     .nav-btn {
@@ -159,7 +169,7 @@
 
     #btn2 {
         top: calc(50% - 40px); 
-        left: calc(50% - 200px); 
+        left: calc(50% - 210px); 
     }
 
     #btn3 { 
@@ -215,7 +225,7 @@
     <div class="button-area">
 
         <div class="center-content">
-            <img src="assets/img/mama.png" alt="Imagen representativa">
+            <img src="assets/img/grupo.jpeg" alt="Imagen representativa">
         </div>
 
         <a href="U1/U1FAM.html" class="nav-btn" id="btn1">1 - FAMILIA</a>

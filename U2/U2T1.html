@@ -333,7 +333,7 @@ button.primary.active:active {
 
         cardEl.classList.add('selected');
         selectedQuestionStage1 = itemData;
-        setFeedback(`Seleccionaste **${itemData.chol}**. ¡Ahora elige su traducción!`, 'neutral');
+        setFeedback(`Seleccionaste "${itemData.chol}". ¡Ahora elige su traducción!`, 'neutral');
     }
 
     function handleStage1AnswerClick(cardEl, itemData) {
@@ -387,7 +387,7 @@ button.primary.active:active {
         shuffleArray(questions);
         shuffleArray(answers);
 
-        container.innerHTML = `<p class="stage0-info">Haz clic en la palabra en **Ch'ol** (Izquierda) y luego en su **Significado** (Derecha) para unirlas.</p>`;
+        container.innerHTML = `<p class="stage0-info">Haz clic en la palabra en Ch'ol (Izquierda) y luego en su Significado (Derecha) para unirlas.</p>`;
 
         const matchingContainer = document.createElement('div');
         matchingContainer.className = 'matching-click-container';
@@ -428,9 +428,9 @@ button.primary.active:active {
     }
 
     const stage2Data = [
-        { sentence: "Me ducho en el ____.", correct: "Wätyi´bäl", options: ["Wätyi´bäl", "Mal", "Paty otyoty"] },
-        { sentence: "Descanso en el ____.", correct: "Mal", options: ["Otyoty", "Mal", "Wätyi´bäl"] },
-        { sentence: "Cocino en el ____.", correct: "Cocina", options: ["Cocina", "Paty otyoty", "Mal"] },
+        { sentence: "Yo duermo en el ____.", correct: "Wätyi´bäl", options: ["Wätyi´bäl", "Mal", "Paty otyoty"] },
+        { sentence: "Descanso en la ____.", correct: "Mal", options: ["Otyoty", "Mal", "Wätyi´bäl"] },
+        { sentence: "Juego en el ____.", correct: "Paty otyoty", options: ["Cocina", "Paty otyoty", "Mal"] },
     ];
     let currentRound2 = 0;
 
@@ -454,7 +454,7 @@ button.primary.active:active {
         }
 
         const currentData = stage2Data[currentRound2];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Data.length}: Selecciona el **lugar** que completa la frase:</p>`;
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Data.length}: Selecciona el lugar que completa la frase:</p>`;
         
         const sentenceArea = document.createElement('div');
         sentenceArea.className = 'sentence-input-area';
@@ -487,9 +487,9 @@ button.primary.active:active {
     }
 
     const stage3Questions = [
-        { audio: "Otyoty", filename: "otyoty.mp3", correct: "casa_vista.png", word: "Casa" },
-        { audio: "Mal", filename: "mal.mp3", correct: "sala_lugar.png", word: "Sala" }, 
-        { audio: "Paty otyoty", filename: "paty_otyoty.mp3", correct: "patio_lugar.png", word: "Patio" },
+        { audio: "Otyoty", filename: "otyoty.mp3", correct: "casa.png", word: "Casa" },
+        { audio: "Mal", filename: "mal.mp3", correct: "sala.png", word: "Sala" }, 
+        { audio: "Paty otyoty", filename: "paty_otyoty.mp3", correct: "patio.png", word: "Patio" },
     ];
     let currentRound3 = 0; 
 
@@ -513,7 +513,7 @@ button.primary.active:active {
         }
 
         const currentData = stage3Questions[currentRound3];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound3 + 1} de 3. Escucha el **lugar en Ch'ol** y selecciona la imagen correcta.</p>`;
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound3 + 1} de 3. Escucha el lugar en Ch'ol y selecciona la imagen correcta.</p>`;
         
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho');
         
@@ -530,8 +530,8 @@ button.primary.active:active {
         
         const allOptions = [
              { filename: currentData.correct, word: currentData.word },
-             { filename: 'random_distractor_1.png', word: 'Distractor A' },
-             { filename: 'random_distractor_2.png', word: 'Distractor B' }
+             { filename: 'plaza.png', word: 'Distractor A' },
+             { filename: 'rio.png', word: 'Distractor B' }
         ];
 
         const row = document.createElement('div');
@@ -561,8 +561,8 @@ button.primary.active:active {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 1 Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Puntuación simulada: **${userScore}/${TOTAL_ACTIVITY_POINTS}**</p>
-                <p>Presiona **Siguiente** para volver al Módulo 2: Donde Vivo.</p>
+                <p style="font-size: 1.2rem;">Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
+                <p>Presiona Siguiente para volver al Módulo 2: Donde Vivo.</p>
             </div>
         `;
         setStageComplete(true);

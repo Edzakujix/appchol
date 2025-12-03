@@ -240,7 +240,7 @@ button.primary.active:active {
             return;
         }
         const currentData = stage1Data[currentRound1];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha el adjetivo y selecciona su **traducción**.</p>`;
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha el adjetivo y selecciona su traducción.</p>`;
 
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho'); 
         
@@ -277,9 +277,9 @@ button.primary.active:active {
     }
 
     const stage2Questions = [
-        { audio: "Chaparro", filename: "chaparro.mp3", correct: "chaparro.png", word: "Chaparro" },
-        { audio: "Kolem", filename: "kolem.mp3", correct: "gigante.png", word: "Grande" }, 
-        { audio: "Tyäkiñ", filename: "flaco.mp3", correct: "flaco.png", word: "Flaco" },
+        { audio: "Chaparro", filename: "chaparro.mp3", correct: "niño.png", word: "Chaparro" },
+        { audio: "Kolem", filename: "kolem.mp3", correct: "hermano_mayor.png", word: "Grande" }, 
+        { audio: "Tyäkiñ", filename: "flaco.mp3", correct: "hermano.png", word: "Flaco" },
     ];
     let currentRound2 = 0; 
 
@@ -320,8 +320,8 @@ button.primary.active:active {
         
         const allOptions = [
              { filename: currentData.correct, word: currentData.word },
-             { filename: 'contrario_1.png', word: 'Gordo/Bajo' },
-             { filename: 'contrario_2.png', word: 'Otro Objeto' }
+             { filename: 'niña.png', word: 'otro' },
+             { filename: 'mama.png', word: 'Otro' }
         ];
 
         const row = document.createElement('div');
@@ -348,9 +348,9 @@ button.primary.active:active {
     }
 
     const stage3Data = [
-        { sentence: "Mi patio es ____.", correct: "Kolem", options: ["Kolem", "Chañ", "Pek´"], hint: "Grande o Pequeño" },
-        { sentence: "El camino es ____.", correct: "Tyam", options: ["Tyam", "Kom", "Chañ"], hint: "Largo o Corto" },
-        { sentence: "El perro es ____.", correct: "Jujp´eñ", options: ["Tyäkiñ", "Jujp´eñ", "Chuty"], hint: "Flaco o Gordo" },
+        { sentence: "Mi patio es ____.", correct: "Kolem", options: ["Kolem", "Chañ", "Pek´"], hint: "Grande" },
+        { sentence: "El camino es ____.", correct: "Tyam", options: ["Tyam", "Kom", "Chañ"], hint: "Largo" },
+        { sentence: "El perro es ____.", correct: "Chuty", options: ["Tyäkiñ", "Jujp´eñ", "Chuty"], hint: "Pequeño" },
     ];
     let currentRound3 = 0;
 
@@ -410,8 +410,8 @@ button.primary.active:active {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 2 Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Puntuación simulada: **${userScore}/${TOTAL_ACTIVITY_POINTS}**</p>
-                <p>Presiona **Siguiente** para volver al Módulo 2: Donde Vivo.</p>
+                <p style="font-size: 1.2rem;">Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
+                <p>Presiona Siguiente para volver al Módulo 2: Donde Vivo.</p>
             </div>
         `;
         setStageComplete(true);

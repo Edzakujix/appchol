@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Ch'ol App - Tema 1: Profesiones y Oficios</title>
+    <title>Tema 1: Profesiones y Oficios</title>
 
     <link rel="stylesheet" href="../assets/css/styles.css">
 
@@ -305,7 +305,7 @@ button.primary.active:active {
                 <iframe src="https://www.youtube.com/embed/URL_DEL_VIDEO_TEMA1?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
             <p style="text-align:center; max-width: 600px; margin-top: 20px;">
-                ¡Mira el video para aprender sobre las **Profesiones y Oficios** en Ch'ol! Luego, presiona **Siguiente** para comenzar las actividades.
+                ¡Mira el video para aprender sobre las Profesiones y Oficios en Ch'ol! Luego, presiona Siguiente para comenzar las actividades.
             </p>
         `;
         container.innerHTML = videoHtml;
@@ -319,7 +319,6 @@ button.primary.active:active {
         { ch_word: "Xpäsjuñ", es_word: "MAESTRO", img: "maestro.png" },
         { ch_word: "Xpäty otyoty", es_word: "ALBAÑIL", img: "albañil.png" },
         { ch_word: "Aj cholejel", es_word: "CAMPESINO", img: "campesino.png" },
-        { ch_word: "Toñel", es_word: "TRABAJO", img: "trabajo.png" } 
     ];
     let currentRound1 = 0;
 
@@ -358,10 +357,10 @@ button.primary.active:active {
         renderControls(); 
 
         container.innerHTML = `
-            <p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Mira la imagen, lee la palabra en Ch'ol y **escribe su significado en Español**.</p>
+            <p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Mira la imagen, lee la palabra en Ch'ol y escribe su significado en Español.</p>
             <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; max-width: 400px; margin: 20px auto; padding: 20px; border: 3px solid var(--color-acentos); border-radius: 15px; background: #E0F7FA;">
                 <img src="../assets/img/${currentData.img}" alt="${currentData.ch_word}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 10px; border: 3px solid #FFF;">
-                <p style="font-size: 1.5rem; font-weight: bold; color: var(--color-acentos);">**${currentData.ch_word}**</p>
+                <p style="font-size: 1.5rem; font-weight: bold; color: var(--color-acentos);">${currentData.ch_word}</p>
                 <input type="text" id="answerInput" placeholder="Escribe aquí en Español" style="padding: 10px; font-size: 1.1rem; border-radius: 8px; border: 2px solid #ccc; width: 100%; text-align: center;">
                 <button class="primary active" id="checkBtn1" style="width: 100%;">Comprobar</button>
             </div>
@@ -436,7 +435,7 @@ button.primary.active:active {
         }
 
         const currentData = stage2Questions[currentRound2];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Questions.length}. Escucha el audio y selecciona la figura: **${currentData.word}**.</p>`;
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Questions.length}. Escucha el audio y selecciona la figura: ${currentData.word}.</p>`;
         
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho');
         
@@ -558,7 +557,7 @@ button.primary.active:active {
         shuffleArray(questions);
         shuffleArray(answers);
 
-        container.innerHTML = `<p class="stage0-info">Haz clic en la palabra en **Ch'ol** (Izquierda) y luego en su **Significado** (Derecha) para unirlas.</p>`;
+        container.innerHTML = `<p class="stage0-info">Haz clic en la palabra en Ch'ol (Izquierda) y luego en su Significado (Derecha) para unirlas.</p>`;
 
         const matchingContainer = document.createElement('div');
         matchingContainer.className = 'matching-click-container';
@@ -599,8 +598,8 @@ button.primary.active:active {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 1 Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Puntuación simulada: **${userScore}/${TOTAL_ACTIVITY_POINTS}**</p>
-                <p>Presiona **Siguiente** para volver a la pantalla principal.</p>
+                <p style="font-size: 1.2rem;">Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
+                <p>Presiona Siguiente para volver a la pantalla principal.</p>
             </div>
         `;
         setStageComplete(true);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Ch'ol App - Tema 1: Saludos</title>
+    <title>Tema 1: Saludos</title>
 
     <link rel="stylesheet" href="../assets/css/styles.css">
 
@@ -287,7 +287,7 @@ button.primary.active:active {
                 <iframe src="https://www.youtube.com/embed/z4fR0S2T-R0?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
             <p style="text-align:center; max-width: 600px; margin-top: 20px;">
-                ¡Mira el video para aprender los saludos básicos en Ch'ol! Luego, presiona **Siguiente** para comenzar las actividades.
+                ¡Mira el video para aprender los saludos básicos en Ch'ol! Luego, presiona "Siguiente" para comenzar las actividades.
             </p>
         `;
         container.innerHTML = videoHtml;
@@ -335,7 +335,7 @@ button.primary.active:active {
             return;
         }
         const currentData = stage1Data[currentRound1];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha el audio y selecciona la **traducción** correcta.</p>`;
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha el audio y selecciona la traducción correcta.</p>`;
 
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho'); 
         
@@ -379,18 +379,18 @@ button.primary.active:active {
     }
 
     const stage2Questions = [
-        { audio: "Mañana", filename: "manana.mp3", correct: "escenario_dia.jpg", word: "Día" },
-        { audio: "Tarde", filename: "tarde.mp3", correct: "escenario_tarde.jpg", word: "Tarde" }, 
-        { audio: "Noche", filename: "noche.mp3", correct: "escenario_noche.jpg", word: "Noche" },
+        { audio: "Mañana", filename: "manana.mp3", correct: "mañana.png", word: "Mañana" },
+        { audio: "Tarde", filename: "tarde.mp3", correct: "tarde.png", word: "Tarde" }, 
+        { audio: "Noche", filename: "noche.mp3", correct: "noche.png", word: "Noche" },
     ];
     let currentRound2 = 0; 
 
     const stage2AllOptions = [
-        { filename: "escenario_dia.jpg", word: "Día" },
-        { filename: "escenario_tarde.jpg", word: "Tarde" },
-        { filename: "escenario_noche.jpg", word: "Noche" },
+        { filename: "mañana.png", word: "Mañana" },
+        { filename: "tarde.png", word: "Tarde" },
+        { filename: "noche.png", word: "Noche" },
         { filename: "rio.png", word: "rio" }, 
-        { filename: "escenario_selva.jpg", word: "Nublado" }
+        { filename: "escenario selva.jpg", word: "Nublado" }
     ];
 
     function checkAnswer2(selectedImage, currentData, allOptionsElements) {
@@ -423,7 +423,7 @@ button.primary.active:active {
         }
 
         const currentData = stage2Questions[currentRound2];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de 3. Escucha el saludo y selecciona la figura que representa: **${currentData.word}**.</p>`;
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de 3. Escucha el saludo y selecciona la figura que representa: "${currentData.word}".</p>`;
         
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho');
         
@@ -470,11 +470,11 @@ button.primary.active:active {
     }
     
     const stage3Data = [
-        { ch: 'Bäktye’', es: 'Buenos días' },
-        { ch: 'Mältye’', es: 'Buenas tardes' },
-        { ch: 'Ac’äntyel', es: 'Buenas noches (al llegar)' },
-        { ch: 'C’otäyel', es: 'Buenas noches (al irse)' },
-        { ch: 'Täle c’ajk', es: 'Hola' },
+        { ch: 'Noche', es: 'Ik´añ' },
+        { ch: 'Adios', es: 'Mux kmajle' },
+        { ch: 'Ven', es: 'La´me' },
+        { ch: 'Pasale', es: 'Tyalety' },
+        { ch: 'Tarde', es: 'Och´añ k´iñ' },
     ];
 
     let selectedQuestion = null;
@@ -502,7 +502,7 @@ button.primary.active:active {
 
         cardEl.classList.add('selected');
         selectedQuestion = question;
-        setFeedback(`Seleccionaste **${question.ch}**. ¡Ahora elige su traducción!`, 'neutral');
+        setFeedback(`Seleccionaste ${question.ch}. ¡Ahora elige su traducción!`, 'neutral');
     }
 
     function handleAnswerClick(cardEl, answer) {
@@ -556,7 +556,7 @@ button.primary.active:active {
         shuffleArray(questions);
         shuffleArray(answers);
 
-        container.innerHTML = `<p class="stage0-info">Haz clic en el **Saludo en Ch'ol** (Izquierda) y luego en su **Traducción en Español** (Derecha) para formar el par.</p>`;
+        container.innerHTML = `<p class="stage0-info">Haz clic en el Saludo en Ch'ol (Izquierda) y luego en su Traducción en Español (Derecha) para formar el par.</p>`;
 
         const matchingContainer = document.createElement('div');
         matchingContainer.className = 'matching-click-container';
@@ -600,8 +600,8 @@ button.primary.active:active {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 1 Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Puntuación simulada: **${userScore}/${TOTAL_ACTIVITY_POINTS}**</p>
-                <p>Presiona **Siguiente** para volver a la pantalla principal.</p>
+                <p style="font-size: 1.2rem;">Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
+                <p>Presiona "Siguiente" para volver a la pantalla principal.</p>
             </div>
         `;
         setStageComplete(true);
