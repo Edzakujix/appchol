@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Ch'ol App - Tema 2: Pasatiempos</title>
+    <title>Tema 2: Pasatiempos</title>
 
     <link rel="stylesheet" href="../assets/css/styles.css">
 
@@ -290,8 +290,6 @@ button.primary.active:active {
             { ch: 'Ñuxejel', es: 'Nadar', img: 'nadar.png', audio: 'audio_ñuxejel.mp3' },
             { ch: 'Jula’ al', es: 'Visitar', img: 'visitar.png', audio: 'audio_julaal.mp3' },
             { ch: 'Letsel', es: 'Trepar', img: 'trepar.png', audio: 'audio_letsel.mp3' },
-            { ch: 'Ts’ijb', es: 'Escribir', img: 'escribir.png', audio: 'audio_tsijb.mp3' },
-            { ch: 'K’el', es: 'Ver', img: 'ver.png', audio: 'audio_kel.mp3' },
         ],
     };
 
@@ -304,9 +302,9 @@ button.primary.active:active {
                 rounds: [
                     { ch: 'Xämbal', audio: 'audio_xämbal.mp3', correct: 'caminar.png', options: ['caminar.png', 'correr.png', 'trepar.png', 'nadar.png'] },
                     { ch: 'Ajñe', audio: 'audio_ajñe.mp3', correct: 'correr.png', options: ['correr.png', 'caminar.png', 'jugar.png', 'visitar.png'] },
-                    { ch: 'Ñuxejel', audio: 'audio_ñuxejel.mp3', correct: 'nadar.png', options: ['nadar.png', 'visitar.png', 'trepar.png', 'escribir.png'] },
-                    { ch: 'Jula’ al', audio: 'audio_julaal.mp3', correct: 'visitar.png', options: ['visitar.png', 'nadar.png', 'ver.png', 'caminar.png'] },
-                    { ch: 'Letsel', audio: 'audio_letsel.mp3', correct: 'trepar.png', options: ['trepar.png', 'jugar.png', 'escribir.png', 'ver.png'] },
+                    { ch: 'Ñuxejel', audio: 'audio_ñuxejel.mp3', correct: 'nadar.png', options: ['nadar.png', 'visitar.png', 'trepar.png', 'lavar.png'] },
+                    { ch: 'Jula’ al', audio: 'audio_julaal.mp3', correct: 'visitar.png', options: ['visitar.png', 'nadar.png', 'barrer.png', 'caminar.png'] },
+                    { ch: 'Letsel', audio: 'audio_letsel.mp3', correct: 'trepar.png', options: ['trepar.png', 'jugar.png', 'lavar.png', 'barrer.png'] },
                     { ch: 'Ñak', audio: 'audio_ñak.mp3', correct: 'jugar.png', options: ['jugar.png', 'caminar.png', 'correr.png', 'nadar.png'] },
                 ]
             },
@@ -446,8 +444,8 @@ function renderControls(html = '') {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; background-color: var(--card); border-radius: 20px; border: 3px solid var(--ok); max-width: 400px; margin-top: 50px;">
                 <h2 style="color: var(--ok); font-size: 2rem;">¡Felicidades!</h2>
-                <p style="font-size: 1.1rem;">Completaste la actividad: **${activityTitle}**.</p>
-                <p style="margin-top: 20px;">Presiona **Siguiente** para continuar.</p>
+                <p style="font-size: 1.1rem;">Completaste la actividad: ${activityTitle}.</p>
+                <p style="margin-top: 20px;">Presiona Siguiente para continuar.</p>
             </div>
         `;
         setStageComplete(true);
@@ -460,7 +458,7 @@ function renderControls(html = '') {
                 <iframe src="${currentData.videoUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
             <p style="text-align:center; max-width: 600px; margin-top: 20px;">
-                ¡Mira el video para aprender sobre los **Pasatiempos y Acciones** en Ch'ol! Luego, presiona **Siguiente**.
+                ¡Mira el video para aprender sobre los Pasatiempos y Acciones en Ch'ol! Luego, presiona Siguiente.
             </p>
         `;
         container.innerHTML = videoHtml;
@@ -609,7 +607,7 @@ function renderControls(html = '') {
         container.innerHTML = `
             <p class="question-stage-info">Ronda ${currentActivityRound + 1} / ${totalRounds}</p>
             <p class="question-text" style="color: var(--color-acentos); border: 2px solid var(--color-acentos); padding: 15px; border-radius: 10px; background: #e0f7fa;">
-                Traduce al Ch'ol: **"${roundData.es}"**
+                Traduce al Ch'ol: "${roundData.es}"
             </p>
             <div class="options-row" id="optionsContainer"></div>
         `;
@@ -648,8 +646,8 @@ function renderControls(html = '') {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 2: Pasatiempos Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Puntuación total: **${userScore} / ${TOTAL_ACTIVITY_POINTS}**</p>
-                <p>Presiona **Siguiente** para volver a la pantalla de módulos.</p>
+                <p style="font-size: 1.2rem;">Puntuación total: ${userScore} / ${TOTAL_ACTIVITY_POINTS}</p>
+                <p>Presiona Siguiente para volver a la pantalla de módulos.</p>
             </div>
         `;
         setStageComplete(true);

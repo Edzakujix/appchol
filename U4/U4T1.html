@@ -3,26 +3,30 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Ch'ol App - Tema 1: Gustos</title>
+    <title>Tema 1: Gustos</title>
 
     <link rel="stylesheet" href="../assets/css/styles.css">
 
     <style>
 button.primary {
-    opacity: 0.5;
-    pointer-events: none;
+    display: none; 
 }
 
 button.primary.active {
-    opacity: 1;
+    display: inline-block; 
+    animation: aparecer 0.5s ease;
     pointer-events: auto;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 button.primary.active:active {
     transform: translateY(5px);
     box-shadow: 0 0px 0 0 #0288D1;
 }
-
 .opt {
     min-width: 140px; 
     padding: 20px; 
@@ -196,12 +200,12 @@ button.primary.active:active {
                     type: 'select_image_audio', 
                     title: 'Actividad 2: ¿Qué estás escuchando?',
                     rounds: [
-                        { audio: 'audio_waj.mp3', correct: 'waj.png', 
-                            options: [{filename: 'img1.png', word: 'Tortilla'}, {filename: 'tyumuty.png', word: 'Huevo'}, {filename: 'buul.png', word: 'Frijol'}, {filename: 'sa.png', word: 'Pozol'}] },
-                        { audio: 'audio_manko.mp3', correct: 'manko.png', 
-                            options: [{filename: 'limon.png', word: 'Ilmoñix'}, {filename: 'manko.png', word: 'Mango'}, {filename: 'guayaba.png', word: 'Pätya'}, {filename: 'chi.png', word: 'Nance'}] },
-                        { audio: 'audio_atol.mp3', correct: 'ul.png', 
-                            options: [{filename: 'cafe.png', word: 'Kajpe'}, {filename: 'xaba.png', word: 'Xä’bä'}, {filename: 'ul.png', word: 'Atol'}, {filename: 'agua.png', word: 'Ja'}] },
+                        { audio: 'audio_waj.mp3', correct: 'tortilla.jpeg', 
+                            options: [{filename: 'tortilla.jpeg', word: 'Waj'}, {filename: 'huevo.png', word: 'Tyumuty'}, {filename: 'frijol.jpeg', word: 'Bu´ul'}, {filename: 'pozol.jpeg', word: 'Sa´'}] },
+                        { audio: 'audio_manko.mp3', correct: 'mango.png', 
+                            options: [{filename: 'limon.png', word: 'Ilmoñix'}, {filename: 'mango.png', word: 'Manko'}, {filename: 'guayaba.png', word: 'Pätya'}, {filename: 'nance.png', word: 'Chi’'}] },
+                        { audio: 'audio_atol.mp3', correct: 'atol.png', 
+                            options: [{filename: 'cafe.png', word: 'Kajpe'}, {filename: 'pozolcc.jpeg', word: 'Xä’bä'}, {filename: 'atol.png', word: 'Ul'}, {filename: 'agua.png', word: 'Ja'}] },
                     ]
                 },
                 { 
@@ -331,8 +335,8 @@ button.primary.active:active {
             container.innerHTML = `
                 <div style="text-align: center; padding: 40px; background-color: var(--matching-card-bg); border-radius: 20px; border: 3px solid var(--ok); max-width: 400px; margin-top: 50px;">
                     <h2 style="color: var(--ok); font-size: 2rem;">¡Felicidades!</h2>
-                    <p style="font-size: 1.1rem;">Completaste la actividad: **${activityTitle}**.</p>
-                    <p style="margin-top: 20px;">Presiona **Siguiente** para continuar.</p>
+                    <p style="font-size: 1.1rem;">Completaste la actividad: ${activityTitle}.</p>
+                    <p style="margin-top: 20px;">Presiona Siguiente para continuar.</p>
                 </div>
             `;
             
@@ -369,7 +373,7 @@ button.primary.active:active {
                     <iframe src="${currentData.videoUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                 </div>
                 <p style="text-align:center; max-width: 600px; margin-top: 20px;">
-                    ¡Mira el video para aprender sobre ${currentData.title.split(': ')[1]}! Luego, presiona **Siguiente**.
+                    ¡Mira el video para aprender sobre ${currentData.title.split(': ')[1]}! Luego, presiona Siguiente.
                 </p>
             `;
             renderControls(); 
@@ -388,7 +392,7 @@ button.primary.active:active {
             document.querySelectorAll('.questions-stack .matching-card.selected').forEach(el => el.classList.remove('selected'));
             cardEl.classList.add('selected');
             selectedQuestion = itemData;
-            setFeedback(`Seleccionaste **${itemData.ch}**. ¡Ahora elige su traducción!`, 'neutral');
+            setFeedback(`Seleccionaste ${itemData.ch}. ¡Ahora elige su traducción!`, 'neutral');
         }
 
         function handleAnswerClick(cardEl, itemData) {
@@ -436,7 +440,7 @@ button.primary.active:active {
             shuffleArray(questions);
             shuffleArray(answers);
 
-            container.innerHTML = `<p class="stage0-info">Haz clic en la palabra en **Ch'ol** (Izquierda) y luego en su **Significado** (Derecha) para unirlas.</p>`;
+            container.innerHTML = `<p class="stage0-info">Haz clic en la palabra en Ch'ol (Izquierda) y luego en su Significado (Derecha) para unirlas.</p>`;
 
             const matchingContainer = document.createElement('div');
             matchingContainer.className = 'matching-click-container';
@@ -585,8 +589,8 @@ button.primary.active:active {
             container.innerHTML = `
                 <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                     <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 1: Gustos Completado! 🎉</h2>
-                    <p style="font-size: 1.2rem;">Puntuación total: **${userScore} / ${TOTAL_ACTIVITY_POINTS}**</p>
-                    <p>¡Excelente trabajo! Presiona **Siguiente** para volver a la pantalla de módulos.</p>
+                    <p style="font-size: 1.2rem;">Puntuación total: ${userScore} / ${TOTAL_ACTIVITY_POINTS}</p>
+                    <p>¡Excelente trabajo! Presiona Siguiente para volver a la pantalla de módulos.</p>
                 </div>
             `;
             setStageComplete(true);

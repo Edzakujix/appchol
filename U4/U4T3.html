@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Ch'ol App - Tema 3: Mi Mundo</title>
+    <title>Tema 3: Mi Mundo</title>
 
         <link rel="stylesheet" href="../assets/css/styles.css">
 
@@ -210,23 +210,23 @@ button.primary.active:active {
                 type: 'select_image_multichoice', 
                 title: 'Actividad 1: ¡Conteo y Figuras!',
                 rounds: [
-                    { q_type: 'count', target: '7', target_chol: 'Wukp’ej', target_img: 'img1.png', options: ['Wäkp’ej', 'Wukp’ej', 'Bolomp’ej'] },
-                    { q_type: 'count', target: '10', target_chol: 'Lujump’ej', target_img: '10_naranjas.png', options: ['Waxäkp’ej', 'Lujump’ej', 'Wukp’ej'] },
-                    { q_type: 'count', target: '12', target_chol: 'Cha’lujump’ej', target_img: '12_ciruelas.png', options: ['Lujump’ej', 'Cha’lujump’ej', 'Junlujump’ej'] },
+                    { q_type: 'count', target: '7', target_chol: 'Wukp’ej', target_img: 'siete.png', options: ['Wäkp’ej', 'Wukp’ej', 'Bolomp’ej'] },
+                    { q_type: 'count', target: '10', target_chol: 'Lujump’ej', target_img: 'diez.png', options: ['Waxäkp’ej', 'Lujump’ej', 'Wukp’ej'] },
+                    { q_type: 'count', target: '12', target_chol: 'Cha’lujump’ej', target_img: 'doce.png', options: ['Lujump’ej', 'Cha’lujump’ej', 'Junlujump’ej'] },
                     { q_type: 'figure', target: 'Cuadrado', target_chol: 'Lakal', target_img: 'cuadrado.png', options: ['Selekña', 'Ts’ujki’bal', 'Lakal'] },
                     { q_type: 'figure', target: 'Círculo', target_chol: 'Selekña', target_img: 'circulo.png', options: ['Lakal', 'Ts’ujki’bal', 'Selekña'] },
-                    { q_type: 'count', target: '20', target_chol: 'Junk’al', target_img: '20_frijoles.png', options: ['Bolomp’ej', 'Cha’lujump’ej', 'Junk’al'] },
+                    { q_type: 'count', target: '20', target_chol: 'Junk’al', target_img: 'veinte.png', options: ['Bolomp’ej', 'Cha’lujump’ej', 'Junk’al'] },
                 ]
             },
             {
                 type: 'matching_clima',
                 title: 'Actividad 2: Clima y Calendario',
                 rounds: [
-                    { ch: 'K’iñ', es: 'Días / Sol' },
+                    { ch: 'K’iñ', es: 'Días' },
                     { ch: 'kiñtyuñil', es: 'Temporada de calor' },
                     { ch: 'Tsiñäle k’iñ', es: 'Temporada de frío' },
-                    { ch: 'Waxäkp’ej', es: '8' },
-                    { ch: 'Bolomp’ej', es: '9' },
+                    { ch: 'Waxäklujump’ej', es: '18' },
+                    { ch: 'Bolomlujump’ej', es: '19' },
                     { ch: 'Junlujump’ej', es: '11' }
                 ]
             },
@@ -235,11 +235,11 @@ button.primary.active:active {
                 title: 'Actividad 3: ¡Traduce lo Aprendido!',
                 rounds: [
                     { es_phrase: 'Círculo', correct_chol: 'Selekña', options: ['Lakal', 'Ts’ujki’bal', 'Selekña'] },
-                    { es_phrase: '7 (número)', correct_chol: 'Wukp’ej', options: ['Wäkp’ej', 'Wukp’ej', 'Bolomp’ej'] },
-                    { es_phrase: '20 (número)', correct_chol: 'Junk’al', options: ['Lujump’ej', 'Cha’lujump’ej', 'Junk’al'] },
+                    { es_phrase: '7 Siete', correct_chol: 'Wukp’ej', options: ['Wäkp’ej', 'Wukp’ej', 'Bolomp’ej'] },
+                    { es_phrase: '20 Veinte', correct_chol: 'Junk’al', options: ['Lujump’ej', 'Cha’lujump’ej', 'Junk’al'] },
                     { es_phrase: 'Temporada de frío', correct_chol: 'Tsiñäle k’iñ', options: ['K’iñ', 'kiñtyuñil', 'Tsiñäle k’iñ'] },
-                    { es_phrase: '8 (número)', correct_chol: 'Waxäkp’ej', options: ['Bolomp’ej', 'Wäkp’ej', 'Waxäkp’ej'] },
-                    { es_phrase: 'Días / Sol', correct_chol: 'K’iñ', options: ['Tsiñäle k’iñ', 'kiñtyuñil', 'K’iñ'] }
+                    { es_phrase: '8 Ocho', correct_chol: 'Waxäkp’ej', options: ['Bolomp’ej', 'Wäkp’ej', 'Waxäkp’ej'] },
+                    { es_phrase: 'Días', correct_chol: 'K’iñ', options: ['Tsiñäle k’iñ', 'kiñtyuñil', 'K’iñ'] }
                 ]
             },
             { type: 'final' } 
@@ -337,8 +337,8 @@ button.primary.active:active {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; background-color: var(--card); border-radius: 20px; border: 3px solid var(--ok); max-width: 400px; margin-top: 50px;">
                 <h2 style="color: var(--ok); font-size: 2rem;">¡Felicidades!</h2>
-                <p style="font-size: 1.1rem;">Completaste la actividad: **${activityTitle}**.</p>
-                <p style="margin-top: 20px;">Presiona **Siguiente** (arriba) para continuar.</p>
+                <p style="font-size: 1.1rem;">Completaste la actividad: ${activityTitle}.</p>
+                <p style="margin-top: 20px;">Presiona Siguiente (arriba) para continuar.</p>
             </div>
         `;
         setStageComplete(true);
@@ -350,7 +350,7 @@ button.primary.active:active {
                 <iframe src="${currentData.videoUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
             <p style="text-align:center; max-width: 600px; margin-top: 20px;">
-                ¡Mira el video para aprender los **Números, Figuras y Clima** en Ch'ol! Luego, presiona **Siguiente**.
+                ¡Mira el video para aprender los Números, Figuras y Clima en Ch'ol! Luego, presiona Siguiente.
             </p>
         `;
         container.innerHTML = videoHtml;
@@ -416,7 +416,7 @@ button.primary.active:active {
         document.querySelectorAll('.questions-stack .matching-card.selected').forEach(el => el.classList.remove('selected'));
         cardEl.classList.add('selected');
         selectedQuestion = question;
-        setFeedback(`Seleccionaste **${question.ch}**. ¡Ahora elige su traducción!`, 'neutral');
+        setFeedback(`Seleccionaste ${question.ch}. ¡Ahora elige su traducción!`, 'neutral');
     }
 
     function handleAnswerClick(cardEl, answer) {
@@ -459,7 +459,7 @@ button.primary.active:active {
         selectedQuestion = null;
         
         container.innerHTML = `
-            <p class="stage0-info">Haz clic en el **Concepto en Ch'ol** (Izquierda) y luego en su **traducción en Español** (Derecha).</p>
+            <p class="stage0-info">Haz clic en el Concepto en Ch'ol (Izquierda) y luego en su traducción en Español (Derecha).</p>
             <div class="matching-click-container">
                 <div id="questionGroup" class="questions-stack">
                     <p class="stack-title">Ch'ol:</p>
@@ -548,8 +548,8 @@ button.primary.active:active {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡MÓDULO 4 COMPLETADO! 🎉</h2>
-                <p style="font-size: 1.2rem;">Puntuación total: **${userScore} / ${TOTAL_ACTIVITY_POINTS}**</p>
-                <p>Presiona **Siguiente** para volver a la pantalla de módulos.</p>
+                <p style="font-size: 1.2rem;">Puntuación total: ${userScore} / ${TOTAL_ACTIVITY_POINTS}</p>
+                <p>Presiona Siguiente para volver a la pantalla de módulos.</p>
             </div>
         `;
         setStageComplete(true);
