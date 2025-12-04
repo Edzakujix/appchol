@@ -249,8 +249,8 @@
         container.innerHTML = `<p class="stage0-info">Toca una figura para escuchar cómo se presenta un niño o una niña en Ch'ol.</p>`;
 
         const demoData = [
-            { type: 'niño', chool: "Jk´aba´ aj Octavio", translation: "Mi nombre es Octavio", filename: "mi_nombre_es_octavio.mp3" }, 
-            { type: 'niña', chool: "Jk´aba´ aj María", translation: "Mi nombre es María", filename: "mi_nombre_es_maria.mp3" }
+            { type: 'niño', chool: "Yo soy un niño.", translation: "Mi nombre es Octavio", filename: "yo_soy_un_niño.mp3" }, 
+            { type: 'niña', chool: "Yo soy una niña.", translation: "Mi nombre es María", filename: "yo_soy_una_niña.mp3" }
         ];
 
         const row = document.createElement('div');
@@ -279,12 +279,12 @@
     }
 
     const stage2Data = [
-        { audio: "Jiñi ili kmam", filename: "ella_es_mi_mama.mp3", correct: "mama.png", options: ["mama.png", "abuelo.png", "abuela.png"], text: "Mi mamá" },
-        { audio: "Jiñi ili ktyaty", filename: "el_es_mi_papa.mp3", correct: "papa.png", options: ["papa.png", "hermano.png", "tia.png"], text: "Mi papá" },
-        { audio: "Jiñi kts´i´ chutyjach", filename: "mi_perro_es_pequeno.mp3", correct: "chihuahua.png", options: ["chihuahua.png", "vaca.png", "gallo.png"], text: "Mi perro es pequeño" },
-        { audio: "Jiñi kotyoty xk´änk´äñ", filename: "mi_casa_es_amarilla.mp3", correct: "casa_amarilla.png", options: ["casa_amarilla.png", "tarde.png", "noche.png"], text: "Mi casa es amarilla" },
-        { audio: "Jiñi ili kyum", filename: "el_es_mi_abuelo.mp3", correct: "abuelo.png", options: ["abuelo.png", "tio.png", "hermano.png"], text: "Mi abuelo" },
-        { audio: "Joñoñ chuty wiñikoñ", filename: "yo_soy_un_niño.mp3", correct: "niño.png", options: ["niño.png", "papa.png", "niña.png"], text: "Yo soy un niño" },
+        { audio: "Ella es mi mamá.", filename: "ella_es_mi_mama.mp3", correct: "mama.png", options: ["mama.png", "abuelo.png", "abuela.png"], text: "Mi mamá" },
+        { audio: "el es mi papá.", filename: "el_es_mi_papa.mp3", correct: "papa.png", options: ["papa.png", "hermano.png", "tia.png"], text: "Mi papá" },
+        { audio: "Mi perro es pequeño.", filename: "mi_perro_es_pequeño.mp3", correct: "chihuahua.png", options: ["chihuahua.png", "vaca.png", "gallo.png"], text: "Mi perro es pequeño" },
+        { audio: "Mi casa es amarilla.", filename: "mi_casa_es_amarilla.mp3", correct: "casa_amarilla.png", options: ["casa_amarilla.png", "tarde.png", "noche.png"], text: "Mi casa es amarilla" },
+        { audio: "El es mi abuelo.", filename: "el_es_mi_abuelo.mp3", correct: "abuelo.png", options: ["abuelo.png", "tio.png", "hermano.png"], text: "Mi abuelo" },
+        { audio: "Yo soy un niño.", filename: "yo_soy_un_niño.mp3", correct: "niño.png", options: ["niño.png", "papa.png", "niña.png"], text: "Yo soy un niño" },
     ];
     let currentRound2 = 0; 
 
@@ -364,23 +364,23 @@
     }
     
     const choolNumbers = [
-        { num: 1, word: "Jump´ej", filename: "num_1.mp3" },
-        { num: 2, word: "Chap´ej", filename: "num_2.mp3" },
-        { num: 3, word: "Uxp´ej", filename: "num_3.mp3" },
-        { num: 4, word: "Chämp´ej", filename: "num_4.mp3" },
-        { num: 5, word: "Jop´ej", filename: "num_5.mp3" },
-        { num: 6, word: "Wäkp´ej", filename: "num_6.mp3" },
-        { num: 7, word: "Wukp´ej", filename: "num_7.mp3" },
-        { num: 8, word: "Waxäkp´ej", filename: "num_8.mp3" },
-        { num: 9, word: "Bolomp´ej", filename: "num_9.mp3" },
-        { num: 10, word: "Lujump´ej", filename: "num_10.mp3" }
+        { num: 1, word: "Jump´ej", filename: "uno.mp3" },
+        { num: 2, word: "Chap´ej", filename: "dos.mp3" },
+        { num: 3, word: "Uxp´ej", filename: "tres.mp3" },
+        { num: 4, word: "Chämp´ej", filename: "cuatro.mp3" },
+        { num: 5, word: "Jop´ej", filename: "cinco.mp3" },
+        { num: 6, word: "Wäkp´ej", filename: "seis.mp3" },
+        { num: 7, word: "Wukp´ej", filename: "siete.mp3" },
+        { num: 8, word: "Waxäkp´ej", filename: "ocho.mp3" },
+        { num: 9, word: "Bolomp´ej", filename: "nueve.mp3" },
+        { num: 10, word: "Lujump´ej", filename: "diez.mp3" }
     ];
 
     const stage3Data = [
-        { count: 3, wordChool: "Uxp´ej", filename: "conteo_3.mp3", image: "tres.png" },
-        { count: 5, wordChool: "Jop´ej", filename: "conteo_5.mp3", image: "cinco.png" },
-        { count: 7, wordChool: "Wukp´ej", filename: "conteo_7.mp3", image: "siete.png" },
-        { count: 10, wordChool: "Lujump´ej", filename: "conteo_10.mp3", image: "diez.png" },
+        { count: 3, wordChool: "Uxp´ej", filename: "tres.mp3", image: "tres.png" },
+        { count: 5, wordChool: "Jop´ej", filename: "cinco.mp3", image: "cinco.png" },
+        { count: 7, wordChool: "Wukp´ej", filename: "siete.mp3", image: "siete.png" },
+        { count: 10, wordChool: "Lujump´ej", filename: "diez.mp3", image: "diez.png" },
     ];
     let currentRound3 = 0;
 
@@ -434,7 +434,7 @@
         const options = getAudioOptions(currentData.wordChool);
 
         container.innerHTML = `
-            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Mira la imagen y selecciona el número en Ch'ol que corresponde al conteo.</p>
+            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Mira la imagen y selecciona apretando dos veces el número en Ch'ol que corresponde al conteo.</p>
             <img src="../assets/img/${currentData.image}" alt="Elementos a contar" style="width: 200px; height: 200px; border-radius: 15px; margin-bottom: 20px; border: 3px solid var(--accent);"/>
         `;
         

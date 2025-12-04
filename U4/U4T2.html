@@ -284,12 +284,12 @@ button.primary.active:active {
 
     const VOCABULARY = {
         acciones: [
-            { ch: 'Ñak', es: 'Jugar', img: 'jugar.png', audio: 'audio_ñak.mp3' },
-            { ch: 'Xämbal', es: 'Caminar', img: 'caminar.png', audio: 'audio_xämbal.mp3' },
-            { ch: 'Ajñe', es: 'Correr', img: 'correr.png', audio: 'audio_ajñe.mp3' },
-            { ch: 'Ñuxejel', es: 'Nadar', img: 'nadar.png', audio: 'audio_ñuxejel.mp3' },
-            { ch: 'Jula’ al', es: 'Visitar', img: 'visitar.png', audio: 'audio_julaal.mp3' },
-            { ch: 'Letsel', es: 'Trepar', img: 'trepar.png', audio: 'audio_letsel.mp3' },
+            { ch: 'Ñak', es: 'Jugar', img: 'jugar.png', audio: 'jugar.mp3' },
+            { ch: 'Xämbal', es: 'Caminar', img: 'caminar.png', audio: 'caminar.mp3' },
+            { ch: 'Ajñe', es: 'Correr', img: 'correr.png', audio: 'correr.mp3' },
+            { ch: 'Ñuxejel', es: 'Nadar', img: 'nadar.png', audio: 'nadar.mp3' },
+            { ch: 'Jula’ al', es: 'Visitar', img: 'visitar.png', audio: 'visitar.mp3' },
+            { ch: 'Letsel', es: 'Trepar', img: 'trepar.png', audio: 'trepar.mp3' },
         ],
     };
 
@@ -300,23 +300,23 @@ button.primary.active:active {
                 type: 'select_image_audio', 
                 title: 'Actividad 1: ¡Verbo en Acción!',
                 rounds: [
-                    { ch: 'Xämbal', audio: 'audio_xämbal.mp3', correct: 'caminar.png', options: ['caminar.png', 'correr.png', 'trepar.png', 'nadar.png'] },
-                    { ch: 'Ajñe', audio: 'audio_ajñe.mp3', correct: 'correr.png', options: ['correr.png', 'caminar.png', 'jugar.png', 'visitar.png'] },
-                    { ch: 'Ñuxejel', audio: 'audio_ñuxejel.mp3', correct: 'nadar.png', options: ['nadar.png', 'visitar.png', 'trepar.png', 'lavar.png'] },
-                    { ch: 'Jula’ al', audio: 'audio_julaal.mp3', correct: 'visitar.png', options: ['visitar.png', 'nadar.png', 'barrer.png', 'caminar.png'] },
-                    { ch: 'Letsel', audio: 'audio_letsel.mp3', correct: 'trepar.png', options: ['trepar.png', 'jugar.png', 'lavar.png', 'barrer.png'] },
-                    { ch: 'Ñak', audio: 'audio_ñak.mp3', correct: 'jugar.png', options: ['jugar.png', 'caminar.png', 'correr.png', 'nadar.png'] },
+                    { ch: 'Xämbal', audio: 'caminar.mp3', correct: 'caminar.png', options: ['caminar.png', 'correr.png', 'trepar.png', 'nadar.png'] },
+                    { ch: 'Ajñe', audio: 'correr.mp3', correct: 'correr.png', options: ['correr.png', 'caminar.png', 'jugar.png', 'visitar.png'] },
+                    { ch: 'Ñuxejel', audio: 'nadar.mp3', correct: 'nadar.png', options: ['nadar.png', 'visitar.png', 'trepar.png', 'lavar.png'] },
+                    { ch: 'Jula’ al', audio: 'visitar.mp3', correct: 'visitar.png', options: ['visitar.png', 'nadar.png', 'barrer.png', 'caminar.png'] },
+                    { ch: 'Letsel', audio: 'trepar.mp3', correct: 'trepar.png', options: ['trepar.png', 'jugar.png', 'lavar.png', 'barrer.png'] },
+                    { ch: 'Ñak', audio: 'jugar.mp3', correct: 'jugar.png', options: ['jugar.png', 'caminar.png', 'correr.png', 'nadar.png'] },
                 ]
             },
             {
                 type: 'sentence_builder',
                 title: 'Actividad 2: ¡Construye la Frase!',
                 rounds: [
-                    { es: 'Yo camino a la milpa', ch_sentence: 'Joñoñ muk’oñ tyi xämbal tyi cholel', audio: 'audio_yo_camino_milpa.mp3',
+                    { es: 'Yo camino a la milpa', ch_sentence: 'Joñoñ muk’oñ tyi xämbal tyi cholel', audio: 'camino_milpa.mp3',
                         words: ['Joñoñ', 'tyi', 'cholel', 'muk’oñ', 'xämbal', 'tyi'] },
-                    { es: 'Los niños nadan en el río', ch_sentence: 'Jiñi alp’eñalo’ muk’o’ tyi ñuxejel tyi kolem ja’', audio: 'audio_ninos_nadan_rio.mp3',
+                    { es: 'Los niños nadan en el río', ch_sentence: 'Jiñi alp’eñalo’ muk’o’ tyi ñuxejel tyi kolem ja’', audio: 'ninos_nadan.mp3',
                         words: ['Jiñi', 'tyi', 'muk’o’', 'kolem', 'alp’eñalo’', 'ñuxejel', 'ja’', 'tyi'] },
-                    { es: 'Mis hermanos corren por el campo', ch_sentence: 'Jiñi kermañujo’ muk’o’ tyi ajñel tyi jami', audio: 'audio_hermanos_corren_campo.mp3',
+                    { es: 'Mis hermanos corren por el campo', ch_sentence: 'Jiñi kermañujo’ muk’o’ tyi ajñel tyi jami', audio: 'hermanos_corren.mp3',
                         words: ['Jiñi', 'jami', 'muk’o’', 'kermañujo’', 'ajñel', 'tyi', 'tyi'] },
                 ]
             },

@@ -200,11 +200,11 @@ button.primary.active:active {
                     type: 'select_image_audio', 
                     title: 'Actividad 2: ¿Qué estás escuchando?',
                     rounds: [
-                        { audio: 'audio_waj.mp3', correct: 'tortilla.jpeg', 
+                        { audio: 'tortilla.mp3', correct: 'tortilla.jpeg', 
                             options: [{filename: 'tortilla.jpeg', word: 'Waj'}, {filename: 'huevo.png', word: 'Tyumuty'}, {filename: 'frijol.jpeg', word: 'Bu´ul'}, {filename: 'pozol.jpeg', word: 'Sa´'}] },
-                        { audio: 'audio_manko.mp3', correct: 'mango.png', 
+                        { audio: 'mango.mp3', correct: 'mango.png', 
                             options: [{filename: 'limon.png', word: 'Ilmoñix'}, {filename: 'mango.png', word: 'Manko'}, {filename: 'guayaba.png', word: 'Pätya'}, {filename: 'nance.png', word: 'Chi’'}] },
-                        { audio: 'audio_atol.mp3', correct: 'atol.png', 
+                        { audio: 'atol.mp3', correct: 'atol.png', 
                             options: [{filename: 'cafe.png', word: 'Kajpe'}, {filename: 'pozolcc.jpeg', word: 'Xä’bä'}, {filename: 'atol.png', word: 'Ul'}, {filename: 'agua.png', word: 'Ja'}] },
                     ]
                 },
@@ -212,13 +212,25 @@ button.primary.active:active {
                     type: 'multiple_choice', 
                     title: 'Actividad 3: Diálogo de Preferencias',
                     rounds: [
-                        { audio: 'audio_preferencia_limon.mp3', ch: 'K-tyi’ tyi’ añet ilmoñix.', q: 'Si te gusta el limón, ¿qué dices en Ch’ol?', correct: 'K-tyi’ tyi’ añet ilmoñix.', 
+                        { 
+                            ch: 'K-tyi’ tyi’ añet ilmoñix.', 
+                            q: 'Si te gusta el limón, ¿qué dices en Ch’ol?', 
+                            correct: 'K-tyi’ tyi’ añet ilmoñix.', 
                             options: ['Ma’ax k-tyi’ tyi’ añet waj.', 'K-tyi’ tyi’ añet ilmoñix.', 'K-tyi’ tyi’ añet ul.', 'Ma’ax k-tyi’ tyi’ añet sa’.'], 
-                            hint: 'Me gusta = K-tyi’ tyi’ añet'},
-                        { audio: 'audio_preferencia_frijol.mp3', ch: 'Ma’ax k-tyi’ tyi’ añet bu’ul.', q: 'No te gusta el frijol. ¿Cuál es la frase correcta?', correct: 'Ma’ax k-tyi’ tyi’ añet bu’ul.', 
-                            options: ['K-tyi’ tyi’ añet waj.', 'Ma’ax k-tyi’ tyi’ añet bu’ul.', 'K-tyi’ tyi’ añet tyumuty.', 'Ma’ax k-tyi’ tyi’ añet waj.']},
-                        { audio: 'audio_preferencia_pozol.mp3', ch: 'K-tyi’ tyi’ añet sa’.', q: 'Te ofrecen pozol. Responde que sí te gusta.', correct: 'K-tyi’ tyi’ añet sa’.', 
-                            options: ['K-tyi’ tyi’ añet sa’.', 'Ma’ax k-tyi’ tyi’ añet sa’.', 'Ma’ax k-tyi’ tyi’ añet kajpe.', 'K-tyi’ tyi’ añet ul.']},
+                            hint: 'Me gusta = K-tyi’ tyi’ añet'
+                        },
+                        { 
+                            ch: 'Ma’ax k-tyi’ tyi’ añet bu’ul.', 
+                            q: 'No te gusta el frijol. ¿Cuál es la frase correcta?', 
+                            correct: 'Ma’ax k-tyi’ tyi’ añet bu’ul.', 
+                            options: ['K-tyi’ tyi’ añet waj.', 'Ma’ax k-tyi’ tyi’ añet bu’ul.', 'K-tyi’ tyi’ añet tyumuty.', 'Ma’ax k-tyi’ tyi’ añet waj.']
+                        },
+                        { 
+                            ch: 'K-tyi’ tyi’ añet sa’.', 
+                            q: 'Te ofrecen pozol. Responde que sí te gusta.', 
+                            correct: 'K-tyi’ tyi’ añet sa’.', 
+                            options: ['K-tyi’ tyi’ añet sa’.', 'Ma’ax k-tyi’ tyi’ añet sa’.', 'Ma’ax k-tyi’ tyi’ añet kajpe.', 'K-tyi’ tyi’ añet ul.']
+                        },
                     ]
                 },
                 { type: 'final' } 
@@ -531,19 +543,12 @@ button.primary.active:active {
             setStageComplete(false);
         }
 
+        // --- FUNCIÓN MODIFICADA: ACTIVIDAD 3 SIN AUDIO ---
         function renderStage3_MultipleChoice(container) {
             const currentData = DATA.stages[3];
             const roundData = currentData.rounds[currentActivityRound];
             
-            const audioBtn = createAudioButton(roundData.ch, roundData.audio, 'cho');
             renderControls(); 
-            const buttonWrapper = document.createElement('div');
-            buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
-            buttonWrapper.appendChild(audioBtn);
-            
-            if (controlsArea && nextBtn) {
-                 controlsArea.insertBefore(buttonWrapper, nextBtn); 
-            }
 
             container.innerHTML = `
                 <p class="stage0-info">Ronda ${currentActivityRound + 1} / ${currentData.rounds.length}</p>

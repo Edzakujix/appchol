@@ -283,11 +283,11 @@
     }
 
     const stage1Data = [
-        { audio: "Ña' ", filename: "ña.mp3", correct: "mama.png", options: ["mama.png", "hermano.png", "abuelo.png"] },
-        { audio: "Tyaty", filename: "tyaty.mp3", correct: "papa.png", options: ["papa.png", "tia.png", "tio.png"] },
-        { audio: "K´ermañu", filename: "K´ermañu.mp3", correct: "hermano.png", options: ["papa.png", "hermano.png", "mama.png"] },
-        { audio: "Ko'", filename: "ko.mp3", correct: "abuela.png", options: ["abuela.png", "abuelo.png", "tio.png"] },
-        { audio: "Yum", filename: "yum.mp3", correct: "abuelo.png", options: ["hermano.png", "abuelo.png", "tia.png"] },
+        { audio: "Kmam o Ña'", filename: "mama.mp3", correct: "mama.png", options: ["mama.png", "hermano.png", "abuelo.png"] },
+        { audio: "Pap o Tyaty", filename: "papa.mp3", correct: "papa.png", options: ["papa.png", "tia.png", "tio.png"] },
+        { audio: "K´ermañu", filename: "hermano.mp3", correct: "hermano.png", options: ["papa.png", "hermano.png", "mama.png"] },
+        { audio: "Ko'", filename: "abuela.mp3", correct: "abuela.png", options: ["abuela.png", "abuelo.png", "tio.png"] },
+        { audio: "Yum", filename: "abuelo.mp3", correct: "abuelo.png", options: ["hermano.png", "abuelo.png", "tia.png"] },
     ];
     let currentRound1 = 0; 
 
@@ -541,11 +541,11 @@
     }
 
 const stage4Data = [
-    { q: "¿Quién es tu mamá?", a: "Ña'’" },
-    { q: "¿Quién es tu papá?", a: "Tyaty" },
-    { q: "¿Quién es tu hermano?", a: "K´ermañu" },
-    { q: "¿Quién es tu abuela?", a: "Ko'" },
-    { q: "¿Quién es tu abuelo?", a: "Yum" }
+    { q: "Mamá", a: "kmam o Ña'’" },
+    { q: "Papá", a: "Pap o Tyaty" },
+    { q: "Hermano", a: "K´ermañu" },
+    { q: "Abuela", a: "Ko'" },
+    { q: "Abuelo", a: "Yum" }
 ];
 
 let selectedQuestion = null;
@@ -554,7 +554,7 @@ let matchedPairs = 0;
 
 function renderStage4_matching(container) {
     container.innerHTML = `
-        <p class="stage0-info">Une correctamente cada pregunta con su respuesta.</p>
+        <p class="stage0-info">Une correctamente cada palabra con su traducción.</p>
 
         <div class="matching-click-container">
             
