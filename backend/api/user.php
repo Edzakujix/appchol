@@ -1,11 +1,14 @@
 <?php
+session_start();
 
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: GET');
 
 require_once '../config/database.php';
-require_once 'auth.php';
 
 class User {
     private $db;
@@ -87,12 +90,18 @@ class User {
     }
 }
 
-$auth = new Auth();
-$usuario_id = $auth->verificarSesion();
-
-$user = new User();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    
+    if (!isset($_SESSION['usuario_id'])) {
+        http_response_code(401);
+        echo json_encode(['error' => 'No has iniciado sesión']);
+        exit;
+    }
+    
+    $usuario_id = $_SESSION['usuario_id'];
+    $user = new User();
+    
     $action = $_GET['action'] ?? 'datos';
 
     switch ($action) {

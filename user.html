@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
         aliasInput: document.getElementById('alias'),
         ageSelect: document.getElementById('age'),
         avatarSelect: document.getElementById('avatar'),
-        fileInput: document.getElementById('upload-image'), // Asegúrate que tu input file tenga este ID
+        fileInput: document.getElementById('upload-image'), 
         aliasDisplay: document.getElementById('aliasDisplay'),
         ageDisplay: document.getElementById('ageDisplay'),
         avatarDisplay: document.getElementById('avatarDisplay'),
@@ -285,9 +285,8 @@ document.addEventListener('DOMContentLoaded', () => {
         temasCountLabel: document.getElementById('temasCompletados')
     };
 
-    let fotoBase64 = null; // Para guardar la foto subida
+    let fotoBase64 = null; 
 
-    // 1. Cargar Estadísticas (Barra de progreso)
     fetch('backend/api/user.php?action=estadisticas')
         .then(res => res.json())
         .then(stats => {
@@ -297,33 +296,26 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.progressBar.textContent = Math.round(porcentajeReal) + '%';
             if(elements.temasCountLabel) elements.temasCountLabel.textContent = stats.temas_completados;
             
-            // Aquí puedes activar tus insignias visualmente
-            // if(stats.temas_completados >= 3) document.getElementById('badge-fam').classList.add('unlocked');
         });
 
-    // 2. Cargar Datos del Perfil (Corrección de Foto vs Zorro)
-    fetch('backend/api/user.php?action=datos')
-        .then(res => res.json())
+    fetch('backend/api/user.php?action=datos&t=' + new Date().getTime())
+    .then(res => res.json())
         .then(user => {
             if(user.error) {
                 console.log("No logueado");
-                return; // Tal vez redirigir a index.html
+                return; 
             }
 
             elements.aliasInput.value = user.alias;
             elements.aliasDisplay.textContent = user.alias;
             elements.ageSelect.value = user.rango_edad || '8-10';
             
-            // LÓGICA IMPORTANTE:
-            // Si el avatar es el default (Zorro/?) Y hay una URL de foto...
             const esAvatarDefault = (!user.avatar || user.avatar === '🦊' || user.avatar === '?');
             
             if (esAvatarDefault && user.foto_perfil_url) {
-                // ...Mostramos la FOTO
                 elements.avatarDisplay.innerHTML = `<img src="${user.foto_perfil_url}" style="width:100%;height:100%;object-fit:cover;">`;
-                elements.avatarSelect.value = '🦊'; // Dejamos el zorro seleccionado en la lista por si quiere volver
+                elements.avatarSelect.value = '🦊'; 
             } else {
-                // ...Si no, mostramos el EMOJI elegido
                 const emoji = user.avatar || '🦊';
                 elements.avatarDisplay.textContent = emoji;
                 elements.avatarDisplay.innerHTML = emoji; 
@@ -331,7 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-    // 3. Previsualizar foto al subirla
     const fileInput = document.querySelector('input[type="file"]');
     if(fileInput) {
         fileInput.addEventListener('change', function() {
@@ -340,9 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     fotoBase64 = e.target.result;
-                    // Mostrar inmediatamente
                     elements.avatarDisplay.innerHTML = `<img src="${fotoBase64}" style="width:100%;height:100%;object-fit:cover;">`;
-                    // Reseteamos el select visual a "Zorro" (o podrías poner una opción "Foto")
                     elements.avatarSelect.value = '🦊'; 
                 };
                 reader.readAsDataURL(file);
@@ -350,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. Guardar Cambios (Ahora sí enviará datos al backend corregido)
     document.getElementById('profileForm').addEventListener('submit', (e) => {
         e.preventDefault();
         
@@ -360,7 +348,6 @@ document.addEventListener('DOMContentLoaded', () => {
             avatar: elements.avatarSelect.value
         };
 
-        // Si subió foto, la agregamos
         if (fotoBase64) {
             data.foto_custom = fotoBase64;
         }
@@ -373,8 +360,22 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(res => res.json())
         .then(resp => {
             if(resp.success) {
+                
+                elements.aliasDisplay.textContent = elements.aliasInput.value;
+                
+                const edadTexto = elements.ageSelect.options[elements.ageSelect.selectedIndex].text;
+                elements.ageDisplay.textContent = edadTexto;
+
+                if (fotoBase64) {
+                    elements.avatarDisplay.innerHTML = `<img src="${fotoBase64}" style="width:100%;height:100%;object-fit:cover;">`;
+                } else {
+                    const emojiSeleccionado = elements.avatarSelect.value;
+                    
+                    elements.avatarDisplay.innerHTML = emojiSeleccionado; 
+                    elements.avatarDisplay.textContent = emojiSeleccionado;
+                }
+
                 alert("¡Datos actualizados correctamente!");
-                location.reload(); 
             } else {
                 alert("Error al guardar: " + (resp.error || "Desconocido"));
                 console.error(resp);

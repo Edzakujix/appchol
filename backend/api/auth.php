@@ -19,18 +19,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($data['google_id']) && isset($data['email'])) {
         $db = (new Database())->getConnection();
         
-        $stmt = $db->prepare("SELECT id FROM usuarios WHERE google_id = ?");
+        $stmt = $db->prepare("SELECT id, alias FROM usuarios WHERE google_id = ?");
         $stmt->execute([$data['google_id']]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
             $userId = $user['id'];
-            $update = $db->prepare("UPDATE usuarios SET ultima_conexion = NOW() WHERE id = ?");
-            $update->execute([$userId]);
+            
+            $nuevoAlias = $user['alias'];
+            if ($user['alias'] === 'Aventurero') {
+                $nuevoAlias = explode(' ', $data['nombre'])[0];
+            }
+
+            $update = $db->prepare("UPDATE usuarios SET 
+                                    ultima_conexion = NOW(), 
+                                    foto_perfil_url = ?, 
+                                    nombre_completo = ?, 
+                                    alias = ? 
+                                    WHERE id = ?");
+            $update->execute([$data['foto'], $data['nombre'], $nuevoAlias, $userId]);
+
         } else {
-            $insert = $db->prepare("INSERT INTO usuarios (google_id, email, nombre_completo, foto_perfil_url, alias) VALUES (?, ?, ?, ?, ?)");
+            $insert = $db->prepare("INSERT INTO usuarios (google_id, email, nombre_completo, foto_perfil_url, alias, avatar) VALUES (?, ?, ?, ?, ?, ?)");
+            
             $aliasDefault = explode(' ', $data['nombre'])[0]; 
-            $insert->execute([$data['google_id'], $data['email'], $data['nombre'], $data['foto'], $aliasDefault]);
+            $insert->execute([
+                $data['google_id'], 
+                $data['email'], 
+                $data['nombre'], 
+                $data['foto'], 
+                $aliasDefault, 
+                '?' 
+            ]);
             $userId = $db->lastInsertId();
         }
 

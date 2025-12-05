@@ -1,21 +1,18 @@
 <?php
-/**
- * API de Perfil de Usuario (CORREGIDO)
- */
+
+session_start(); 
 
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: PUT, OPTIONS'); 
 header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
-// Manejo de petición OPTIONS
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
 require_once '../config/database.php';
-require_once 'auth.php'; 
 
 class Profile {
     private $db;
@@ -38,12 +35,10 @@ class Profile {
                 }
             }
 
-            // Si se envía una foto nueva (Base64), la guardamos
             if (isset($datos['foto_custom']) && !empty($datos['foto_custom'])) {
                 $campos_actualizar[] = "foto_perfil_url = :foto";
                 $valores[":foto"] = $datos['foto_custom'];
-                // Si pone foto, quitamos el avatar de emoji para que se vea la foto
-                $campos_actualizar[] = "avatar = NULL"; 
+                $campos_actualizar[] = "avatar = '?'"; 
             }
 
             if (empty($campos_actualizar)) {
@@ -71,34 +66,28 @@ class Profile {
     }
 }
 
-// --- EJECUCIÓN PRINCIPAL ---
-
-// 1. Verificar Sesión (Aquí estaba el fallo antes)
-$auth = new Auth();
-$usuario_id = $auth->verificarSesion(); // ¡Obtenemos el ID de la sesión!
-
-if (!$usuario_id) {
+if (!isset($_SESSION['usuario_id'])) {
     http_response_code(401);
     echo json_encode(['error' => 'No has iniciado sesión']);
     exit;
 }
 
-// 2. Verificar método
+$usuario_id = $_SESSION['usuario_id'];
+
 if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
     http_response_code(405);
-    echo json_encode(['error' => 'Método no permitido']);
+    echo json_encode(['error' => 'Método no permitido. Se espera PUT.']);
     exit;
 }
 
-// 3. Procesar datos
-$data = json_decode(file_get_contents("php://input"), true);
+$input = file_get_contents("php://input");
+$data = json_decode($input, true);
 
 if (!empty($data)) {
     $perfil = new Profile();
-    // Usamos el $usuario_id seguro de la sesión
     echo json_encode($perfil->actualizarPerfil($usuario_id, $data));
 } else {
     http_response_code(400);
-    echo json_encode(['error' => 'Datos vacíos']);
+    echo json_encode(['error' => 'Datos vacíos o JSON inválido']);
 }
 ?>
