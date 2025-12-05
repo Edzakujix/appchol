@@ -119,6 +119,7 @@
     <div class="ground-sim"></div>
 
     <script>
+        const TEMA_ID = 16;
         const MAIN_SCREEN_URL = './U5MICU.html'; 
         const TOTAL_ACTIVITY_POINTS = 100;
 
@@ -492,6 +493,7 @@
         }
 
         function renderStageFinal(container) {
+            guardarProgresoEnBD();
             renderControls();
             container.innerHTML = `
                 <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
@@ -507,6 +509,24 @@
                 nextBtn.classList.add('active');
             }
         }
+
+function guardarProgresoEnBD() {
+    fetch('../../backend/api/progress.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            tema_id: TEMA_ID,
+            completado: true
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Progreso guardado:", data);
+        if(data.success) {
+        }
+    })
+    .catch(error => console.error('Error al guardar:', error));
+}
 
         document.addEventListener('DOMContentLoaded', () => {
             render();

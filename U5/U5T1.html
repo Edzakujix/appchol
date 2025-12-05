@@ -171,6 +171,7 @@
     <div class="ground-sim"></div>
 
     <script>
+        const TEMA_ID = 14;
         const MAIN_SCREEN_URL = './U5MICU.html'; 
         const TOTAL_ACTIVITY_POINTS = 100;
 
@@ -194,7 +195,7 @@
                         { word: 'Chikiñ', es: 'Orejas', img: 'oreja.png', audio: 'oreja.mp3' },
                         { word: 'K’ä’', es: 'Manos', img: 'mano.png', audio: 'mano.mp3' },
                         { word: 'Yalo’ k’ä’', es: 'Dedos', img: 'dedo.png', audio: 'dedo.mp3' },
-                        { word: 'Ya’', es: 'Piernas', img: 'pierna.png', audio: 'pierna.mp3' },
+                        { word: 'Ya’', es: 'Piernas', img: 'pierna.png', audio: 'piernas.mp3' },
                         { word: 'Ok', es: 'Pie', img: 'pie.png', audio: 'pie.mp3' }
                     ]
                 },
@@ -512,6 +513,7 @@
         }
 
         function renderStageFinal(container) {
+            guardarProgresoEnBD();
             renderControls();
             container.innerHTML = `
                 <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
@@ -526,6 +528,24 @@
                 nextBtn.classList.add('active');
             }
         }
+
+function guardarProgresoEnBD() {
+    fetch('../../backend/api/progress.php', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            tema_id: TEMA_ID,
+            completado: true
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Progreso guardado:", data);
+        if(data.success) {
+        }
+    })
+    .catch(error => console.error('Error al guardar:', error));
+}
 
         document.addEventListener('DOMContentLoaded', () => {
             render();

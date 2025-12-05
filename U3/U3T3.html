@@ -80,6 +80,7 @@ button.primary.active:active {
 
 
 <script>
+    const TEMA_ID = 10;
     const MAIN_SCREEN_URL = '../U3/U3ESC.html'; 
     const USER_GOOGLE_ID = 'ID_DEL_USUARIO_AUTENTICADO'; 
     const TOTAL_ACTIVITY_POINTS = 40; 
@@ -438,10 +439,28 @@ button.primary.active:active {
                 <p>Presiona Siguiente para volver a la pantalla principal.</p>
             </div>
         `;
+        guardarProgresoEnBD();
         setStageComplete(true);
         renderControls();
     }
 
+    function guardarProgresoEnBD() {
+    fetch('../../backend/api/progress.php', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            tema_id: TEMA_ID,
+            completado: true
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Progreso guardado:", data);
+        if(data.success) {
+        }
+    })
+    .catch(error => console.error('Error al guardar:', error));
+}
 
     document.addEventListener('DOMContentLoaded', () => {
         render();

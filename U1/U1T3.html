@@ -150,6 +150,7 @@
 
 
 <script>
+    const TEMA_ID = 3;
     const MAIN_SCREEN_URL = '../U1/U1FAM.html';
     
     function goHome() {
@@ -449,7 +450,7 @@
         { word: "KMAM", image: "mama.png", letters: "KMSMSAEA" }, 
         { word: "ALO", image: "niño.png", letters: "LIFAGOE" }, 
         { word: "IXIK", image: "niña.png", letters: "IRXIMAK" }, 
-        { word: "KICHAÑ", image: "tiO.png", letters: "KIPCHRSAÑT" },
+        { word: "KICHAÑ", image: "tio.png", letters: "KIPCHRSAÑT" },
     ];
     let currentRound3 = 0;
     let currentAttempt3 = ""; 
@@ -653,9 +654,28 @@ function handleMatchClick(card, container) {
                 <p>Presiona "Siguiente" para volver a la pantalla principal.</p>
             </div>
         `;
+        guardarProgresoEnBD();
         setStageComplete(true);
         renderControls();
     }
+
+function guardarProgresoEnBD() {
+    fetch('../../backend/api/progress.php', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            tema_id: TEMA_ID,
+            completado: true
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Progreso guardado:", data);
+        if(data.success) {
+        }
+    })
+    .catch(error => console.error('Error al guardar:', error));
+}
 
     document.addEventListener('DOMContentLoaded', () => {
         render();

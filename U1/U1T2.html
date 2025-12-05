@@ -112,6 +112,7 @@
 
 
 <script>
+    const TEMA_ID = 2;
     const MAIN_SCREEN_URL = '../U1/U1FAM.html'; 
     
     function goHome() {
@@ -576,9 +577,28 @@
                 <p>Presiona Siguiente para volver a la pantalla principal.</p>
             </div>
         `;
+        guardarProgresoEnBD();
         setStageComplete(true);
         renderControls();
     }
+
+    function guardarProgresoEnBD() {
+    fetch('../../backend/api/progress.php', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            tema_id: TEMA_ID,
+            completado: true
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Progreso guardado:", data);
+        if(data.success) {
+        }
+    })
+    .catch(error => console.error('Error al guardar:', error));
+}
 
     document.addEventListener('DOMContentLoaded', () => {
         render();
