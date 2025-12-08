@@ -6,143 +6,106 @@
     <title>Tema 1: Saludos</title>
 
     <link rel="stylesheet" href="../assets/css/styles.css">
+    
+    <link rel="stylesheet" href="../assets/css/enhanced-styles.css">
 
     <style>
-button.primary {
-    opacity: 0.5;
-    pointer-events: none;
-}
+        button.primary {
+            opacity: 0.5;
+            pointer-events: none;
+        }
 
-button.primary.active {
-    opacity: 1;
-    pointer-events: auto;
-}
+        button.primary.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-button.primary.active:active {
-    transform: translateY(5px);
-    box-shadow: 0 0px 0 0 #0288D1;
-}
+        .opt {
+            min-width: 140px; 
+            padding: 20px; 
+            border-radius: 20px;
+            background: #fff;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px; 
+            cursor: pointer;
+            border: 4px solid #E0E0E0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all .2s;
+        }
+        
+        .opt.disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
 
-.opt {
-    min-width: 140px; 
-    padding: 20px; 
-    border-radius: 20px;
-    background: #fff;
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px; 
-    cursor: pointer;
-    border: 4px solid #E0E0E0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    transition: all .2s;
-}
+        .day-image-option img {
+            width: 100px; 
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
 
-.opt:not(.disabled):hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-}
+        .matching-click-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: var(--matching-bg, #8AC257); 
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
 
-.opt.disabled { pointer-events: none; opacity: 0.7; }
-.opt.ok { border-color: var(--ok); box-shadow: 0 8px 20px rgba(76,175,80,0.3); background: #E8F5E9; }
-.opt.bad { border-color: var(--bad); box-shadow: 0 8px 20px rgba(229,57,53,0.3); background: #FFEBEE; }
+        .matching-card {
+            background-color: var(--matching-card-bg, #E7F6E1);
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-.day-image-option img {
-    width: 100px; 
-    height: 100px;
-    border-radius: 10px;
-    object-fit: cover;
-}
+        .questions-stack, .answers-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.5);
+        }
 
-.matching-click-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-    background-color: var(--matching-bg, #8AC257); 
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
+        .stack-title {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--text-color, #333);
+            margin-bottom: 5px;
+            text-align: left;
+            padding-left: 10px;
+        }
 
-.matching-card {
-    background-color: var(--matching-card-bg, #E7F6E1);
-    border-radius: 12px;
-    padding: 15px 20px;
-    font-weight: 700;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
-    border: 2px solid transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.matching-card:hover:not(.matched):not(.selected) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 0 0 rgba(0,0,0,0.15);
-}
-
-.matching-card.selected {
-    border-color: var(--select-highlight, #FF7043);
-    box-shadow: 0 0 0 4px var(--select-highlight, #FF7043);
-    background-color: #F8E3DD;
-}
-
-.matching-card.matched {
-    background-color: var(--ok);
-    color: white;
-    pointer-events: none;
-    cursor: default;
-    box-shadow: none;
-    border-color: var(--ok);
-}
-
-.matching-card.shaking {
-    animation: shake 0.5s; 
-    animation-iteration-count: 2;
-    border-color: var(--bad) !important;
-    box-shadow: 0 0 0 4px var(--bad) !important;
-    background-color: #FFEBEE !important;
-    color: var(--bad);
-}
-
-.questions-stack, .answers-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.5);
-}
-
-.stack-title {
-    font-weight: 800;
-    font-size: 1.1rem;
-    color: var(--text-color, #333);
-    margin-bottom: 5px;
-    text-align: left;
-    padding-left: 10px;
-}
-
-@media (min-width: 601px) {
-    .matching-click-container {
-        flex-direction: row;
-        justify-content: space-around;
-    }
-    .questions-stack, .answers-stack {
-        flex-basis: 48%;
-    }
-}
+        @media (min-width: 601px) {
+            .matching-click-container {
+                flex-direction: row;
+                justify-content: space-around;
+            }
+            .questions-stack, .answers-stack {
+                flex-basis: 48%;
+            }
+        }
     </style>
-
 </head>
-<body>
+<body class="module-1">
     <div class="app" role="application" aria-label="Prototipo actividades para primaria">
         <header>
             <h1 id="title">Mini-Clase: Saludos Ch'ol</h1>
@@ -154,23 +117,30 @@ button.primary.active:active {
 
         <main class="stage-area" id="stageArea"></main>
 
-        <div class="controls" id="controlsArea">
-            </div>
+        <div class="controls" id="controlsArea"></div>
 
         <footer>Prototipo educativo · Tema 1: Saludos</footer>
     </div>
 
     <div class="ground-sim"></div>
 
+    <script src="../assets/js/sound-effects.js"></script>
 
 <script>
     const TEMA_ID = 1;
     const MAIN_SCREEN_URL = '../U1/U1FAM.html'; 
-    const USER_GOOGLE_ID = 'ID_DEL_USUARIO_AUTENTICADO'; 
     const TOTAL_ACTIVITY_POINTS = 30; 
     
+    let stage1Attempts = 0;
+    let stage1MaxAttempts = 2; 
+    let stage2Attempts = 0;
+    let stage2MaxAttempts = 2;
+
     function goHome() {
-        window.location.href = MAIN_SCREEN_URL;
+        soundSystem.play('whoosh');
+        setTimeout(() => {
+            window.location.href = MAIN_SCREEN_URL;
+        }, 200);
     }
 
     const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4];
@@ -206,7 +176,10 @@ button.primary.active:active {
     }
     
     function disableOptions() {
-        document.querySelectorAll('.opt').forEach(el => el.classList.add('disabled'));
+        document.querySelectorAll('.opt').forEach(el => {
+            el.classList.add('disabled');
+            el.style.pointerEvents = 'none'; 
+        });
     }
 
     function renderControls(html = '') {
@@ -217,13 +190,18 @@ button.primary.active:active {
     function next(){ 
         if (!stageProgress[currentStage]) {
             setFeedback("¡Termina esta parte antes de continuar!", 'bad');
+            soundSystem.play('error');
             return;
         }
 
+        soundSystem.play('whoosh');
+
         if (currentStage === 4) {
-             alert(`✅ Tema Terminado. Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo a la pantalla principal...`);
-             window.location.href = MAIN_SCREEN_URL; 
-             return; 
+            setTimeout(() => {
+                alert(`✅ Tema Terminado. Puntuación: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo...`);
+                window.location.href = MAIN_SCREEN_URL; 
+            }, 300);
+            return; 
         }
 
         currentStage++;
@@ -257,10 +235,8 @@ button.primary.active:active {
         }
     }
 
-
     function playAudio(audioFilename, text, lang = 'cho') {
         const audioUrl = `../assets/audio/${audioFilename}`; 
-        
         const audio = new Audio(audioUrl);
         
         audio.play()
@@ -276,16 +252,18 @@ button.primary.active:active {
 
     function createAudioButton(text, audioFilename, lang = 'cho') {
         const btn = document.createElement('button');
-        btn.className = 'ghost';
+        btn.className = 'ghost audio-btn';
         btn.innerHTML = '🔊 Reproducir Audio';
-        btn.onclick = () => { playAudio(audioFilename, text, lang); };
+        btn.onclick = (e) => { 
+            playAudio(audioFilename, text, lang); 
+        };
         return btn;
     }
 
     function renderStage0(container){
         const videoHtml = `
             <div class="video-wrapper">
-                <iframe src="https://www.youtube.com/embed/z4fR0S2T-R0?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/RUTAS_PENDIENTES?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
             <p style="text-align:center; max-width: 600px; margin-top: 20px;">
                 ¡Mira el video para aprender los saludos básicos en Ch'ol! Luego, presiona "Siguiente" para comenzar las actividades.
@@ -302,40 +280,70 @@ button.primary.active:active {
         { audio: "Tyalety", filename: "pasale.mp3", correct: "Pasale", options: ["Pasale", "Voy llegando", "Mañana", "Adiós"] },
         { audio: "La´me", filename: "ven.mp3", correct: "Ven", options: ["Ven", "Bueno", "Pasale", "Adiós"] },
         { audio: "Ya´ ktyile", filename: "ahi_vengo.mp3", correct: "Ahí vengo", options: ["Ahí vengo", "Voy llegando", "Mañana", "Bueno"] },
-
     ];
     let currentRound1 = 0; 
 
     function checkAnswer1(selectedOption, currentData, allOptionsElements) {
+        const selectedElement = Array.from(allOptionsElements).find(el => 
+            el.textContent === selectedOption
+        );
+
         if (selectedOption === currentData.correct) {
+            handleCorrectAnswer(selectedElement);
             setFeedback('¡Muy bien! ¡Correcto!', 'ok');
+            
+            stage1Attempts = 0; 
             currentRound1++;
+            
             setTimeout(() => {
                 renderStage1(document.getElementById('stageArea'));
-            }, 1200);
+            }, 1500);
         } else {
-            setFeedback('Incorrecto. ¡La respuesta correcta es: ' + currentData.correct + '!', 'bad');
-            allOptionsElements.forEach(el => {
-                if (el.textContent === currentData.correct) {
-                    el.classList.add('ok');
-                }
-            });
-            currentRound1++;
-            setTimeout(() => {
-                renderStage1(document.getElementById('stageArea'));
-            }, 2500);
+            stage1Attempts++;
+            
+            if (stage1Attempts < stage1MaxAttempts) {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. Te quedan ${stage1MaxAttempts - stage1Attempts} intentos. ¡Intenta de nuevo!`, 'bad');
+                
+                setTimeout(() => {
+                    allOptionsElements.forEach(el => {
+                        el.classList.remove('bad', 'disabled');
+                        el.style.pointerEvents = 'auto';
+                    });
+                    setFeedback('Intenta de nuevo...', 'neutral');
+                }, 1500);
+            } else {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. La respuesta correcta es: ${currentData.correct}.`, 'bad');
+                
+                allOptionsElements.forEach(el => {
+                    if (el.textContent === currentData.correct) {
+                        el.classList.add('ok');
+                    }
+                });
+                
+                stage1Attempts = 0; 
+                currentRound1++;
+                
+                setTimeout(() => {
+                    renderStage1(document.getElementById('stageArea'));
+                }, 2500);
+            }
         }
     }
 
     function renderStage1(container) {
         if (currentRound1 >= stage1Data.length) {
-            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las 6 rondas.</h2>`;
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las ${stage1Data.length} rondas.</h2>`;
             setStageComplete(true);
             renderControls();
+            earnStar(container);
             return;
         }
+        
         const currentData = stage1Data[currentRound1];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha el audio y selecciona la traducción correcta.</p>`;
+        const attemptsInfo = stage1MaxAttempts > 1 ? `(Tienes ${stage1MaxAttempts} intentos)` : '';
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha el audio y selecciona la traducción correcta. ${attemptsInfo}</p>`;
 
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho'); 
         
@@ -379,7 +387,7 @@ button.primary.active:active {
     }
 
     const stage2Questions = [
-        { audio: "K´iñ", filename: "manana.mp3", correct: "mañana.png", word: "Mañana" },
+        { audio: "K´iñ", filename: "mañana.mp3", correct: "mañana.png", word: "Mañana" },
         { audio: "Och´añ k´iñ", filename: "tarde.mp3", correct: "tarde.png", word: "Tarde" }, 
         { audio: "Ik´añ", filename: "noche.mp3", correct: "noche.png", word: "Noche" },
     ];
@@ -394,23 +402,51 @@ button.primary.active:active {
     ];
 
     function checkAnswer2(selectedImage, currentData, allOptionsElements) {
+        const selectedElement = Array.from(allOptionsElements).find(el => 
+            el.dataset.img === selectedImage
+        );
+
         if (selectedImage === currentData.correct) {
+            handleCorrectAnswer(selectedElement);
             setFeedback(`¡Correcto! Es la ${currentData.word}.`, 'ok');
+            
+            stage2Attempts = 0; 
             currentRound2++;
+            
             setTimeout(() => {
                 renderStage2(document.getElementById('stageArea'));
-            }, 1200);
+            }, 1500);
         } else {
-            setFeedback('Incorrecto. ¡La figura correcta representa ' + currentData.word + '!', 'bad');
-            allOptionsElements.forEach(el => {
-                if (el.dataset.img === currentData.correct) {
-                    el.classList.add('ok');
-                }
-            });
-            currentRound2++;
-            setTimeout(() => {
-                renderStage2(document.getElementById('stageArea'));
-            }, 2500);
+            stage2Attempts++;
+            
+            if (stage2Attempts < stage2MaxAttempts) {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. Te quedan ${stage2MaxAttempts - stage2Attempts} intentos. ¡Intenta de nuevo!`, 'bad');
+                
+                setTimeout(() => {
+                    allOptionsElements.forEach(el => {
+                        el.classList.remove('bad', 'disabled');
+                        el.style.pointerEvents = 'auto';
+                    });
+                    setFeedback('Intenta de nuevo...', 'neutral');
+                }, 1500);
+            } else {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. La figura correcta representa ${currentData.word}.`, 'bad');
+                
+                allOptionsElements.forEach(el => {
+                    if (el.dataset.img === currentData.correct) {
+                        el.classList.add('ok');
+                    }
+                });
+                
+                stage2Attempts = 0;
+                currentRound2++;
+                
+                setTimeout(() => {
+                    renderStage2(document.getElementById('stageArea'));
+                }, 2500);
+            }
         }
     }
     
@@ -419,11 +455,13 @@ button.primary.active:active {
             container.innerHTML = `<h2 style="color: var(--ok);">¡Genial! Terminaste las 3 rondas del día.</h2>`;
             setStageComplete(true);
             renderControls();
+            earnStar(container);
             return; 
         }
 
         const currentData = stage2Questions[currentRound2];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de 3. Escucha el saludo y selecciona la figura que representa: "${currentData.word}".</p>`;
+        const attemptsInfo = stage2MaxAttempts > 1 ? `(Tienes ${stage2MaxAttempts} intentos)` : '';
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de 3. Escucha el saludo y selecciona la figura que representa: "${currentData.word}". ${attemptsInfo}</p>`;
         
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho');
         
@@ -489,6 +527,8 @@ button.primary.active:active {
     }
 
     function handleQuestionClick(cardEl, question) {
+        soundSystem.play('click');
+        
         if (cardEl.classList.contains('selected')) {
             cardEl.classList.remove('selected');
             selectedQuestion = null;
@@ -506,42 +546,41 @@ button.primary.active:active {
     }
 
     function handleAnswerClick(cardEl, answer) {
+        soundSystem.play('click');
+        
         if (!selectedQuestion) {
             setFeedback('Selecciona primero una palabra Ch\'ol de la columna izquierda.', 'bad');
-            cardEl.classList.add('shaking');
-            setTimeout(() => cardEl.classList.remove('shaking'), 500);
+            visualEffects.shake(cardEl);
             return;
         }
 
         const questionCardEl = document.querySelector(`.questions-stack .matching-card[data-chol="${selectedQuestion.ch}"]`);
 
         if (selectedQuestion.es === answer.es) {
+            soundSystem.play('success');
             setFeedback('¡Emparejamiento Correcto!', 'ok');
             
             cardEl.classList.add('matched');
             questionCardEl.classList.add('matched');
-            cardEl.classList.remove('shaking'); 
-            questionCardEl.classList.remove('shaking', 'selected');
+            visualEffects.celebrate(cardEl);
+            visualEffects.celebrate(questionCardEl);
 
             selectedQuestion = null;
-            
             matchedPairsCount++;
 
             if (matchedPairsCount === stage3Data.length) {
-                setFeedback('¡Actividad 3 Completada! Todo es correcto.', 'ok');
-                setStageComplete(true);
+                setTimeout(() => {
+                    setFeedback('¡Actividad 3 Completada! Todo es correcto.', 'ok');
+                    setStageComplete(true);
+                    earnStar(document.getElementById('stageArea'));
+                }, 500);
             }
 
         } else {
+            soundSystem.play('error');
             setFeedback('Incorrecto. Intenta de nuevo.', 'bad');
-
-            cardEl.classList.add('shaking');
-            questionCardEl.classList.add('shaking');
-            
-            setTimeout(() => {
-                cardEl.classList.remove('shaking');
-                questionCardEl.classList.remove('shaking');
-            }, 500);
+            visualEffects.shake(cardEl);
+            visualEffects.shake(questionCardEl);
         }
     }
 
@@ -597,10 +636,12 @@ button.primary.active:active {
     }
     
     function renderStage4(container) {
+        celebrateLevelComplete();
+        
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
                 <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 1 Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
+                <p style="font-size: 1.2rem;">Puntuación: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
                 <p>Presiona "Siguiente" para volver a la pantalla principal.</p>
             </div>
         `;
@@ -610,22 +651,23 @@ button.primary.active:active {
     }
 
     function guardarProgresoEnBD() {
-    fetch('../../backend/api/progress.php', { 
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            tema_id: TEMA_ID,
-            completado: true
+        fetch('../../backend/api/progress.php', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tema_id: TEMA_ID,
+                completado: true
+            })
         })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Progreso guardado:", data);
-        if(data.success) {
-        }
-    })
-    .catch(error => console.error('Error al guardar:', error));
-}
+        .then(response => response.json())
+        .then(data => {
+            console.log("Progreso guardado:", data);
+            if(data.success) {
+                collectCoin();
+            }
+        })
+        .catch(error => console.error('Error al guardar:', error));
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
         render();

@@ -6,148 +6,145 @@
     <title>Tema 1: Profesiones y Oficios</title>
 
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/enhanced-styles.css">
 
     <style>
-:root {
-    --matching-bg: #8AC257;
-    --matching-card-bg: #E7F6E1;
-    --select-highlight: #FF7043;
-}
 
-button.primary {
-    opacity: 0.5;
-    pointer-events: none;
-}
+        button.primary {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        button.primary.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-button.primary.active {
-    opacity: 1;
-    pointer-events: auto;
-}
+        .opt {
+            min-width: 140px; 
+            padding: 15px; 
+            border-radius: 20px; 
+            background: #fff; 
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; 
+            cursor: pointer; 
+            border: 4px solid #E0E0E0;
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            transition: all .2s;
+            text-align: center;
+        }
 
-button.primary.active:active {
-    transform: translateY(5px);
-    box-shadow: 0 0px 0 0 #0288D1;
-}
+        .opt:hover:not(.disabled) {
+            transform: translateY(-5px); 
+            border-color: var(--accent);
+        }
 
-.opt {
-    min-width: 140px; 
-    padding: 20px; 
-    border-radius: 20px;
-    background: #fff;
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px; 
-    cursor: pointer;
-    border: 4px solid #E0E0E0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    transition: all .2s;
-}
+        .opt.disabled { 
+            pointer-events: none; 
+            opacity: 0.7; 
+            cursor: default;
+        }
 
-.opt:not(.disabled):hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-}
+        .day-image-option img {
+            width: 110px; 
+            height: 110px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
 
-.opt.disabled { pointer-events: none; opacity: 0.7; }
-.opt.ok { border-color: var(--ok); box-shadow: 0 8px 20px rgba(76,175,80,0.3); background: #E8F5E9; }
-.opt.bad { border-color: var(--bad); box-shadow: 0 8px 20px rgba(229,57,53,0.3); background: #FFEBEE; }
+        .matching-click-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 700px;
+            padding: 25px;
+            background-color: #FFF; 
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 4px solid #E0E0E0;
+        }
 
-.day-image-option img {
-    width: 100px; 
-    height: 100px;
-    border-radius: 10px;
-    object-fit: cover;
-}
+        .matching-card {
+            background-color: #F5F5F5;
+            border-radius: 15px;
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+            border: 2px solid #E0E0E0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60px;
+            text-align: center;
+        }
 
-.matching-click-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    max-width: 700px;
-    padding: 20px;
-    background-color: var(--matching-bg); 
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
+        .matching-card:hover:not(.matched):not(.selected) {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            background-color: #FFF;
+        }
 
-.matching-card {
-    background-color: var(--matching-card-bg);
-    border-radius: 12px;
-    padding: 10px 15px;
-    font-weight: 700;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
-    border: 3px solid transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 60px;
-}
+        .matching-card.selected {
+            border-color: var(--accent);
+            background-color: #E3F2FD;
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
 
-.matching-card:hover:not(.matched):not(.selected) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 0 0 rgba(0,0,0,0.15);
-}
+        .matching-card.matched {
+            background-color: var(--ok);
+            color: white;
+            pointer-events: none;
+            cursor: default;
+            box-shadow: none;
+            border-color: var(--ok);
+            animation: pop 0.3s ease-out;
+        }
 
-.matching-card.selected {
-    border-color: var(--select-highlight);
-    box-shadow: 0 0 0 4px var(--select-highlight);
-    background-color: #F8E3DD;
-}
+        .matching-card.shaking {
+            animation: shake 0.5s;
+            border-color: var(--bad) !important;
+            background-color: #FFEBEE !important;
+            color: var(--bad);
+        }
 
-.matching-card.matched {
-    background-color: var(--ok);
-    color: white;
-    pointer-events: none;
-    cursor: default;
-    box-shadow: none;
-    border-color: var(--ok);
-}
+        @keyframes pop {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
 
-.matching-card.shaking {
-    animation: shake 0.5s;
-    animation-iteration-count: 2;
-    border-color: var(--bad) !important;
-    box-shadow: 0 0 0 4px var(--bad) !important;
-    background-color: #FFEBEE !important;
-    color: var(--bad);
-}
+        .questions-stack, .answers-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
 
-.questions-stack, .answers-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.5);
-}
+        .stack-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            text-align: center;
+            text-transform: uppercase;
+        }
 
-.stack-title {
-    font-weight: 800;
-    font-size: 1.1rem;
-    color: var(--text-color);
-    margin-bottom: 5px;
-    text-align: left;
-    padding-left: 10px;
-}
-
-@media (min-width: 601px) {
-    .matching-click-container {
-        flex-direction: row;
-        justify-content: space-around;
-    }
-    .questions-stack, .answers-stack {
-        flex-basis: 48%;
-    }
-}
+        @media (min-width: 601px) {
+            .matching-click-container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
     </style>
-
 </head>
 <body>
     <div class="app" role="application" aria-label="Prototipo actividades para primaria">
@@ -161,14 +158,14 @@ button.primary.active:active {
 
         <main class="stage-area" id="stageArea"></main>
 
-        <div class="controls" id="controlsArea">
-        </div>
+        <div class="controls" id="controlsArea"></div>
 
         <footer>Prototipo educativo · Módulo 3: Tema 1</footer>
     </div>
 
     <div class="ground-sim"></div>
 
+    <script src="../assets/js/sound-effects.js"></script>
 
 <script>
     const TEMA_ID = 8; 
@@ -176,8 +173,17 @@ button.primary.active:active {
     const USER_GOOGLE_ID = 'ID_DEL_USUARIO_AUTENTICADO'; 
     const TOTAL_ACTIVITY_POINTS = 40; 
     
+    let stage1Attempts = 0;
+    const stage1MaxAttempts = 2;
+
+    let stage2Attempts = 0;
+    const stage2MaxAttempts = 2;
+
     function goHome() {
-        window.location.href = MAIN_SCREEN_URL;
+        soundSystem.play('whoosh');
+        setTimeout(() => {
+            window.location.href = MAIN_SCREEN_URL;
+        }, 200);
     }
 
     const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4];
@@ -212,8 +218,8 @@ button.primary.active:active {
         else { feedbackEl.style.color = 'var(--text-color)' }
     }
     
-    function disableOptions() {
-        document.querySelectorAll('.opt').forEach(el => el.classList.add('disabled'));
+    function disableOptions(selector) {
+        document.querySelectorAll(selector).forEach(el => el.classList.add('disabled'));
     }
 
     function renderControls(html = '') {
@@ -224,11 +230,17 @@ button.primary.active:active {
     function next(){ 
         if (!stageProgress[currentStage]) {
             setFeedback("¡Termina esta parte antes de continuar!", 'bad');
+            soundSystem.play('error');
             return;
         }
+
+        soundSystem.play('whoosh');
+
         if (currentStage === 4) {
-             alert(`✅ Tema Terminado. Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo a la pantalla principal...`);
-             window.location.href = MAIN_SCREEN_URL; 
+             setTimeout(() => {
+                 alert(`✅ Tema Terminado. Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo a la pantalla principal...`);
+                 window.location.href = MAIN_SCREEN_URL; 
+             }, 300);
              return; 
         }
         currentStage++;
@@ -270,7 +282,6 @@ button.primary.active:active {
 
     function playAudio(audioFilename, text, lang = 'cho') {
         const audioUrl = `../assets/audio/${audioFilename}`; 
-        
         const audio = new Audio(audioUrl);
         
         audio.play()
@@ -286,7 +297,7 @@ button.primary.active:active {
 
     function createAudioButton(text, audioFilename, lang = 'cho') {
         const btn = document.createElement('button');
-        btn.className = 'ghost';
+        btn.className = 'ghost audio-btn';
         btn.innerHTML = '🔊 Reproducir Audio';
         btn.onclick = () => { playAudio(audioFilename, text, lang); };
         return btn;
@@ -303,7 +314,7 @@ button.primary.active:active {
     function renderStage0(container){
         const videoHtml = `
             <div class="video-wrapper">
-                <iframe src="https://www.youtube.com/embed/URL_DEL_VIDEO_TEMA1?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/g3d1K4z5q6c?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
             <p style="text-align:center; max-width: 600px; margin-top: 20px;">
                 ¡Mira el video para aprender sobre las Profesiones y Oficios en Ch'ol! Luego, presiona Siguiente para comenzar las actividades.
@@ -329,20 +340,47 @@ button.primary.active:active {
 
         if (userInput === correctAnswer) {
             setFeedback('¡Muy bien! ¡Correcto!', 'ok');
+            soundSystem.play('success');
+            
             inputEl.style.borderColor = 'var(--ok)';
             inputEl.disabled = true;
+            
+            stage1Attempts = 0;
             currentRound1++;
+            
             setTimeout(() => {
                 renderStage1(document.getElementById('stageArea'));
             }, 1500);
         } else {
-            setFeedback(`Incorrecto. La respuesta correcta era: **${currentData.es_word}**`, 'bad');
-            inputEl.style.borderColor = 'var(--bad)';
-            inputEl.disabled = true;
-            currentRound1++;
-            setTimeout(() => {
-                renderStage1(document.getElementById('stageArea'));
-            }, 3000);
+            stage1Attempts++;
+            if (stage1Attempts < stage1MaxAttempts) {
+                setFeedback(`Incorrecto. Te quedan ${stage1MaxAttempts - stage1Attempts} intentos.`, 'bad');
+                soundSystem.play('error');
+                
+                inputEl.style.borderColor = 'var(--bad)';
+                visualEffects.shake(inputEl);
+                
+                const checkBtn = document.getElementById('checkBtn1');
+                checkBtn.classList.add('active');
+                checkBtn.disabled = false;
+                checkBtn.textContent = "Reintentar";
+                
+            } else {
+                setFeedback(`Incorrecto. La respuesta correcta es: **${currentData.es_word}**`, 'bad');
+                soundSystem.play('error');
+                
+                inputEl.value = currentData.es_word; 
+                inputEl.style.borderColor = 'var(--bad)';
+                inputEl.style.color = 'var(--bad)';
+                inputEl.disabled = true;
+                
+                stage1Attempts = 0;
+                currentRound1++;
+                
+                setTimeout(() => {
+                    renderStage1(document.getElementById('stageArea'));
+                }, 3000);
+            }
         }
     }
 
@@ -351,28 +389,34 @@ button.primary.active:active {
             container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las ${stage1Data.length} rondas.</h2>`;
             setStageComplete(true);
             renderControls();
+            earnStar(container);
             return;
         }
 
         const currentData = stage1Data[currentRound1];
+        const attemptsInfo = stage1MaxAttempts > 1 ? `(Tienes ${stage1MaxAttempts} intentos)` : '';
+
         renderControls(); 
 
         container.innerHTML = `
-            <p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Mira la imagen, lee la palabra en Ch'ol y escribe su significado en Español.</p>
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; max-width: 400px; margin: 20px auto; padding: 20px; border: 3px solid var(--color-acentos); border-radius: 15px; background: #E0F7FA;">
-                <img src="../assets/img/${currentData.img}" alt="${currentData.ch_word}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 10px; border: 3px solid #FFF;">
-                <p style="font-size: 1.5rem; font-weight: bold; color: var(--color-acentos);">${currentData.ch_word}</p>
-                <input type="text" id="answerInput" placeholder="Escribe aquí en Español" style="padding: 10px; font-size: 1.1rem; border-radius: 8px; border: 2px solid #ccc; width: 100%; text-align: center;">
-                <button class="primary active" id="checkBtn1" style="width: 100%;">Comprobar</button>
+            <p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Mira la imagen, lee la palabra en Ch'ol y escribe su significado en Español. ${attemptsInfo}</p>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; max-width: 400px; margin: 20px auto; padding: 25px; border: 4px solid var(--accent); border-radius: 20px; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                <img src="../assets/img/${currentData.img}" alt="${currentData.ch_word}" style="width: 140px; height: 140px; object-fit: cover; border-radius: 15px; border: 3px solid #eee;">
+                <p style="font-size: 1.8rem; font-weight: 800; color: var(--accent); margin:0;">${currentData.ch_word}</p>
+                <input type="text" id="answerInput" placeholder="Escribe en Español..." autocomplete="off" style="padding: 12px; font-size: 1.1rem; border-radius: 10px; border: 2px solid #ccc; width: 100%; text-align: center; outline: none; transition: all 0.2s;">
+                <button class="primary active" id="checkBtn1" style="width: 100%; margin-top: 10px;">Comprobar</button>
             </div>
         `;
 
         const inputEl = document.getElementById('answerInput');
         const checkBtn = document.getElementById('checkBtn1');
         
+        setTimeout(() => inputEl.focus(), 100);
+        
         checkBtn.onclick = () => {
             if (inputEl.value.trim() === "") {
                 setFeedback("¡Debes escribir algo!", 'bad');
+                visualEffects.shake(inputEl);
                 return;
             }
             checkBtn.classList.remove('active');
@@ -384,6 +428,10 @@ button.primary.active:active {
             if (event.key === 'Enter' && checkBtn.classList.contains('active')) {
                 checkBtn.click();
             }
+        });
+        
+        inputEl.addEventListener('input', function() {
+            inputEl.style.borderColor = '#ccc'; 
         });
 
         setStageComplete(false);
@@ -406,24 +454,45 @@ button.primary.active:active {
         { filename: "florista.png", word: "Florista" } 
     ];
 
-    function checkAnswer2(selectedImage, currentData, allOptionsElements) {
+    function checkAnswer2(selectedImage, currentData, allOptionsElements, selectedElement) {
         if (selectedImage === currentData.correct) {
             setFeedback(`¡Correcto! Es el ${currentData.word}.`, 'ok');
+            handleCorrectAnswer(selectedElement);
+            
+            stage2Attempts = 0;
             currentRound2++;
             setTimeout(() => {
                 renderStage2(document.getElementById('stageArea'));
-            }, 1200);
+            }, 1500);
         } else {
-            setFeedback('Incorrecto. ¡La figura correcta representa ' + currentData.word + '!', 'bad');
-            allOptionsElements.forEach(el => {
-                if (el.dataset.img === currentData.correct) {
-                    el.classList.add('ok');
-                }
-            });
-            currentRound2++;
-            setTimeout(() => {
-                renderStage2(document.getElementById('stageArea'));
-            }, 2500);
+            stage2Attempts++;
+            if (stage2Attempts < stage2MaxAttempts) {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. Te quedan ${stage2MaxAttempts - stage2Attempts} intentos.`, 'bad');
+                
+                setTimeout(() => {
+                    allOptionsElements.forEach(el => {
+                        el.classList.remove('disabled', 'bad');
+                        el.style.pointerEvents = 'auto';
+                    });
+                    setFeedback('Intenta de nuevo...', 'neutral');
+                }, 1500);
+            } else {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback('Incorrecto. La figura correcta era: ' + currentData.word, 'bad');
+                
+                allOptionsElements.forEach(el => {
+                    if (el.dataset.img === currentData.correct) {
+                        el.classList.add('ok');
+                    }
+                });
+                
+                stage2Attempts = 0;
+                currentRound2++;
+                setTimeout(() => {
+                    renderStage2(document.getElementById('stageArea'));
+                }, 2500);
+            }
         }
     }
     
@@ -432,11 +501,14 @@ button.primary.active:active {
             container.innerHTML = `<h2 style="color: var(--ok);">¡Genial! Terminaste las ${stage2Questions.length} rondas.</h2>`;
             setStageComplete(true);
             renderControls();
+            earnStar(container);
             return; 
         }
 
         const currentData = stage2Questions[currentRound2];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Questions.length}. Escucha el audio y selecciona la figura: ${currentData.word}.</p>`;
+        const attemptsInfo = stage2MaxAttempts > 1 ? `(Tienes ${stage2MaxAttempts} intentos)` : '';
+
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Questions.length}. Escucha el audio y selecciona la figura: ${currentData.word}. ${attemptsInfo}</p>`;
         
         const audioBtn = createAudioButton(currentData.audio, currentData.filename, 'cho');
         
@@ -470,7 +542,7 @@ button.primary.active:active {
             
             b.onclick = ()=>{
                 const allOptions = document.querySelectorAll('.opt');
-                disableOptions();
+                disableOptions('.opt');
                 
                 if (it.filename === currentData.correct) {
                     b.classList.add('ok');
@@ -478,7 +550,7 @@ button.primary.active:active {
                     b.classList.add('bad');
                 }
                 
-                checkAnswer2(it.filename, currentData, allOptions); 
+                checkAnswer2(it.filename, currentData, allOptions, b); 
             };
             row.appendChild(b);
         });
@@ -486,7 +558,6 @@ button.primary.active:active {
         container.appendChild(row);
         setStageComplete(false);
     }
-
 
     const stage3Pairs = [
         { chol: 'Xpäsjuñ', es: 'Maestro' },
@@ -501,6 +572,7 @@ button.primary.active:active {
     let matchedPairsCountStage3 = 0;
 
     function handleStage3QuestionClick(cardEl, itemData) {
+        soundSystem.play('click');
         if (cardEl.classList.contains('selected')) {
             cardEl.classList.remove('selected');
             selectedQuestionStage3 = null;
@@ -510,14 +582,14 @@ button.primary.active:active {
         document.querySelectorAll('.questions-stack .matching-card.selected').forEach(el => el.classList.remove('selected'));
         cardEl.classList.add('selected');
         selectedQuestionStage3 = itemData;
-        setFeedback(`Seleccionaste **${itemData.chol}**. ¡Ahora elige su traducción!`, 'neutral');
+        setFeedback(`Seleccionaste ${itemData.chol}. ¡Ahora elige su traducción!`, 'neutral');
     }
 
     function handleStage3AnswerClick(cardEl, itemData) {
+        soundSystem.play('click');
         if (!selectedQuestionStage3) {
             setFeedback('Selecciona primero una palabra Ch\'ol de la columna izquierda.', 'bad');
-            cardEl.classList.add('shaking');
-            setTimeout(() => cardEl.classList.remove('shaking'), 500);
+            visualEffects.shake(cardEl);
             return;
         }
 
@@ -525,21 +597,30 @@ button.primary.active:active {
 
         if (selectedQuestionStage3.es === itemData.es) {
             setFeedback('¡Emparejamiento Correcto!', 'ok');
+            soundSystem.play('success');
+            
             cardEl.classList.add('matched');
             questionCardEl.classList.add('matched');
             cardEl.classList.remove('shaking'); 
             questionCardEl.classList.remove('shaking', 'selected');
+            
             selectedQuestionStage3 = null;
             matchedPairsCountStage3++;
 
             if (matchedPairsCountStage3 === stage3Pairs.length) {
-                setFeedback('¡Felicidades! Todos los pares son correctos.', 'ok');
-                setStageComplete(true);
+                setTimeout(() => {
+                    setFeedback('¡Felicidades! Todos los pares son correctos.', 'ok');
+                    setStageComplete(true);
+                    earnStar(document.getElementById('stageArea'));
+                }, 500);
             }
         } else {
             setFeedback('Incorrecto. Intenta de nuevo.', 'bad');
+            soundSystem.play('error');
+            
             cardEl.classList.add('shaking');
             questionCardEl.classList.add('shaking');
+            
             setTimeout(() => {
                 cardEl.classList.remove('shaking');
                 questionCardEl.classList.remove('shaking');
@@ -565,7 +646,7 @@ button.primary.active:active {
 
         const questionsStack = document.createElement('div');
         questionsStack.className = 'questions-stack';
-        questionsStack.innerHTML = `<p class="stack-title">Ch'ol:</p>`;
+        questionsStack.innerHTML = `<p class="stack-title">Ch'ol</p>`;
         
         questions.forEach(q => {
             const cardEl = document.createElement('div');
@@ -578,7 +659,7 @@ button.primary.active:active {
 
         const answersStack = document.createElement('div');
         answersStack.className = 'answers-stack';
-        answersStack.innerHTML = `<p class="stack-title">Español:</p>`;
+        answersStack.innerHTML = `<p class="stack-title">Español</p>`;
 
         answers.forEach(a => {
             const cardEl = document.createElement('div');
@@ -597,34 +678,47 @@ button.primary.active:active {
     
     function renderStage4(container) {
         container.innerHTML = `
-            <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
-                <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 1 Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
+            <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px; background-color: rgba(255,255,255,0.9);">
+                <h2 style="color: var(--ok); font-size: 2.5rem; margin-bottom: 20px;">🎉 ¡Tema 1 Completado! 🎉</h2>
+                <p style="font-size: 1.5rem; font-weight: bold;">Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
+                <p style="margin-top: 15px;">Has aprendido las Profesiones en Ch'ol.</p>
                 <p>Presiona Siguiente para volver a la pantalla principal.</p>
             </div>
         `;
+        
+        try {
+            if (window.visualEffects && typeof window.visualEffects.confetti === 'function') {
+                window.visualEffects.confetti();
+            } else if (typeof celebrateLevelComplete === 'function') {
+                celebrateLevelComplete();
+            }
+        } catch (e) {
+            console.log("Efectos visuales no disponibles");
+        }
+
         guardarProgresoEnBD();
         setStageComplete(true);
         renderControls();
     }
 
     function guardarProgresoEnBD() {
-    fetch('../../backend/api/progress.php', { 
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            tema_id: TEMA_ID,
-            completado: true
+        fetch('../../backend/api/progress.php', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tema_id: TEMA_ID,
+                completado: true
+            })
         })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Progreso guardado:", data);
-        if(data.success) {
-        }
-    })
-    .catch(error => console.error('Error al guardar:', error));
-}
+        .then(response => response.json())
+        .then(data => {
+            console.log("Progreso guardado:", data);
+            if(data.success && window.collectCoin) {
+                collectCoin();
+            }
+        })
+        .catch(error => console.error('Error al guardar:', error));
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
         render();

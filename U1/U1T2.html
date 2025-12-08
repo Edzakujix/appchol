@@ -5,90 +5,146 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Tema 2: Presentación Personal</title>
 
-        <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/enhanced-styles.css">
 
     <style>
-.demo-image-card {
-    width: 150px; 
-    height: 150px;
-    border-radius: 50%;
-    background-color: #E0E0E0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border: 5px solid transparent;
-    transition: all 0.3s;
-}
+        
+        button.primary {
+            opacity: 0.5;
+            pointer-events: none;
+        }
 
-.demo-image-card:hover {
-    transform: scale(1.05);
-    border-color: var(--next);
-}
+        button.primary.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-.demo-image-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
+        .opt {
+            min-width: 140px; 
+            padding: 15px; 
+            border-radius: 20px;
+            background: #fff;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; 
+            cursor: pointer;
+            border: 4px solid #E0E0E0;
+            transition: all .2s;
+        }
 
-.translation-container {
-    width: 100%;
-    max-width: 650px;
-    text-align: center;
-    padding: 20px;
-    background-color: #e3f2fd;
-    border-radius: 20px;
-    border: 3px solid #90caf9;
-    margin-bottom: 20px;
-}
+        .opt.disabled {
+            opacity: 0.7;
+            cursor: default;
+            pointer-events: none;
+        }
+        
+        .opt img {
+            width: 100px; 
+            height: 100px; 
+            object-fit: contain; 
+            border-radius: 10px;
+        }
 
-.translation-prompt {
-    font-size: clamp(1.3rem, 4vw, 1.8rem);
-    font-weight: 800;
-    color: var(--accent);
-    margin-bottom: 15px;
-    text-shadow: 1px 1px #fff;
-}
+        .demo-image-card {
+            width: 160px; 
+            height: 160px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 6px solid #E0E0E0;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
 
-.translation-options-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
+        .demo-image-card:hover {
+            transform: scale(1.05);
+            border-color: var(--next);
+        }
 
-.translation-option {
-    background-color: #fff;
-    border: 3px solid #FFCA28;
-    border-radius: 15px;
-    padding: 15px 20px;
-    font-weight: 700;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
+        .demo-image-card img {
+            width: 90%;
+            height: 90%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
 
-.translation-option:hover:not(.disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-}
+        .translation-container {
+            width: 100%;
+            max-width: 650px;
+            text-align: center;
+            padding: 25px;
+            background-color: #e3f2fd;
+            border-radius: 20px;
+            border: 4px solid #90caf9;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
 
-.translation-option.ok {
-    border-color: var(--ok);
-    background: #E8F5E9;
-}
+        .translation-prompt {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            font-weight: 800;
+            color: var(--accent);
+            text-shadow: 1px 1px #fff;
+        }
 
-.translation-option.bad {
-    border-color: var(--bad);
-    background: #FFEBEE;
-}
+        .translation-options-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-@media (max-width: 600px){
-    .translation-prompt { font-size: 1.3rem; }
-    .translation-option { font-size: 1rem; }
-}
+        .translation-option {
+            background-color: #fff;
+            border: 3px solid #FFCA28;
+            border-radius: 15px;
+            padding: 15px 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+
+        .translation-option:hover:not(.disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .translation-option.ok {
+            border-color: var(--ok);
+            background: #E8F5E9;
+            color: var(--ok);
+        }
+
+        .translation-option.bad {
+            border-color: var(--bad);
+            background: #FFEBEE;
+            opacity: 0.6;
+        }
+
+        .translation-option.disabled {
+            pointer-events: none;
+            cursor: default;
+        }
+
+        .clicked-once {
+            border-color: var(--active) !important;
+            background-color: #E3F2FD;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 600px){
+            .translation-prompt { font-size: 1.3rem; }
+            .translation-option { font-size: 1rem; padding: 10px 15px; }
+        }
     </style>
 </head>
 <body>
@@ -103,20 +159,32 @@
 
         <main class="stage-area" id="stageArea"></main>
 
-        <div class="controls" id="controlsArea">
-             </div>
+        <div class="controls" id="controlsArea"></div>
 
         <footer>Prototipo educativo · Tema 2: Presentación Personal</footer>
     </div>
-        <div class="ground-sim"></div>
 
+    <div class="ground-sim"></div>
+
+    <script src="../assets/js/sound-effects.js"></script>
 
 <script>
     const TEMA_ID = 2;
     const MAIN_SCREEN_URL = '../U1/U1FAM.html'; 
+    const TOTAL_ACTIVITY_POINTS = 40; 
+
+    let stage2Attempts = 0;
+    let stage2MaxAttempts = 2; 
+    let stage3Attempts = 0;
+    let stage3MaxAttempts = 2;
+    let stage4Attempts = 0;
+    let stage4MaxAttempts = 2;
     
     function goHome() {
-        window.location.href = MAIN_SCREEN_URL;
+        soundSystem.play('whoosh');
+        setTimeout(() => {
+            window.location.href = MAIN_SCREEN_URL;
+        }, 200);
     }
 
     const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4, renderStage5];
@@ -128,8 +196,6 @@
     
     let stageProgress = new Array(stages.length).fill(false); 
     let userScore = 0;
-    const TOTAL_ACTIVITY_POINTS = 40; 
-
 
     function setStageComplete(isComplete = true) {
         if (isComplete && !stageProgress[currentStage]) {
@@ -144,6 +210,7 @@
     function clearFeedback(){ 
         if(feedbackEl) feedbackEl.textContent = ""; 
     }
+    
     function setFeedback(text, kind){
         if(!feedbackEl) return;
         feedbackEl.textContent = text;
@@ -157,15 +224,26 @@
         feedbackEl = document.getElementById('feedback');
     }
 
+    function disableOptions(selector) {
+        document.querySelectorAll(selector).forEach(el => {
+            el.classList.add('disabled');
+        });
+    }
+
     function next(){ 
         if (!stageProgress[currentStage]) {
             setFeedback("¡Termina esta parte antes de continuar!", 'bad');
+            soundSystem.play('error');
             return;
         }
 
+        soundSystem.play('whoosh');
+
         if (currentStage === 5) {
-            alert(`✅ Tema Terminado. Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo a la pantalla principal...`);
-            window.location.href = MAIN_SCREEN_URL; 
+            setTimeout(() => {
+                alert(`✅ Tema Terminado. Puntuación: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo...`);
+                window.location.href = MAIN_SCREEN_URL; 
+            }, 300);
             return; 
         }
 
@@ -174,29 +252,6 @@
             currentStage = stages.length - 1; 
         }
         render(); 
-    }
-
-    function render(){ 
-        clearFeedback(); 
-        setStageComplete(false);
-        const container = document.getElementById('stageArea'); 
-        container.innerHTML=''; 
-
-        const titles = [
-            'Mini-Clase: Presentación Personal', 
-            'Actividad 1: Demostración (Niño/Niña)', 
-            'Actividad 2: Identificar Familia/Objetos (6 rondas)', 
-            'Actividad 3: Conteo Visual (4 rondas)',
-            'Actividad 4: Traducción de Preguntas (5 rondas)',
-            '¡Tema Terminado!' 
-        ];
-        titleEl.textContent = titles[currentStage];
-
-        stages[currentStage](container);
-        
-        if (currentStage === 0 || currentStage === 5) { 
-            setStageComplete(true);
-        }
     }
 
     function speakText(text, lang='es-ES'){
@@ -209,7 +264,6 @@
     
     function playAudio(audioFilename, text, lang = 'cho') {
         const audioUrl = `../assets/audio/${audioFilename}`; 
-        
         const audio = new Audio(audioUrl);
         
         audio.play()
@@ -218,7 +272,6 @@
             })
             .catch(e => {
                 console.error(`❌ Error al cargar o reproducir "${audioUrl}": ${e.message}`);
-                
                 speakText(text, lang); 
                 setFeedback(`[TTS] No se encontró el audio real. Reproduciendo: "${text}"`, 'neutral');
             });
@@ -226,16 +279,39 @@
 
     function createAudioButton(text, audioFilename, lang = 'cho') {
         const btn = document.createElement('button');
-        btn.className = 'ghost';
+        btn.className = 'ghost audio-btn'; 
         btn.innerHTML = '🔊 Reproducir Audio';
         btn.onclick = () => { playAudio(audioFilename, text, lang); };
         return btn;
     }
 
+    function render(){ 
+        clearFeedback(); 
+        setStageComplete(false);
+        const container = document.getElementById('stageArea'); 
+        container.innerHTML=''; 
+
+        const titles = [
+            'Mini-Clase: Presentación Personal', 
+            'Actividad 1: Demostración', 
+            'Actividad 2: Identificar Familia/Objetos', 
+            'Actividad 3: Conteo Visual',
+            'Actividad 4: Traducción',
+            '¡Tema Terminado!' 
+        ];
+        titleEl.textContent = titles[currentStage];
+
+        stages[currentStage](container);
+        
+        if (currentStage === 0 || currentStage === 5) { 
+            setStageComplete(true);
+        }
+    }
+
     function renderStage0(container){
-          const videoHtml = `
+        const videoHtml = `
             <div class="video-wrapper">
-                <iframe src="https://www.youtube.com/embed/z4fR0S2T-R0?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/RUTAS_PENDIENTES?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
             <p style="text-align:center; max-width: 600px; margin-top: 20px;">
                 ¡Mira el video para aprender las frases de presentación! Presiona "Siguiente" para la demostración.
@@ -268,6 +344,7 @@
             b.onclick = () => {
                 playAudio(data.filename, data.chool, 'cho');
                 setFeedback(`Ch'ol: "${data.chool}" (Español: ${data.translation})`, 'neutral');
+                soundSystem.play('click');
             };
             
             b.appendChild(img);
@@ -290,23 +367,52 @@
     let currentRound2 = 0; 
 
     function checkAnswer2(selectedImage, currentData, allOptionsElements) {
+        const selectedElement = Array.from(allOptionsElements).find(el => el.dataset.img === selectedImage);
+
         if (selectedImage === currentData.correct) {
             setFeedback('¡Muy bien! ¡Correcto!', 'ok');
+            handleCorrectAnswer(selectedElement); 
+            
+            stage2Attempts = 0;
             currentRound2++;
+            
             setTimeout(() => {
                 renderStage2(document.getElementById('stageArea'));
-            }, 1200);
+            }, 1500);
         } else {
-            setFeedback('Incorrecto. ¡La imagen correcta representa: ' + currentData.text + '!', 'bad');
-            allOptionsElements.forEach(el => {
-                if (el.dataset.img === currentData.correct) {
-                    el.classList.add('ok');
-                }
-            });
-            currentRound2++;
-            setTimeout(() => {
-                renderStage2(document.getElementById('stageArea'));
-            }, 2500);
+            stage2Attempts++;
+            
+            if (stage2Attempts < stage2MaxAttempts) {
+                handleIncorrectAnswer(selectedElement); 
+                setFeedback(`Incorrecto. Te quedan ${stage2MaxAttempts - stage2Attempts} intentos. ¡Intenta de nuevo!`, 'bad');
+                
+                setTimeout(() => {
+                    allOptionsElements.forEach(el => {
+                        if(el !== selectedElement) {
+                             el.classList.remove('disabled');
+                        }
+                        el.classList.remove('bad', 'disabled'); 
+                        el.style.pointerEvents = 'auto';
+                    });
+                    setFeedback('Intenta de nuevo...', 'neutral');
+                }, 1500);
+
+            } else {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. La respuesta correcta era: ${currentData.text}.`, 'bad');
+                
+                allOptionsElements.forEach(el => {
+                    if (el.dataset.img === currentData.correct) {
+                        el.classList.add('ok');
+                    }
+                });
+                
+                stage2Attempts = 0;
+                currentRound2++;
+                setTimeout(() => {
+                    renderStage2(document.getElementById('stageArea'));
+                }, 2500);
+            }
         }
     }
 
@@ -315,11 +421,14 @@
             container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las 6 rondas.</h2>`;
             setStageComplete(true);
             renderControls();
+            earnStar(container); 
             return;
         }
 
         const currentData = stage2Data[currentRound2];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Data.length}: Escucha la frase en Ch'ol y selecciona la imagen correcta.</p>`;
+        const attemptsInfo = stage2MaxAttempts > 1 ? `(Tienes ${stage2MaxAttempts} intentos)` : '';
+        
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Data.length}: Escucha y selecciona la imagen correcta. ${attemptsInfo}</p>`;
 
         renderControls(); 
         
@@ -343,11 +452,11 @@
             b.className = 'opt';
             b.dataset.img = opt; 
             
-            b.innerHTML = `<img src="../assets/img/${opt}" alt="Opción" style="width: 100px; height: 100px; border-radius: 10px;"/>`;
+            b.innerHTML = `<img src="../assets/img/${opt}" alt="Opción" />`;
 
             b.onclick = (e) => {
                 const allOptions = document.querySelectorAll('.opt');
-                allOptions.forEach(el => el.classList.add('disabled'));
+                disableOptions('.opt');
                 
                 if (opt === currentData.correct) {
                     b.classList.add('ok');
@@ -388,7 +497,6 @@
     function getAudioOptions(correctWordChool) {
         const correctOpt = choolNumbers.find(n => n.word === correctWordChool);
         let options = [correctOpt];
-        
         const allOther = choolNumbers.filter(n => n.word !== correctWordChool);
         while (options.length < 4 && allOther.length > 0) {
             const randomIndex = Math.floor(Math.random() * allOther.length);
@@ -398,28 +506,46 @@
         return options.sort(() => Math.random() - 0.5);
     }
 
-
-    function checkAnswer3(selectedWord, currentData, allOptionsElements) {
+    function checkAnswer3(selectedWord, currentData, allOptionsElements, selectedElement) {
         if (selectedWord === currentData.wordChool) {
             setFeedback('¡Correcto! El número ' + currentData.wordChool + ' coincide.', 'ok');
+            handleCorrectAnswer(selectedElement);
+            
+            stage3Attempts = 0;
             currentRound3++;
             setTimeout(() => {
                 renderStage3(document.getElementById('stageArea'));
-            }, 1200);
+            }, 1500);
         } else {
-            setFeedback('Incorrecto. El número correcto es: ' + currentData.wordChool + ' (' + currentData.count + ')', 'bad');
-            
-            allOptionsElements.forEach(el => {
-                if (el.dataset.word === currentData.wordChool) {
-                    el.classList.add('ok');
-                }
-            });
-            
-            currentRound3++;
-            
-            setTimeout(() => {
-                renderStage3(document.getElementById('stageArea'));
-            }, 2500);
+            stage3Attempts++;
+            if (stage3Attempts < stage3MaxAttempts) {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. Te quedan ${stage3MaxAttempts - stage3Attempts} intentos.`, 'bad');
+                
+                setTimeout(() => {
+                    allOptionsElements.forEach(el => {
+                        el.classList.remove('disabled', 'bad', 'clicked-once');
+                        el.style.pointerEvents = 'auto';
+                    });
+                    setFeedback('Toca para escuchar, toca otra vez para elegir.', 'neutral');
+                }, 1500);
+
+            } else {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback('Incorrecto. El número correcto era: ' + currentData.wordChool, 'bad');
+                
+                allOptionsElements.forEach(el => {
+                    if (el.dataset.word === currentData.wordChool) {
+                        el.classList.add('ok');
+                    }
+                });
+                
+                stage3Attempts = 0;
+                currentRound3++;
+                setTimeout(() => {
+                    renderStage3(document.getElementById('stageArea'));
+                }, 2500);
+            }
         }
     }
 
@@ -428,15 +554,19 @@
             container.innerHTML = `<h2 style="color: var(--ok);">¡Muy bien! ¡Contaste ${stage3Data.length} veces correctamente!</h2>`;
             setStageComplete(true);
             renderControls();
+            earnStar(container);
             return;
         }
 
         const currentData = stage3Data[currentRound3];
         const options = getAudioOptions(currentData.wordChool);
+        const attemptsInfo = stage3MaxAttempts > 1 ? `(Tienes ${stage3MaxAttempts} intentos)` : '';
 
         container.innerHTML = `
-            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Mira la imagen y selecciona apretando dos veces el número en Ch'ol que corresponde al conteo.</p>
-            <img src="../assets/img/${currentData.image}" alt="Elementos a contar" style="width: 200px; height: 200px; border-radius: 15px; margin-bottom: 20px; border: 3px solid var(--accent);"/>
+            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Mira la imagen. Toca el botón una vez para ESCUCHAR, y otra vez para SELECCIONAR. ${attemptsInfo}</p>
+            <div style="text-align:center;">
+                <img src="../assets/img/${currentData.image}" alt="Elementos a contar" style="width: 180px; height: 180px; border-radius: 20px; margin-bottom: 20px; border: 4px solid var(--accent); object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"/>
+            </div>
         `;
         
         const audioBtn = createAudioButton(currentData.wordChool, currentData.filename, 'cho'); 
@@ -457,30 +587,32 @@
 
         options.forEach(opt => {
             const b = document.createElement('div');
-            b.className = 'word-option translation-option'; 
+            b.className = 'translation-option'; 
             b.dataset.word = opt.word;
             b.dataset.filename = opt.filename;
-            b.textContent = opt.word + ' (🔊)'; 
+            b.innerHTML = `${opt.word} <span style="font-size:0.8em">🔊</span>`; 
             
             b.onclick = (e) => {
                 const allOptions = document.querySelectorAll('.translation-option');
                 
                 if (!b.classList.contains('clicked-once') && !b.classList.contains('disabled')) {
                     playAudio(opt.filename, opt.word, 'cho'); 
+                    
+                    allOptions.forEach(other => other.classList.remove('clicked-once'));
+                    
                     b.classList.add('clicked-once');
-                    setTimeout(() => b.classList.remove('clicked-once'), 1500);
-                    setFeedback(`Escuchaste: **${opt.word}**. Toca de nuevo para seleccionar.`, 'neutral');
+                    setFeedback(`Escuchaste: **${opt.word}**. ¡Toca de nuevo para confirmar!`, 'neutral');
                     return;
                 }
                 
-                allOptions.forEach(el => el.classList.add('disabled'));
+                disableOptions('.translation-option');
                 b.classList.remove('clicked-once');
                 
                 if (opt.word !== currentData.wordChool) {
                     b.classList.add('bad');
                 }
 
-                checkAnswer3(opt.word, currentData, allOptions);
+                checkAnswer3(opt.word, currentData, allOptions, b);
             };
             row.appendChild(b);
         });
@@ -488,7 +620,6 @@
         container.appendChild(row);
         setStageComplete(false);
     }
-
 
     const stage4Data = [
         { question: "¿Cómo te llamas?", correct: "¿Bajche´ ak´aba´?", options: ["¿Ba´ki chumulety?", "¿Bajche´ ak´aba´?", "Jiñi ili kpap"] },
@@ -499,27 +630,45 @@
     ];
     let currentRound4 = 0;
 
-    function checkAnswer4(selectedOption, currentData, allOptionsElements) {
+    function checkAnswer4(selectedOption, currentData, allOptionsElements, selectedElement) {
         if (selectedOption === currentData.correct) {
             setFeedback('¡Correcto! Es la traducción correcta.', 'ok');
+            handleCorrectAnswer(selectedElement);
+            
+            stage4Attempts = 0;
             currentRound4++;
             setTimeout(() => {
                 renderStage4(document.getElementById('stageArea'));
-            }, 1200);
+            }, 1500);
         } else {
-            setFeedback('Incorrecto. La traducción correcta es: ' + currentData.correct, 'bad');
-            
-            allOptionsElements.forEach(el => {
-                if (el.textContent === currentData.correct) {
-                    el.classList.add('ok');
-                }
-            });
+            stage4Attempts++;
+            if(stage4Attempts < stage4MaxAttempts) {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. Te quedan ${stage4MaxAttempts - stage4Attempts} intentos.`, 'bad');
+                
+                setTimeout(() => {
+                    allOptionsElements.forEach(el => {
+                        el.classList.remove('disabled', 'bad');
+                        el.style.pointerEvents = 'auto';
+                    });
+                    setFeedback('Intenta de nuevo...', 'neutral');
+                }, 1500);
+            } else {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback('Incorrecto. La traducción correcta es: ' + currentData.correct, 'bad');
+                
+                allOptionsElements.forEach(el => {
+                    if (el.textContent === currentData.correct) {
+                        el.classList.add('ok');
+                    }
+                });
 
-            currentRound4++; 
-            
-            setTimeout(() => {
-                renderStage4(document.getElementById('stageArea'));
-            }, 2500);
+                stage4Attempts = 0;
+                currentRound4++; 
+                setTimeout(() => {
+                    renderStage4(document.getElementById('stageArea'));
+                }, 2500);
+            }
         }
     }
 
@@ -528,11 +677,14 @@
             container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Terminaste las 5 preguntas.</h2>`;
             setStageComplete(true);
             renderControls();
+            earnStar(container);
             return;
         }
 
         const currentData = stage4Data[currentRound4];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound4 + 1} de ${stage4Data.length}: Selecciona la traducción correcta a Ch'ol para la siguiente frase en Español:</p>`;
+        const attemptsInfo = stage4MaxAttempts > 1 ? `(Tienes ${stage4MaxAttempts} intentos)` : '';
+
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound4 + 1} de ${stage4Data.length}: Selecciona la traducción correcta. ${attemptsInfo}</p>`;
         
         const translationContainer = document.createElement('div');
         translationContainer.className = 'translation-container';
@@ -550,7 +702,7 @@
             
             b.onclick = () => {
                 const allOptions = document.querySelectorAll('.translation-option');
-                allOptions.forEach(el => el.classList.add('disabled'));
+                disableOptions('.translation-option');
 
                 if (opt === currentData.correct) {
                     b.classList.add('ok');
@@ -558,7 +710,7 @@
                     b.classList.add('bad');
                 }
                 
-                checkAnswer4(opt, currentData, allOptions);
+                checkAnswer4(opt, currentData, allOptions, b);
             };
             optionsContainer.appendChild(b);
         });
@@ -570,35 +722,46 @@
 
     function renderStage5(container) {
         container.innerHTML = `
-            <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
-                <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 2 Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
-                <p>Has terminado todas las actividades de Presentación Personal.</p>
-                <p>Presiona Siguiente para volver a la pantalla principal.</p>
+            <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px; background-color: rgba(255,255,255,0.9);">
+                <h2 style="color: var(--ok); font-size: 2.5rem; margin-bottom: 20px;">🎉 ¡Tema 2 Completado! 🎉</h2>
+                <p style="font-size: 1.5rem; font-weight: bold;">Puntuación: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
+                <p style="margin-top: 15px;">Has terminado todas las actividades de Presentación Personal.</p>
+                <p>Presiona "Siguiente" para volver a la pantalla principal.</p>
             </div>
         `;
+        
+        try {
+            if (typeof celebrateLevelComplete === 'function') {
+                celebrateLevelComplete();
+            } else if (window.visualEffects && typeof window.visualEffects.confetti === 'function') {
+                window.visualEffects.confetti();
+            }
+        } catch (e) {
+            console.log("Efecto visual no disponible:", e);
+        }
+
         guardarProgresoEnBD();
         setStageComplete(true);
         renderControls();
     }
-
     function guardarProgresoEnBD() {
-    fetch('../../backend/api/progress.php', { 
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            tema_id: TEMA_ID,
-            completado: true
+        fetch('../../backend/api/progress.php', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tema_id: TEMA_ID,
+                completado: true
+            })
         })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Progreso guardado:", data);
-        if(data.success) {
-        }
-    })
-    .catch(error => console.error('Error al guardar:', error));
-}
+        .then(response => response.json())
+        .then(data => {
+            console.log("Progreso guardado:", data);
+            if(data.success) {
+                if(window.collectCoin) collectCoin();
+            }
+        })
+        .catch(error => console.error('Error al guardar:', error));
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
         render();

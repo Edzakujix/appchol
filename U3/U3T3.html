@@ -5,58 +5,57 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Tema 3: Verbos</title>
 
-        <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/enhanced-styles.css">
 
     <style>
-button.primary {
-    opacity: 0.5;
-    pointer-events: none;
-}
 
-button.primary.active {
-    opacity: 1;
-    pointer-events: auto;
-}
+        button.primary {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        button.primary.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-button.primary.active:active {
-    transform: translateY(5px);
-    box-shadow: 0 0px 0 0 #0288D1;
-}
+        .opt {
+            min-width: 140px; 
+            padding: 15px; 
+            border-radius: 20px; 
+            background: #fff;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            gap: 10px; 
+            cursor: pointer;
+            border: 4px solid #E0E0E0; 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            transition: all .2s;
+            text-align: center;
+        }
 
-.opt {
-    min-width: 140px; 
-    padding: 20px; 
-    border-radius: 20px; 
-    background: #fff;
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 10px; 
-    cursor: pointer;
-    border: 4px solid #E0E0E0; 
-    font-size: 1.1rem; 
-    font-weight: 600; 
-    transition: all .2s;
-}
+        .opt:hover:not(.disabled) {
+            transform: translateY(-5px); 
+            border-color: var(--accent);
+        }
 
-.opt:not(.disabled):hover {
-    transform: translateY(-5px) scale(1.05); 
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-}
+        .opt.disabled { 
+            pointer-events: none; 
+            opacity: 0.7; 
+            cursor: default;
+        }
 
-.opt.disabled { pointer-events: none; opacity: 0.7; }
-.opt.ok { border-color: var(--ok); box-shadow: 0 8px 20px rgba(76,175,80,0.3); background: #E8F5E9; }
-.opt.bad { border-color: var(--bad); box-shadow: 0 8px 20px rgba(229,57,53,0.3); background: #FFEBEE; }
-
-.day-image-option img {
-    width: 100px; 
-    height: 100px; 
-    border-radius: 10px; 
-    object-fit: cover;
-}
+        .day-image-option img {
+            width: 120px; 
+            height: 120px; 
+            border-radius: 12px; 
+            object-fit: cover;
+        }
     </style>
-
 </head>
 <body>
     <div class="app" role="application" aria-label="Prototipo actividades para primaria">
@@ -70,14 +69,14 @@ button.primary.active:active {
 
         <main class="stage-area" id="stageArea"></main>
 
-        <div class="controls" id="controlsArea">
-        </div>
+        <div class="controls" id="controlsArea"></div>
 
         <footer>Prototipo educativo · Módulo 3: Tema 3</footer>
     </div>
 
     <div class="ground-sim"></div>
 
+    <script src="../assets/js/sound-effects.js"></script>
 
 <script>
     const TEMA_ID = 10;
@@ -85,7 +84,21 @@ button.primary.active:active {
     const USER_GOOGLE_ID = 'ID_DEL_USUARIO_AUTENTICADO'; 
     const TOTAL_ACTIVITY_POINTS = 40; 
     
-    function goHome() { window.location.href = MAIN_SCREEN_URL; }
+    let stage1Attempts = 0;
+    const stage1MaxAttempts = 2;
+
+    let stage2Attempts = 0;
+    const stage2MaxAttempts = 2;
+
+    let stage3Attempts = 0;
+    const stage3MaxAttempts = 2;
+
+    function goHome() {
+        soundSystem.play('whoosh');
+        setTimeout(() => {
+            window.location.href = MAIN_SCREEN_URL;
+        }, 200);
+    }
 
     const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStage4];
     let currentStage = 0;
@@ -112,11 +125,11 @@ button.primary.active:active {
         feedbackEl.innerHTML = text; 
         if(kind === 'ok'){ feedbackEl.style.color = 'var(--ok)' }
         else if(kind === 'bad'){ feedbackEl.style.color = 'var(--bad)' }
-        else { feedbackEl.style.color = 'var(--color-texto)' }
+        else { feedbackEl.style.color = 'var(--text-color)' }
     }
     
-    function disableOptions() {
-        document.querySelectorAll('.opt').forEach(el => el.classList.add('disabled'));
+    function disableOptions(selector) {
+        document.querySelectorAll(selector).forEach(el => el.classList.add('disabled'));
     }
 
     function renderControls(html = '') {
@@ -127,12 +140,17 @@ button.primary.active:active {
     function next(){ 
         if (!stageProgress[currentStage]) {
             setFeedback("¡Termina esta parte antes de continuar!", 'bad');
+            soundSystem.play('error');
             return;
         }
 
+        soundSystem.play('whoosh');
+
         if (currentStage === 4) {
-             alert(`✅ Tema Terminado. Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo a la pantalla principal...`);
-             window.location.href = MAIN_SCREEN_URL; 
+             setTimeout(() => {
+                 alert(`✅ Tema Terminado. Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}. Volviendo a la pantalla principal...`);
+                 window.location.href = MAIN_SCREEN_URL; 
+             }, 300);
              return; 
         }
 
@@ -184,7 +202,7 @@ button.primary.active:active {
 
     function createAudioButton(text, audioFilename, lang = 'cho') {
         const btn = document.createElement('button');
-        btn.className = 'ghost';
+        btn.className = 'ghost audio-btn';
         btn.innerHTML = '🔊 Reproducir Audio';
         btn.onclick = () => { playAudio(audioFilename, text, lang); };
         return btn;
@@ -224,18 +242,39 @@ button.primary.active:active {
         { filename: "maestro.png", word: "Enseñar" } 
     ];
 
-    function checkAnswer1(selectedImage, currentData, allOptionsElements) {
+    function checkAnswer1(selectedImage, currentData, allOptionsElements, selectedElement) {
         if (selectedImage === currentData.correct) {
             setFeedback(`¡Correcto! Es ${currentData.word}.`, 'ok');
+            handleCorrectAnswer(selectedElement);
+            
+            stage1Attempts = 0;
             currentRound1++;
             setTimeout(() => { renderStage1(document.getElementById('stageArea')); }, 1200);
         } else {
-            setFeedback('Incorrecto. ¡La figura correcta representa ' + currentData.word + '!', 'bad');
-            allOptionsElements.forEach(el => {
-                if (el.dataset.img === currentData.correct) { el.classList.add('ok'); }
-            });
-            currentRound1++;
-            setTimeout(() => { renderStage1(document.getElementById('stageArea')); }, 2500);
+            stage1Attempts++;
+            if (stage1Attempts < stage1MaxAttempts) {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. Te quedan ${stage1MaxAttempts - stage1Attempts} intentos.`, 'bad');
+                
+                setTimeout(() => {
+                    allOptionsElements.forEach(el => {
+                        el.classList.remove('disabled', 'bad');
+                        el.style.pointerEvents = 'auto';
+                    });
+                    setFeedback('Intenta de nuevo...', 'neutral');
+                }, 1500);
+            } else {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback('Incorrecto. La figura correcta representa ' + currentData.word + '!', 'bad');
+                
+                allOptionsElements.forEach(el => {
+                    if (el.dataset.img === currentData.correct) { el.classList.add('ok'); }
+                });
+                
+                stage1Attempts = 0;
+                currentRound1++;
+                setTimeout(() => { renderStage1(document.getElementById('stageArea')); }, 2500);
+            }
         }
     }
     
@@ -244,11 +283,14 @@ button.primary.active:active {
             container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las ${stage1Questions.length} rondas de verbos léxicos.</h2>`;
             setStageComplete(true);
             renderControls();
+            earnStar(container);
             return; 
         }
 
         const currentData = stage1Questions[currentRound1];
-        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Questions.length}. Escucha el audio y selecciona la figura que muestra la acción: ${currentData.word}.</p>`;
+        const attemptsInfo = stage1MaxAttempts > 1 ? `(Tienes ${stage1MaxAttempts} intentos)` : '';
+
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Questions.length}. Escucha el audio y selecciona la figura que muestra la acción: ${currentData.word}. ${attemptsInfo}</p>`;
         
         const audioBtn = createAudioButton(currentData.ch_word, currentData.filename, 'cho');
         audioBtn.innerHTML = '🔊 Reproducir Verbo';
@@ -280,9 +322,9 @@ button.primary.active:active {
             
             b.onclick = ()=>{
                 const allOptions = document.querySelectorAll('.opt');
-                disableOptions();
+                disableOptions('.opt');
                 if (it.filename === currentData.correct) { b.classList.add('ok'); } else { b.classList.add('bad'); }
-                checkAnswer1(it.filename, currentData, allOptions); 
+                checkAnswer1(it.filename, currentData, allOptions, b); 
             };
             row.appendChild(b);
         });
@@ -299,18 +341,39 @@ button.primary.active:active {
     ];
     let currentRound2 = 0;
 
-    function checkAnswer2(selectedImage, currentData, allOptionsElements) {
+    function checkAnswer2(selectedImage, currentData, allOptionsElements, selectedElement) {
         if (selectedImage === currentData.correct_img) {
             setFeedback('¡Muy bien! ¡Correcto!', 'ok');
+            handleCorrectAnswer(selectedElement);
+            
+            stage2Attempts = 0;
             currentRound2++;
             setTimeout(() => { renderStage2(document.getElementById('stageArea')); }, 1500);
         } else {
-            setFeedback(`Incorrecto. ¡La oración significa: **${currentData.hint}**!`, 'bad');
-            allOptionsElements.forEach(el => {
-                if (el.dataset.img === currentData.correct_img) { el.classList.add('ok'); }
-            });
-            currentRound2++;
-            setTimeout(() => { renderStage2(document.getElementById('stageArea')); }, 3000);
+            stage2Attempts++;
+            if (stage2Attempts < stage2MaxAttempts) {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. Te quedan ${stage2MaxAttempts - stage2Attempts} intentos.`, 'bad');
+                
+                setTimeout(() => {
+                    allOptionsElements.forEach(el => {
+                        el.classList.remove('disabled', 'bad');
+                        el.style.pointerEvents = 'auto';
+                    });
+                    setFeedback('Lee de nuevo e intenta...', 'neutral');
+                }, 1500);
+            } else {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. La oración significa: **${currentData.hint}**`, 'bad');
+                
+                allOptionsElements.forEach(el => {
+                    if (el.dataset.img === currentData.correct_img) { el.classList.add('ok'); }
+                });
+                
+                stage2Attempts = 0;
+                currentRound2++;
+                setTimeout(() => { renderStage2(document.getElementById('stageArea')); }, 3000);
+            }
         }
     }
 
@@ -319,15 +382,18 @@ button.primary.active:active {
             container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las ${stage2Data.length} rondas de oraciones de acción.</h2>`;
             setStageComplete(true);
             renderControls();
+            earnStar(container);
             return;
         }
 
         const currentData = stage2Data[currentRound2];
+        const attemptsInfo = stage2MaxAttempts > 1 ? `(Tienes ${stage2MaxAttempts} intentos)` : '';
+
         renderControls();
         
         container.innerHTML = `
-            <p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Data.length}: Escucha la oración y selecciona la acción correcta.</p>
-            <p style="font-size: 1.4rem; font-weight: bold; color: var(--accent);">${currentData.ch_sentence}</p>
+            <p class="stage0-info">Ronda ${currentRound2 + 1} de ${stage2Data.length}: Escucha la oración y selecciona la acción correcta. ${attemptsInfo}</p>
+            <p style="font-size: 1.4rem; font-weight: bold; color: var(--accent); margin-bottom: 20px; text-align:center;">${currentData.ch_sentence}</p>
         `;
         
         const audioBtn = createAudioButton(currentData.ch_sentence, currentData.audio, 'cho');
@@ -348,15 +414,15 @@ button.primary.active:active {
             b.className = 'opt day-image-option'; 
             b.dataset.img = imgName;
             
-            b.innerHTML = `<img src="../assets/img/${imgName}" alt="Opción de acción" style="width: 150px; height: 150px;"/>`;
+            b.innerHTML = `<img src="../assets/img/${imgName}" alt="Opción de acción" style="width: 140px; height: 140px; border-radius:15px;"/>`;
             
             b.onclick = ()=>{
                 const allOptions = document.querySelectorAll('.opt');
-                disableOptions();
+                disableOptions('.opt');
                 
                 if (imgName === currentData.correct_img) { b.classList.add('ok'); } else { b.classList.add('bad'); }
                 
-                checkAnswer2(imgName, currentData, allOptions); 
+                checkAnswer2(imgName, currentData, allOptions, b); 
             };
             row.appendChild(b);
         });
@@ -364,7 +430,6 @@ button.primary.active:active {
         container.appendChild(row);
         setStageComplete(false);
     }
-
 
     const stage3Data = [
         { sentence: "Jiñi xchuty alo´ chonko ___ ijuñ", correct: "boñ", options: ["boñ", "ts´ijbuñ", "sety´"], hint_es: "El niño esta pintando" },
@@ -374,18 +439,39 @@ button.primary.active:active {
     ];
     let currentRound3 = 0; 
 
-    function checkAnswer3(selectedOption, currentData, allOptionsElements) {
+    function checkAnswer3(selectedOption, currentData, allOptionsElements, selectedElement) {
         if (selectedOption === currentData.correct) {
             setFeedback('¡Muy bien! ¡Correcto!', 'ok');
+            handleCorrectAnswer(selectedElement);
+            
+            stage3Attempts = 0;
             currentRound3++;
             setTimeout(() => { renderStage3(document.getElementById('stageArea')); }, 1500);
         } else {
-            setFeedback(`Incorrecto. ¡La respuesta correcta era: ${currentData.correct}! (${currentData.hint_es})`, 'bad');
-            allOptionsElements.forEach(el => {
-                if (el.textContent === currentData.correct) { el.classList.add('ok'); }
-            });
-            currentRound3++;
-            setTimeout(() => { renderStage3(document.getElementById('stageArea')); }, 3500);
+            stage3Attempts++;
+            if (stage3Attempts < stage3MaxAttempts) {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. Te quedan ${stage3MaxAttempts - stage3Attempts} intentos.`, 'bad');
+                
+                setTimeout(() => {
+                    allOptionsElements.forEach(el => {
+                        el.classList.remove('disabled', 'bad');
+                        el.style.pointerEvents = 'auto';
+                    });
+                    setFeedback('Intenta de nuevo.', 'neutral');
+                }, 1500);
+            } else {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. ¡La respuesta correcta era: **${currentData.correct}**!`, 'bad');
+                
+                allOptionsElements.forEach(el => {
+                    if (el.textContent === currentData.correct) { el.classList.add('ok'); }
+                });
+                
+                stage3Attempts = 0;
+                currentRound3++;
+                setTimeout(() => { renderStage3(document.getElementById('stageArea')); }, 3500);
+            }
         }
     }
 
@@ -394,14 +480,17 @@ button.primary.active:active {
             container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las ${stage3Data.length} rondas de completar oraciones.</h2>`;
             setStageComplete(true);
             renderControls();
+            earnStar(container);
             return;
         }
 
         const currentData = stage3Data[currentRound3];
+        const attemptsInfo = stage3MaxAttempts > 1 ? `(Tienes ${stage3MaxAttempts} intentos)` : '';
+
         container.innerHTML = `
-            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Completa la oración en Ch'ol seleccionando la palabra correcta.</p>
-            <p style="font-size: 1.4rem; font-weight: bold; color: var(--accent);">
-                ${currentData.sentence.replace('___', '<span style="color: var(--bad); text-decoration: underline;">___</span>')}
+            <p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Completa la oración en Ch'ol seleccionando la palabra correcta. ${attemptsInfo}</p>
+            <p style="font-size: 1.4rem; font-weight: bold; color: var(--accent); margin-bottom: 25px; text-align:center; padding: 15px; background: #fff; border-radius: 15px;">
+                ${currentData.sentence.replace('___', '<span style="color: var(--accent); text-decoration: underline; font-weight: 800;">___</span>')}
             </p>
         `;
 
@@ -418,11 +507,11 @@ button.primary.active:active {
             
             b.onclick = (e) => {
                 const allOptions = document.querySelectorAll('.opt');
-                disableOptions(); 
+                disableOptions('.opt'); 
                 
                 if (opt === currentData.correct) { b.classList.add('ok'); } else { b.classList.add('bad'); }
                 
-                checkAnswer3(opt, currentData, allOptions);
+                checkAnswer3(opt, currentData, allOptions, b);
             };
             row.appendChild(b);
         });
@@ -433,34 +522,47 @@ button.primary.active:active {
     
     function renderStage4(container) {
         container.innerHTML = `
-            <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
-                <h2 style="color: var(--ok); font-size: 2.5rem;">🎉 ¡Tema 3 Completado! 🎉</h2>
-                <p style="font-size: 1.2rem;">Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
+            <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px; background-color: rgba(255,255,255,0.9);">
+                <h2 style="color: var(--ok); font-size: 2.5rem; margin-bottom: 20px;">🎉 ¡Tema 3 Completado! 🎉</h2>
+                <p style="font-size: 1.5rem; font-weight: bold;">Puntuación simulada: ${userScore}/${TOTAL_ACTIVITY_POINTS}</p>
+                <p style="margin-top: 15px;">Has aprendido los Verbos en Ch'ol.</p>
                 <p>Presiona Siguiente para volver a la pantalla principal.</p>
             </div>
         `;
+        
+        try {
+            if (window.visualEffects && typeof window.visualEffects.confetti === 'function') {
+                window.visualEffects.confetti();
+            } else if (typeof celebrateLevelComplete === 'function') {
+                celebrateLevelComplete();
+            }
+        } catch (e) {
+            console.log("Efectos visuales no disponibles");
+        }
+
         guardarProgresoEnBD();
         setStageComplete(true);
         renderControls();
     }
 
     function guardarProgresoEnBD() {
-    fetch('../../backend/api/progress.php', { 
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            tema_id: TEMA_ID,
-            completado: true
+        fetch('../../backend/api/progress.php', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tema_id: TEMA_ID,
+                completado: true
+            })
         })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Progreso guardado:", data);
-        if(data.success) {
-        }
-    })
-    .catch(error => console.error('Error al guardar:', error));
-}
+        .then(response => response.json())
+        .then(data => {
+            console.log("Progreso guardado:", data);
+            if(data.success && window.collectCoin) {
+                collectCoin();
+            }
+        })
+        .catch(error => console.error('Error al guardar:', error));
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
         render();

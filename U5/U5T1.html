@@ -6,8 +6,10 @@
     <title>Tema 1: Mi Cuerpo</title>
 
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/enhanced-styles.css">
 
     <style>
+
         button.primary {
             opacity: 0.5;
             pointer-events: none;
@@ -16,541 +18,678 @@
             opacity: 1;
             pointer-events: auto;
         }
-        button.primary.active:active {
-            transform: translateY(5px);
-            box-shadow: 0 0px 0 0 #0288D1;
-        }
 
-        .opt, .img-option {
+        .opt {
             min-width: 140px; 
-            padding: 20px; 
+            padding: 15px; 
             border-radius: 20px; 
-            background: #fff;
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
+            background: #fff; 
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             gap: 10px; 
-            cursor: pointer;
-            border: 4px solid #E0E0E0; 
+            cursor: pointer; 
+            border: 4px solid #E0E0E0;
             font-size: 1.1rem; 
             font-weight: 600; 
             transition: all .2s;
-        }
-        
-        .opt:not(.disabled):hover, .img-option:not(.disabled):hover {
-            transform: translateY(-5px) scale(1.05); 
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+            text-align: center;
         }
 
-        .opt.disabled, .img-option.disabled { pointer-events: none; opacity: 0.6; filter: grayscale(0.4); }
-        .opt.ok, .img-option.ok { border-color: var(--ok); box-shadow: 0 8px 20px rgba(76,175,80,0.3); background: #E8F5E9; filter: none; opacity: 1;}
-        .opt.bad, .img-option.bad { border-color: var(--bad); box-shadow: 0 8px 20px rgba(229,57,53,0.3); background: #FFEBEE; }
+        .opt:hover:not(.disabled) {
+            transform: translateY(-5px); 
+            border-color: var(--accent);
+        }
+
+        .opt.disabled { 
+            pointer-events: none; 
+            opacity: 0.7; 
+            cursor: default;
+        }
+
+        .img-option img {
+            width: 130px; 
+            height: 130px; 
+            border-radius: 12px; 
+            object-fit: contain;
+            border: 2px solid #f0f0f0;
+        }
 
         .matching-click-container {
-            display: flex; 
-            flex-direction: column; 
-            gap: 15px; 
-            width: 100%; 
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
             max-width: 700px;
-            padding: 20px; 
-            background-color: var(--matching-bg); 
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        .matching-card {
-            background-color: var(--matching-card-bg); 
-            border-radius: 12px; 
-            padding: 10px 15px;
-            font-weight: 700; 
-            font-size: 1.2rem; 
-            cursor: pointer; 
-            transition: all 0.2s;
-            box-shadow: 0 4px 0 0 rgba(0,0,0,0.1); 
-            border: 3px solid transparent;
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 60px;
-        }
-        .matching-card:hover:not(.matched):not(.selected) {
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 0 0 rgba(0,0,0,0.15);
-        }
-        .matching-card.selected {
-            border-color: var(--select-highlight); 
-            box-shadow: 0 0 0 4px var(--select-highlight);
-            background-color: #F8E3DD;
-        }
-        .matching-card.matched {
-            background-color: var(--ok); 
-            color: white; 
-            pointer-events: none; 
-            cursor: default;
-            box-shadow: none; 
-            border-color: var(--ok);
-        }
-        .matching-card.shaking {
-            animation: shake 0.5s; 
-            animation-iteration-count: 2; 
-            border-color: var(--bad) !important;
-            box-shadow: 0 0 0 4px var(--bad) !important; 
-            background-color: #FFEBEE !important; 
-            color: var(--bad);
-        }
-        .questions-stack, .answers-stack {
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px; 
-            padding: 10px;
-            border-radius: 15px; 
-            background: rgba(255, 255, 255, 0.5);
-        }
-        .stack-title {
-            font-weight: 800; 
-            font-size: 1.1rem; 
-            color: var(--color-texto);
-            margin-bottom: 5px; 
-            text-align: left; 
-            padding-left: 10px;
+            padding: 25px;
+            background-color: #FFF; 
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 4px solid #E0E0E0;
         }
 
-        .audio-btn-big {
-            width: 70px; 
-            height: 70px; 
-            border-radius: 50%; 
-            background: var(--accent);
-            color: white; 
-            font-size: 2rem; 
-            display: flex; 
-            align-items: center; 
+        .matching-card {
+            background-color: #F5F5F5;
+            border-radius: 15px;
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+            border: 2px solid #E0E0E0;
+            display: flex;
             justify-content: center;
-            box-shadow: 0 4px #bf360c; 
-            cursor: pointer; 
-            margin-bottom: 20px; 
-            transition: transform 0.1s;
+            align-items: center;
+            min-height: 60px;
+            text-align: center;
         }
-        .audio-btn-big:active { 
-            transform: translateY(4px); 
-            box-shadow: none; 
+
+        .matching-card:hover:not(.matched):not(.selected) {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            background-color: #FFF;
+        }
+
+        .matching-card.selected {
+            border-color: var(--accent);
+            background-color: #E3F2FD;
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .matching-card.matched {
+            background-color: var(--ok);
+            color: white;
+            pointer-events: none;
+            cursor: default;
+            box-shadow: none;
+            border-color: var(--ok);
+            animation: pop 0.3s ease-out;
+        }
+
+        .matching-card.shaking {
+            animation: shake 0.5s;
+            border-color: var(--bad) !important;
+            background-color: #FFEBEE !important;
+            color: var(--bad);
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .questions-stack, .answers-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .stack-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            text-align: center;
+            text-transform: uppercase;
         }
 
         @media (min-width: 601px) {
-            .matching-click-container { 
-                flex-direction: row; 
-                justify-content: space-around; 
+            .matching-click-container {
+                flex-direction: row;
+                justify-content: space-between;
             }
-            .questions-stack, .answers-stack { 
-                flex-basis: 48%; 
-            }
-        }
-        @media (max-width: 600px) {
-            .app { padding-right: 0; }
-            button.primary, button.ghost { padding: 8px 15px; font-size: 0.9rem; }
-            .controls { flex-direction: column; gap: 10px; align-items: stretch; }
         }
     </style>
 </head>
 <body>
-    <div class="app">
+    <div class="app" role="application" aria-label="Prototipo actividades para primaria">
         <header>
             <h1 id="title">U5 - Tema 1: Mi Cuerpo</h1>
             <div style="display: flex; gap: 10px;">
                 <button class="ghost" onclick="goHome()" style="font-weight: 500; padding: 10px;">🏠 Inicio</button>
+                <button class="primary" id="nextBtn" onclick="next()">Siguiente</button>
             </div>
         </header>
 
         <main class="stage-area" id="stageArea"></main>
 
-        <div class="controls" id="controlsArea">
-            <div id="feedback" class="feedback"></div>
-            </div>
+        <div class="controls" id="controlsArea"></div>
         
         <footer>Prototipo educativo · Unidad 5</footer>
     </div>
+    
     <div class="ground-sim"></div>
 
-    <script>
-        const TEMA_ID = 14;
-        const MAIN_SCREEN_URL = './U5MICU.html'; 
-        const TOTAL_ACTIVITY_POINTS = 100;
+    <script src="../assets/js/sound-effects.js"></script>
 
-        function goHome() { window.location.href = MAIN_SCREEN_URL; }
+<script>
+    const TEMA_ID = 14;
+    const MAIN_SCREEN_URL = './U5MICU.html'; 
+    const TOTAL_ACTIVITY_POINTS = 100;
 
-        const DATA = {
-            stages: [
-                { 
-                    type: 'video', 
-                    title: 'Introducción: Mi Cuerpo', 
-                    videoUrl: 'https://www.youtube.com/embed/RUTAS_PENDIENTES?rel=0' 
-                },
-                {
-                    type: 'select_image_audio',
-                    title: 'Actividad 1: Escucha y Encuentra',
-                    rounds: [
-                        { word: 'Jol', es: 'Cabeza', img: 'cabeza.png', audio: 'cabeza.mp3' },
-                        { word: 'Wuty', es: 'Ojos', img: 'ojo.png', audio: 'ojo.mp3' },
-                        { word: 'Ni’', es: 'Nariz', img: 'nariz.png', audio: 'nariz.mp3' },
-                        { word: 'Tyi’', es: 'Boca', img: 'boca.png', audio: 'boca.mp3' },
-                        { word: 'Chikiñ', es: 'Orejas', img: 'oreja.png', audio: 'oreja.mp3' },
-                        { word: 'K’ä’', es: 'Manos', img: 'mano.png', audio: 'mano.mp3' },
-                        { word: 'Yalo’ k’ä’', es: 'Dedos', img: 'dedo.png', audio: 'dedo.mp3' },
-                        { word: 'Ya’', es: 'Piernas', img: 'pierna.png', audio: 'piernas.mp3' },
-                        { word: 'Ok', es: 'Pie', img: 'pie.png', audio: 'pie.mp3' }
-                    ]
-                },
-                {
-                    type: 'matching_click',
-                    title: 'Actividad 2: Emociones y Adjetivos',
-                    rounds: [
-                        { ch: 'Bi’bi’', es: 'Feo' },
-                        { ch: 'Lekax', es: 'Bonito / Guapo' },
-                        { ch: 'Tyijikña', es: 'Feliz' },
-                        { ch: 'Ch’äjyem', es: 'Triste' },
-                        { ch: 'Bo’yem', es: 'Cansado' },
-                        { ch: 'Mich’', es: 'Enojado' }
-                    ]
-                },
-                {
-                    type: 'select_image_audio',
-                    title: 'Actividad 3: Sensaciones',
-                    rounds: [
-                        { word: 'Wi’ñal', es: 'Con hambre', img: 'hambre.png', audio: 'hambre.mp3' },
-                        { word: 'Tyäkiñ tyi’', es: 'Con sed', img: 'sed.png', audio: 'sed.mp3' },
-                        { word: 'Bo’yem', es: 'Cansado', img: 'cansado.png', audio: 'cansado.mp3' },
-                        { word: 'Tyijikña', es: 'Feliz', img: 'feliz.png', audio: 'feliz.mp3' },
-                        { word: 'Ch’äjyem', es: 'Triste', img: 'triste.png', audio: 'triste.mp3' }
-                    ]
-                },
-                { type: 'final' }
-            ]
-        };
+    let stage1Attempts = 0;
+    const stage1MaxAttempts = 2;
 
-        const stages = [renderStage0, renderStage1_SelectImage, renderStage2_Matching, renderStage3_SelectImage, renderStageFinal];
-        let currentStage = 0;
-        let currentActivityRound = 0;
-        let userScore = 0;
-        let stageProgress = new Array(stages.length).fill(false);
-        
-        let feedbackEl = null;
-        const titleEl = document.getElementById('title');
-        let nextBtn = null;
-        const controlsArea = document.getElementById('controlsArea');
-        const stageArea = document.getElementById('stageArea');
+    let stage3Attempts = 0;
+    const stage3MaxAttempts = 2;
 
-        let selectedQuestion = null;
-        let matchedPairsCount = 0;
+    function goHome() {
+        soundSystem.play('whoosh');
+        setTimeout(() => {
+            window.location.href = MAIN_SCREEN_URL;
+        }, 200);
+    }
 
-        function setStageComplete(isComplete = true) {
-            stageProgress[currentStage] = isComplete;
-            if(nextBtn) nextBtn.classList.toggle('active', isComplete);
-        }
+    const stages = [renderStage0, renderStage1, renderStage2, renderStage3, renderStageFinal];
+    let currentStage = 0;
+    let userScore = 0;
+    let stageProgress = new Array(stages.length).fill(false);
+    
+    let feedbackEl = null;
+    const titleEl = document.getElementById('title');
+    let nextBtn = null;
+    const controlsArea = document.getElementById('controlsArea');
 
-        function clearFeedback(){ if(feedbackEl) feedbackEl.textContent = ""; }
-
-        function setFeedback(text, kind){
-            if(!feedbackEl) return;
-            feedbackEl.textContent = text;
-            if(kind === 'ok'){ feedbackEl.style.color = 'var(--ok)' }
-            else if(kind === 'bad'){ feedbackEl.style.color = 'var(--bad)' }
-            else { feedbackEl.style.color = 'var(--color-texto)' }
-        }
-
-        function disableAllOptions() {
-            document.querySelectorAll('.opt, .img-option, .matching-card').forEach(el => {
-                el.classList.add('disabled');
-                el.onclick = null;
-            });
-        }
-
-        function renderControls(html = '') {
-            controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>
-                                      <button class="primary" id="nextBtn" onclick="next()">Siguiente ➡</button>${html}`;
-            feedbackEl = document.getElementById('feedback');
-            nextBtn = document.getElementById('nextBtn');
-            
-            if (stageProgress[currentStage]) {
-                nextBtn.classList.add('active');
+    function setStageComplete(isComplete = true) {
+        if (isComplete && !stageProgress[currentStage]) {
+            if(currentStage >= 1 && currentStage <= 3) { 
+                userScore += 25; 
             }
         }
+        stageProgress[currentStage] = isComplete;
+        if(nextBtn) nextBtn.classList.toggle('active', isComplete);
+    }
 
-        function addPoints(points = 10) { userScore += points; }
+    function clearFeedback(){ if(feedbackEl) feedbackEl.textContent = ""; }
 
-        function speakText(text, lang='es-ES'){
-            if(!window.speechSynthesis) return;
-            const u = new SpeechSynthesisUtterance(text);
-            u.lang = lang;
-            window.speechSynthesis.cancel();
-            window.speechSynthesis.speak(u);
+    function setFeedback(text, kind){
+        if(!feedbackEl) return;
+        feedbackEl.textContent = text;
+        if(kind === 'ok'){ feedbackEl.style.color = 'var(--ok)' }
+        else if(kind === 'bad'){ feedbackEl.style.color = 'var(--bad)' }
+        else { feedbackEl.style.color = 'var(--color-texto)' }
+    }
+
+    function disableOptions(selector) {
+        document.querySelectorAll(selector).forEach(el => {
+            el.classList.add('disabled');
+        });
+    }
+
+    function renderControls(html = '') {
+        controlsArea.innerHTML = `<div id="feedback" class="feedback"></div>${html}`;
+        feedbackEl = document.getElementById('feedback');
+        nextBtn = document.getElementById('nextBtn'); 
+    }
+
+    function next() {
+        if (!stageProgress[currentStage]) {
+            setFeedback("¡Termina esta parte antes de continuar!", 'bad');
+            soundSystem.play('error');
+            return;
         }
 
-        function playAudio(audioFilename, text = 'Audio', lang = 'cho') {
-            const audioUrl = `../assets/audio/${audioFilename}`; 
-            const audio = new Audio(audioUrl);
-            audio.play()
-                .then(() => { setFeedback(`🔊 Escuchando...`, 'neutral'); })
-                .catch(e => {
-                    console.error(`❌ Error audio: ${e.message}`);
-                    speakText(text, lang); 
-                    setFeedback(`🔊 "${text}"`, 'neutral');
-                });
-        }
+        soundSystem.play('whoosh');
 
-        function shuffleArray(array) {
-            return array.sort(() => Math.random() - 0.5);
-        }
-
-        function next() {
-            if (!nextBtn.classList.contains('active')) {
-                setFeedback("¡Completa la actividad para avanzar!", 'bad');
-                return;
-            }
-            if (currentStage === stages.length - 1) {
+        if (currentStage === stages.length - 1) {
+            setTimeout(() => {
                 alert(`✅ Unidad Completada. Puntos: ${userScore}.`);
                 goHome();
-                return; 
-            }
-            currentStage++;
-            currentActivityRound = 0;
-            render();
+            }, 300);
+            return; 
         }
 
-        function render() {
-            clearFeedback();
-            setStageComplete(false);
-            stageArea.innerHTML = '';
+        currentStage++;
+        render();
+    }
 
-            const currentData = DATA.stages[currentStage];
-            if(currentData.title) titleEl.textContent = currentData.title;
-            else if(currentStage === stages.length -1) titleEl.textContent = "¡Módulo Completado!";
+    function speakText(text, lang='es-ES'){
+        if(!window.speechSynthesis) return;
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = lang;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+    }
 
-            stages[currentStage](stageArea, currentData);
+    function playAudio(audioFilename, text = 'Audio', lang = 'cho') {
+        const audioUrl = `../assets/audio/${audioFilename}`; 
+        const audio = new Audio(audioUrl);
+        audio.play()
+            .then(() => { setFeedback(`🔊 Reproduciendo: "${text}"`, 'neutral'); })
+            .catch(e => {
+                console.error(`❌ Error audio: ${e.message}`);
+                speakText(text, lang); 
+                setFeedback(`[TTS] ${text}`, 'neutral');
+            });
+    }
 
-            if (currentData.type === 'video' || currentData.type === 'final') {
-                setStageComplete(true);
-            }
+    function createAudioButton(text, audioFilename, lang = 'cho') {
+        const btn = document.createElement('button');
+        btn.className = 'ghost audio-btn';
+        btn.innerHTML = '🔊 Escuchar';
+        btn.onclick = () => { playAudio(audioFilename, text, lang); };
+        return btn;
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
+        return array;
+    }
 
-        function showActivitySuccessScreen(activityTitle) {
-            stageArea.innerHTML = `
-                <div style="text-align: center; padding: 40px; background-color: var(--card); border-radius: 20px; border: 3px solid var(--ok); max-width: 400px; margin: 50px auto;">
-                    <h2 style="color: var(--ok); font-size: 2rem;">¡Excelente!</h2>
-                    <p style="font-size: 1.1rem;">Has completado: <br><strong>${activityTitle}</strong>.</p>
-                    <p style="margin-top: 20px;">Presiona <strong>Siguiente</strong> para continuar.</p>
-                </div>
-            `;
+    function render() {
+        clearFeedback();
+        setStageComplete(false);
+        const container = document.getElementById('stageArea');
+        container.innerHTML = '';
+
+        const titles = [
+            'Introducción: Mi Cuerpo',
+            'Actividad 1: Escucha y Encuentra',
+            'Actividad 2: Emociones y Adjetivos',
+            'Actividad 3: Sensaciones',
+            '¡Unidad Completada!'
+        ];
+        titleEl.textContent = titles[currentStage];
+
+        nextBtn = document.getElementById('nextBtn');
+
+        stages[currentStage](container);
+
+        if (currentStage === 0 || currentStage === 4) {
             setStageComplete(true);
         }
+    }
 
-        function renderStage0(container, currentData) {
-            renderControls();
-            container.innerHTML = `
-                <div class="video-wrapper">
-                    <iframe src="${currentData.videoUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                </div>
-                <p style="text-align:center; max-width: 600px; margin-top: 20px;">
-                    ¡Mira el video para aprender las partes del cuerpo!
-                </p>
-            `;
-            setStageComplete(true);
-        }
+    function renderStage0(container) {
+        renderControls();
+        container.innerHTML = `
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/RUTAS_PENDIENTES?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <p style="text-align:center; max-width: 600px; margin-top: 20px;">
+                ¡Mira el video para aprender las partes del cuerpo!
+            </p>
+        `;
+        setStageComplete(true);
+    }
 
-        function renderStage1_SelectImage(container, currentData) {
-            if(currentActivityRound === 0) {
-                 currentData._shuffledRounds = shuffleArray([...currentData.rounds]);
-            }
+    const stage1Data = [
+        { word: 'Jol', es: 'Cabeza', img: 'cabeza.png', audio: 'cabeza.mp3' },
+        { word: 'Wuty', es: 'Ojos', img: 'ojo.png', audio: 'ojo.mp3' },
+        { word: 'Ni’', es: 'Nariz', img: 'nariz.png', audio: 'nariz.mp3' },
+        { word: 'Tyi’', es: 'Boca', img: 'boca.png', audio: 'boca.mp3' },
+        { word: 'Chikiñ', es: 'Orejas', img: 'oreja.png', audio: 'oreja.mp3' },
+        { word: 'K’ä’', es: 'Manos', img: 'mano.png', audio: 'mano.mp3' },
+        { word: 'Yalo’ k’ä’', es: 'Dedos', img: 'dedo.png', audio: 'dedo.mp3' },
+        { word: 'Ya’', es: 'Piernas', img: 'pierna.png', audio: 'piernas.mp3' },
+        { word: 'Ok', es: 'Pie', img: 'pie.png', audio: 'pie.mp3' }
+    ];
+    let currentRound1 = 0;
 
-            const totalRounds = currentData._shuffledRounds.length;
-            const roundItem = currentData._shuffledRounds[currentActivityRound];
-
-            renderControls();
-
-            container.innerHTML = `
-                <p class="question-stage-info" style="color: #777; margin-bottom:10px;">Ronda ${currentActivityRound + 1} / ${totalRounds}</p>
-                
-                <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:20px;">
-                    <div class="audio-btn-big" onclick="playAudio('${roundItem.audio}', '${roundItem.word}')">🔊</div>
-                    <p style="font-size: 1.2rem;">¿Qué escuchaste?</p>
-                </div>
-                
-                <div class="options-row" id="imageOptionsRow"></div>
-            `;
-
-            const row = document.getElementById('imageOptionsRow');
+    function checkAnswer1(selectedImage, currentData, allOptionsElements, selectedElement) {
+        if (selectedImage === currentData.img) {
+            setFeedback(`¡Correcto! Es ${currentData.word} (${currentData.es})`, 'ok');
+            handleCorrectAnswer(selectedElement);
             
-            let pool = currentData.rounds.filter(i => i.word !== roundItem.word);
-            pool = shuffleArray(pool).slice(0, 2);
-            let options = shuffleArray([roundItem, ...pool]);
-
-            options.forEach(opt => {
-                const div = document.createElement('div');
-                div.className = 'img-option';
-                div.innerHTML = `<img src="../assets/img/${opt.img}" alt="${opt.es}"><p>${opt.es}</p>`;
+            stage1Attempts = 0;
+            currentRound1++;
+            setTimeout(() => {
+                renderStage1(document.getElementById('stageArea'));
+            }, 1500);
+        } else {
+            stage1Attempts++;
+            if (stage1Attempts < stage1MaxAttempts) {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. Te quedan ${stage1MaxAttempts - stage1Attempts} intentos.`, 'bad');
                 
-                div.onclick = () => {
-                    if(div.classList.contains('disabled')) return;
-
-                    if(opt.word === roundItem.word) {
-                        div.classList.add('ok');
-                        setFeedback(`¡Correcto! Es ${opt.word}`, 'ok');
-                        addPoints(10);
-                        
-                        disableAllOptions();
-
-                        setTimeout(() => {
-                            currentActivityRound++;
-                            if (currentActivityRound < totalRounds) {
-                                renderStage1_SelectImage(container, currentData);
-                            } else {
-                                showActivitySuccessScreen(currentData.title);
-                            }
-                        }, 1500);
-
-                    } else {
-                        div.classList.add('bad');
-                        div.classList.add('disabled'); 
-                        setFeedback(`Esa no es. ¡Intenta de nuevo!`, 'bad');
-                    }
-                };
-                row.appendChild(div);
-            });
-            
-            setStageComplete(false);
-        }
-
-        function renderStage3_SelectImage(container, currentData) {
-            renderStage1_SelectImage(container, currentData);
-        }
-
-        function renderStage2_Matching(container, currentData) {
-            matchedPairsCount = 0;
-            selectedQuestion = null;
-            
-            renderControls();
-            setFeedback('Selecciona la palabra en Ch\'ol y luego su significado.', 'neutral');
-
-            container.innerHTML = `
-                <p style="margin-bottom: 20px;">Empareja las emociones.</p>
-                <div class="matching-click-container">
-                    <div id="colChol" class="questions-stack">
-                        <p class="stack-title">Ch'ol</p>
-                    </div>
-                    <div id="colEs" class="answers-stack">
-                        <p class="stack-title">Español</p>
-                    </div>
-                </div>
-            `;
-
-            const colChol = document.getElementById('colChol');
-            const colEs = document.getElementById('colEs');
-
-            const listChol = shuffleArray([...currentData.rounds]);
-            const listEs = shuffleArray([...currentData.rounds]);
-
-            listChol.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'matching-card';
-                card.textContent = item.ch;
-                card.dataset.id = item.ch;
-                card.onclick = () => handleMatchingClick(card, item, 'question');
-                colChol.appendChild(card);
-            });
-
-            listEs.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'matching-card';
-                card.textContent = item.es;
-                card.dataset.matchId = item.ch;
-                card.onclick = () => handleMatchingClick(card, item, 'answer');
-                colEs.appendChild(card);
-            });
-
-            setStageComplete(false);
-        }
-
-        function handleMatchingClick(cardEl, itemData, type) {
-            if (cardEl.classList.contains('matched') || cardEl.classList.contains('disabled')) return;
-
-            if (type === 'question') {
-                document.querySelectorAll('.questions-stack .matching-card.selected').forEach(c => c.classList.remove('selected'));
-                cardEl.classList.add('selected');
-                selectedQuestion = itemData;
-                setFeedback(`Seleccionaste: **${itemData.ch}**. Busca su pareja.`, 'neutral');
+                setTimeout(() => {
+                    allOptionsElements.forEach(el => {
+                        el.classList.remove('disabled', 'bad');
+                        el.style.pointerEvents = 'auto';
+                    });
+                    setFeedback('Intenta de nuevo.', 'neutral');
+                }, 1500);
             } else {
-                if (!selectedQuestion) {
-                    setFeedback('Primero selecciona una palabra de la columna izquierda (Ch\'ol).', 'bad');
-                    cardEl.classList.add('shaking');
-                    setTimeout(() => cardEl.classList.remove('shaking'), 500);
-                    return;
-                }
-
-                if (selectedQuestion.ch === itemData.ch) {
-                    setFeedback('¡Correcto!', 'ok');
-                    cardEl.classList.add('matched');
-                    const questionCard = document.querySelector(`.questions-stack .matching-card[data-id="${selectedQuestion.ch}"]`);
-                    if(questionCard) {
-                        questionCard.classList.remove('selected');
-                        questionCard.classList.add('matched');
-                    }
-                    matchedPairsCount++;
-                    addPoints(10);
-                    selectedQuestion = null;
-
-                    if (matchedPairsCount >= DATA.stages[2].rounds.length) {
-                        showActivitySuccessScreen(DATA.stages[2].title);
-                    }
-                } else {
-                    setFeedback('No coinciden. Intenta de nuevo.', 'bad');
-                    cardEl.classList.add('shaking');
-                    const questionCard = document.querySelector(`.questions-stack .matching-card.selected`);
-                    if(questionCard) questionCard.classList.add('shaking');
-                    setTimeout(() => {
-                        cardEl.classList.remove('shaking');
-                        if(questionCard) questionCard.classList.remove('shaking');
-                    }, 500);
-                }
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. La respuesta correcta era: ${currentData.word}`, 'bad');
+                
+                allOptionsElements.forEach(el => {
+                    if (el.dataset.img === currentData.img) { el.classList.add('ok'); }
+                });
+                
+                stage1Attempts = 0;
+                currentRound1++;
+                setTimeout(() => {
+                    renderStage1(document.getElementById('stageArea'));
+                }, 2500);
             }
         }
+    }
 
-        function renderStageFinal(container) {
-            guardarProgresoEnBD();
+    function renderStage1(container) {
+        if (currentRound1 >= stage1Data.length) {
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Identificaste todas las partes del cuerpo.</h2>`;
+            setStageComplete(true);
             renderControls();
-            container.innerHTML = `
-                <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px;">
-                    <h1 style="font-size: 4rem;">🎉</h1>
-                    <h2 style="color: var(--ok); font-size: 2.5rem;">¡Tema Completado!</h2>
-                    <p style="font-size: 1.2rem;">Puntuación total: <strong>${userScore}</strong></p>
-                    <p>Presiona el botón Siguiente para volver al menú de la unidad.</p>
-                </div>
-            `;
-            if(nextBtn) {
-                nextBtn.textContent = "Volver al Menú";
-                nextBtn.classList.add('active');
+            earnStar(container);
+            return;
+        }
+
+        const currentData = stage1Data[currentRound1];
+        const attemptsInfo = stage1MaxAttempts > 1 ? `(Tienes ${stage1MaxAttempts} intentos)` : '';
+
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound1 + 1} de ${stage1Data.length}: Escucha y selecciona la imagen correcta. ${attemptsInfo}</p>`;
+        
+        const audioBtn = createAudioButton(currentData.word, currentData.audio, 'cho');
+        renderControls();
+        
+        const buttonWrapper = document.createElement('div');
+        buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
+        buttonWrapper.appendChild(audioBtn);
+        const feedbackEl = document.getElementById('feedback');
+        if (controlsArea) { controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); }
+
+        const row = document.createElement('div');
+        row.className = 'options-row';
+        
+        let options = [currentData];
+        let distractors = stage1Data.filter(d => d.word !== currentData.word);
+        shuffleArray(distractors);
+        options = options.concat(distractors.slice(0, 3)); 
+        shuffleArray(options);
+
+        options.forEach(item => {
+            const b = document.createElement('div');
+            b.className = 'opt img-option';
+            b.dataset.img = item.img;
+            
+            b.innerHTML = `<img src="../assets/img/${item.img}" alt="${item.es}"/> <p>${item.es}</p>`;
+            
+            b.onclick = () => {
+                const allOptions = document.querySelectorAll('.opt');
+                disableOptions('.opt'); 
+                
+                if (item.img === currentData.img) { b.classList.add('ok'); } else { b.classList.add('bad'); }
+                
+                checkAnswer1(item.img, currentData, allOptions, b);
+            };
+            row.appendChild(b);
+        });
+        
+        container.appendChild(row);
+        setStageComplete(false);
+    }
+
+    const stage2Pairs = [
+        { ch: 'Bi’bi’', es: 'Feo' },
+        { ch: 'Lekax', es: 'Bonito / Guapo' },
+        { ch: 'Tyijikña', es: 'Feliz' },
+        { ch: 'Ch’äjyem', es: 'Triste' },
+        { ch: 'Bo’yem', es: 'Cansado' },
+        { ch: 'Mich’', es: 'Enojado' }
+    ];
+
+    let selectedQuestion = null;
+    let matchedPairsCount = 0;
+
+    function handleQuestionClick(cardEl, question) {
+        soundSystem.play('click');
+        if (cardEl.classList.contains('selected')) {
+            cardEl.classList.remove('selected');
+            selectedQuestion = null;
+            setFeedback('Selecciona una emoción en Ch\'ol y luego su significado.', 'neutral');
+            return;
+        }
+        document.querySelectorAll('.questions-stack .matching-card.selected').forEach(el => el.classList.remove('selected'));
+        cardEl.classList.add('selected');
+        selectedQuestion = question;
+        setFeedback(`Seleccionaste ${question.ch}. ¡Ahora elige su traducción!`, 'neutral');
+    }
+
+    function handleAnswerClick(cardEl, answer) {
+        soundSystem.play('click');
+        if (!selectedQuestion) {
+            setFeedback('Selecciona primero una palabra Ch\'ol.', 'bad');
+            visualEffects.shake(cardEl);
+            return;
+        }
+
+        const questionCardEl = document.querySelector(`.questions-stack .matching-card[data-chol="${selectedQuestion.ch}"]`);
+
+        if (selectedQuestion.es === answer.es) {
+            setFeedback('¡Emparejamiento Correcto!', 'ok');
+            soundSystem.play('success');
+            
+            cardEl.classList.add('matched');
+            questionCardEl.classList.add('matched');
+            cardEl.classList.remove('shaking');
+            questionCardEl.classList.remove('shaking', 'selected');
+            
+            selectedQuestion = null;
+            matchedPairsCount++;
+
+            if (matchedPairsCount === stage2Pairs.length) {
+                setTimeout(() => {
+                    setFeedback('¡Actividad 2 Completada! Todo es correcto.', 'ok');
+                    setStageComplete(true);
+                    earnStar(document.getElementById('stageArea'));
+                }, 500);
             }
+        } else {
+            setFeedback('Incorrecto. Intenta de nuevo.', 'bad');
+            soundSystem.play('error');
+            
+            cardEl.classList.add('shaking');
+            questionCardEl.classList.add('shaking');
+            setTimeout(() => {
+                cardEl.classList.remove('shaking');
+                questionCardEl.classList.remove('shaking');
+            }, 500);
         }
+    }
 
-function guardarProgresoEnBD() {
-    fetch('../../backend/api/progress.php', { 
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            tema_id: TEMA_ID,
-            completado: true
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Progreso guardado:", data);
-        if(data.success) {
-        }
-    })
-    .catch(error => console.error('Error al guardar:', error));
-}
+    function renderStage2(container) {
+        matchedPairsCount = 0; 
+        selectedQuestion = null;
+        
+        container.innerHTML = `
+            <p class="stage0-info">Haz clic en la Emoción en Ch'ol (Izquierda) y luego en su significado en Español (Derecha).</p>
+            <div class="matching-click-container">
+                <div id="questionGroup" class="questions-stack">
+                    <p class="stack-title">Ch'ol</p>
+                </div>
+                <div id="answerGroup" class="answers-stack">
+                    <p class="stack-title">Español</p>
+                </div>
+            </div>
+        `;
+        
+        renderControls();
+        setFeedback('Selecciona una emoción y su significado.', 'neutral');
 
-        document.addEventListener('DOMContentLoaded', () => {
-            render();
+        const questionGroup = document.getElementById('questionGroup');
+        const answerGroup = document.getElementById('answerGroup');
+        const shuffledQuestions = shuffleArray([...stage2Pairs]);
+        const shuffledAnswers = shuffleArray([...stage2Pairs]);
+
+        shuffledQuestions.forEach(pair => {
+            const qCard = document.createElement('div');
+            qCard.className = 'matching-card';
+            qCard.dataset.chol = pair.ch;
+            qCard.textContent = pair.ch;
+            qCard.onclick = () => handleQuestionClick(qCard, pair);
+            questionGroup.appendChild(qCard);
         });
 
-    </script>
+        shuffledAnswers.forEach(pair => {
+            const aCard = document.createElement('div');
+            aCard.className = 'matching-card';
+            aCard.dataset.es = pair.es;
+            aCard.textContent = pair.es;
+            aCard.onclick = () => handleAnswerClick(aCard, pair);
+            answerGroup.appendChild(aCard);
+        });
+        setStageComplete(false);
+    }
+
+    const stage3Data = [
+        { word: 'Wi’ñal', es: 'Con hambre', img: 'hambre.png', audio: 'hambre.mp3' },
+        { word: 'Tyäkiñ tyi’', es: 'Con sed', img: 'sed.png', audio: 'sed.mp3' },
+        { word: 'Bo’yem', es: 'Cansado', img: 'cansado.png', audio: 'cansado.mp3' },
+        { word: 'Tyijikña', es: 'Feliz', img: 'feliz.png', audio: 'feliz.mp3' },
+        { word: 'Ch’äjyem', es: 'Triste', img: 'triste.png', audio: 'triste.mp3' }
+    ];
+    let currentRound3 = 0;
+
+    function checkAnswer3(selectedImage, currentData, allOptionsElements, selectedElement) {
+        if (selectedImage === currentData.img) {
+            setFeedback(`¡Correcto! Es ${currentData.word}.`, 'ok');
+            handleCorrectAnswer(selectedElement);
+            
+            stage3Attempts = 0;
+            currentRound3++;
+            setTimeout(() => {
+                renderStage3(document.getElementById('stageArea'));
+            }, 1500);
+        } else {
+            stage3Attempts++;
+            if (stage3Attempts < stage3MaxAttempts) {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. Te quedan ${stage3MaxAttempts - stage3Attempts} intentos.`, 'bad');
+                
+                setTimeout(() => {
+                    allOptionsElements.forEach(el => {
+                        el.classList.remove('disabled', 'bad');
+                        el.style.pointerEvents = 'auto';
+                    });
+                    setFeedback('Intenta de nuevo.', 'neutral');
+                }, 1500);
+            } else {
+                handleIncorrectAnswer(selectedElement);
+                setFeedback(`Incorrecto. La respuesta correcta era: ${currentData.es}`, 'bad');
+                
+                allOptionsElements.forEach(el => {
+                    if (el.dataset.img === currentData.img) { el.classList.add('ok'); }
+                });
+                
+                stage3Attempts = 0;
+                currentRound3++;
+                setTimeout(() => {
+                    renderStage3(document.getElementById('stageArea'));
+                }, 2500);
+            }
+        }
+    }
+
+    function renderStage3(container) {
+        if (currentRound3 >= stage3Data.length) {
+            container.innerHTML = `<h2 style="color: var(--ok);">¡Felicidades! Completaste las sensaciones.</h2>`;
+            setStageComplete(true);
+            renderControls();
+            earnStar(container);
+            return;
+        }
+
+        const currentData = stage3Data[currentRound3];
+        const attemptsInfo = stage3MaxAttempts > 1 ? `(Tienes ${stage3MaxAttempts} intentos)` : '';
+
+        container.innerHTML = `<p class="stage0-info">Ronda ${currentRound3 + 1} de ${stage3Data.length}: Escucha la sensación y selecciona la imagen. ${attemptsInfo}</p>`;
+        
+        const audioBtn = createAudioButton(currentData.word, currentData.audio, 'cho');
+        renderControls();
+        const buttonWrapper = document.createElement('div');
+        buttonWrapper.style.cssText = "display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;";
+        buttonWrapper.appendChild(audioBtn);
+        const feedbackEl = document.getElementById('feedback');
+        if (controlsArea) { controlsArea.insertBefore(buttonWrapper, feedbackEl.nextSibling); }
+
+        const row = document.createElement('div');
+        row.className = 'options-row';
+        
+        let options = [currentData];
+        let distractors = stage3Data.filter(d => d.word !== currentData.word);
+        shuffleArray(distractors);
+        options = options.concat(distractors.slice(0, 3)); 
+        shuffleArray(options);
+
+        options.forEach(item => {
+            const b = document.createElement('div');
+            b.className = 'opt img-option';
+            b.dataset.img = item.img;
+            
+            b.innerHTML = `<img src="../assets/img/${item.img}" alt="${item.es}"/> <p>${item.es}</p>`;
+            
+            b.onclick = () => {
+                const allOptions = document.querySelectorAll('.opt');
+                disableOptions('.opt');
+                
+                if (item.img === currentData.img) { b.classList.add('ok'); } else { b.classList.add('bad'); }
+                
+                checkAnswer3(item.img, currentData, allOptions, b);
+            };
+            row.appendChild(b);
+        });
+        
+        container.appendChild(row);
+        setStageComplete(false);
+    }
+
+    function renderStageFinal(container) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; border: 5px dashed var(--ok); border-radius: 20px; background-color: rgba(255,255,255,0.9);">
+                <h2 style="color: var(--ok); font-size: 2.5rem; margin-bottom: 20px;">🎉 ¡Unidad 5 Completada! 🎉</h2>
+                <p style="font-size: 1.5rem; font-weight: bold;">Puntuación total: ${userScore} / ${TOTAL_ACTIVITY_POINTS}</p>
+                <p style="margin-top: 15px;">Has aprendido sobre el Cuerpo, Emociones y Sensaciones en Ch'ol.</p>
+                <p>Presiona Siguiente para volver al menú principal.</p>
+            </div>
+        `;
+        
+        try {
+            if (window.visualEffects && typeof window.visualEffects.confetti === 'function') {
+                window.visualEffects.confetti();
+            } else if (typeof celebrateLevelComplete === 'function') {
+                celebrateLevelComplete();
+            }
+        } catch (e) {
+            console.log("Efectos visuales no disponibles");
+        }
+
+        guardarProgresoEnBD();
+        setStageComplete(true);
+        renderControls();
+    }
+
+    function guardarProgresoEnBD() {
+        fetch('../../backend/api/progress.php', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tema_id: TEMA_ID,
+                completado: true
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Progreso guardado:", data);
+            if(data.success && window.collectCoin) {
+                collectCoin();
+            }
+        })
+        .catch(error => console.error('Error al guardar:', error));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        render();
+    });
+</script>
 </body>
 </html>

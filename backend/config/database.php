@@ -1,13 +1,10 @@
 <?php
-/**
- * Configuración de la Base de Datos
- */
 
 class Database {
-    private $host = "localhost";
-    private $db_name = "aprendiendo_chol";
-    private $username = "root";  // Cambiar según tu configuración
-    private $password = "";      // Cambiar según tu configuración
+    private $host = "localhost"; 
+    private $db_name = "nuestr71_bd"; 
+    private $username = "nuestr71_admin";    
+    private $password = "Ch0l4pp_333.";        
     private $conn;
 
     public function getConnection() {
